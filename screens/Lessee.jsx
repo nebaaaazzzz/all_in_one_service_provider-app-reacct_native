@@ -96,17 +96,17 @@ const Lessee = () => {
                   onPress={() => setIndex(index)}
                   style={{
                     marginHorizontal: 10,
-                    borderBottomColor: "blue",
+                    borderBottomColor: "#3498db",
                     borderBottomWidth: indexS == index ? 2 : 0,
                   }}
                 >
                   <AntDesign
                     name={item.name}
                     size={20}
-                    color="blue"
+                    color="#3498db"
                     style={{ textAlign: "center" }}
                   />
-                  <Text style={{ color: "blue" }}>{item.title}</Text>
+                  <Text style={{ color: "#3498db" }}>{item.title}</Text>
                 </Pressable>
               );
             }}

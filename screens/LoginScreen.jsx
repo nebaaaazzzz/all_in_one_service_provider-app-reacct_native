@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, StatusBar, ScrollView } from "react-native";
-import React, { Component } from "react";
+import React from "react";
 import { TextInput, Button } from "react-native-paper";
 import styled from "styled-components/native";
 const STextInput = styled(TextInput)`

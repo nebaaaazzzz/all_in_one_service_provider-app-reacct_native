@@ -13,6 +13,12 @@ import ConfirmationScreen from "./screens/ConfirmationScreen";
 import HomeScreen from "./screens/HomeScreen";
 import Lessee from "./screens/Lessee";
 import HomeDetailScreen from "./screens/HomeDetailScreen";
+import HostScreen from "./screens/HostScreen";
+import PropertyTypeScreen from "./screens/PropertyTypeScreen";
+import PlaceDescriptionScreen from "./screens/PlaceDescriptionScreen";
+import SpacekindScreen from "./screens/SpacekindScreen";
+import LocationScreen from "./screens/LocationScreen";
+import ManualAdressScreen from "./screens/ManualAdressScreen";
 const DrawerNavigator = createDrawerNavigator();
 const StackNavigator = createStackNavigator();
 function Home() {
@@ -43,13 +49,28 @@ export default function App() {
     >
       <NavigationContainer>
         <StackNavigator.Navigator
-          initialRouteName="home"
+          initialRouteName="location"
           screenOptions={{ headerShown: false }}
         >
           <StackNavigator.Screen
             name="homedetail"
             component={HomeDetailScreen}
           />
+          <StackNavigator.Screen
+            name="manualadress"
+            component={ManualAdressScreen}
+          />
+          <StackNavigator.Screen name="location" component={LocationScreen} />
+          <StackNavigator.Screen
+            name="placedescription"
+            component={PlaceDescriptionScreen}
+          />
+          <StackNavigator.Screen name="spacekind" component={SpacekindScreen} />
+          <StackNavigator.Screen
+            name="properytype"
+            component={PropertyTypeScreen}
+          />
+          <StackNavigator.Screen name="host" component={HostScreen} />
           <StackNavigator.Screen name="lessee" component={Lessee} />
           <StackNavigator.Screen name="home" component={HomeScreen} />
           <StackNavigator.Screen
