@@ -20,7 +20,7 @@ const STextInput = styled(TextInput)`
   color: rgba(0, 0, 0, 0.2);
   font-size: 18px;
 `;
-const ManualAdressScreen = () => {
+const ManualAdressScreen = ({ route }) => {
   const { height, width } = useWindowDimensions();
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState(undefined);

@@ -19,6 +19,13 @@ import PlaceDescriptionScreen from "./screens/PlaceDescriptionScreen";
 import SpacekindScreen from "./screens/SpacekindScreen";
 import LocationScreen from "./screens/LocationScreen";
 import ManualAdressScreen from "./screens/ManualAdressScreen";
+import GuestSizeScreen from "./screens/GuestSizeScreen";
+import PlaceOfferScreen from "./screens/PlaceOfferScreen";
+import HouseImagesScreen from "./screens/HouseImagesScreen";
+import PlaceNameScreen from "./screens/PlaceNameScreen";
+import DescribePlaceScreen from "./screens/DescribePlaceScreen";
+import DetailPlaceDescription from "./screens/DetailPlaceDescriptionScreen";
+import PriceScreen from "./screens/PriceScreen";
 const DrawerNavigator = createDrawerNavigator();
 const StackNavigator = createStackNavigator();
 function Home() {
@@ -49,13 +56,28 @@ export default function App() {
     >
       <NavigationContainer>
         <StackNavigator.Navigator
-          initialRouteName="location"
+          initialRouteName="price"
           screenOptions={{ headerShown: false }}
         >
+          <StackNavigator.Screen name="price" component={PriceScreen} />
+          <StackNavigator.Screen name="placename" component={PlaceNameScreen} />
+          <StackNavigator.Screen
+            name="detilplacedescription"
+            component={DetailPlaceDescription}
+          />
+          <StackNavigator.Screen
+            name="describeplace"
+            component={DescribePlaceScreen}
+          />
+          <StackNavigator.Screen
+            name="houseimages"
+            component={HouseImagesScreen}
+          />
           <StackNavigator.Screen
             name="homedetail"
             component={HomeDetailScreen}
           />
+          <StackNavigator.Screen name="guestsize" component={GuestSizeScreen} />
           <StackNavigator.Screen
             name="manualadress"
             component={ManualAdressScreen}

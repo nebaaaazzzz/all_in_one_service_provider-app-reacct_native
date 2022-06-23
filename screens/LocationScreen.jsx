@@ -12,41 +12,53 @@ import * as Location from "expo-location";
 import Icon from "@expo/vector-icons/SimpleLineIcons";
 import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
-const LocationScreen = () => {
-  const [location, setLocation] = useState(null);
+import { ScrollView } from "react-native-gesture-handler";
+const LocationScreen = ({ navigation }) => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [bgColor, setBgColor] = useState(false);
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
+  const [search, setSearch] = useState(false);
+  const [searchResult, setSearchResut] = useState([]);
   const inputRef = useRef();
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-      try {
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, []);
-  useEffect(() => {
-    if (inputRef.current.isFocused()) {
-      setBgColor(true);
-    } else {
-      setBgColor(false);
+  const pressHandler = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
     }
-  }, []);
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+    try {
+      let location = await Location.getCurrentPositionAsync({});
+      fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+      )
+        .then(async (res) => {
+          const r = await res.json();
+          navigation.navigate("manualadress", {
+            context: r?.features[0]?.context,
+          });
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+    )
+      .then(async (res) => {
+        const s = await res.json();
+        if (s.features) {
+          setSearchResut(s.features);
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }, [locationQuery]);
   return (
     <TouchableWithoutFeedback
       style={{ flex: 1 }}
@@ -55,7 +67,6 @@ const LocationScreen = () => {
       }}
     >
       <View
-        onResponderMove={() => setBgColor(true)}
         horizontal={false}
         style={{
           flex: 1,
@@ -69,6 +80,9 @@ const LocationScreen = () => {
             marginTop: isFull ? 0 : "40%",
             backgroundColor: "#fff",
             flex: 1,
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+            overflow: "hidden",
           }}
         >
           {isFull ? (
@@ -81,7 +95,13 @@ const LocationScreen = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Pressable onPress={() => setIsFull(false)}>
+              <Pressable
+                onPress={() => {
+                  setIsFull(false);
+                  setLocationQuery("");
+                  inputRef.current.clear();
+                }}
+              >
                 <Icon size={20} name="arrow-left" />
               </Pressable>
               <Text style={{ fontWeight: "600", fontSize: 20 }}>
@@ -102,6 +122,7 @@ const LocationScreen = () => {
                 borderTopLeftRadius: 15,
                 borderTopRightRadius: 15,
               }}
+              cacheEnabled
               initialRegion={{
                 latitude: 11.5968568,
                 longitude: 37.3981523,
@@ -112,22 +133,46 @@ const LocationScreen = () => {
           )}
 
           <Searchbar
+            onChangeText={setLocationQuery}
             icon={"location-enter"}
             ref={inputRef}
             onFocus={() => {
-              setIsFull(true);
+              if (isFull) {
+                setSearch(true);
+              } else {
+                inputRef.current.blur();
+                setIsFull(true);
+              }
             }}
-            onBlur={() => setBgColor(false)}
+            onBlur={() => {
+              setSearch(false);
+              setBgColor(false);
+            }}
             style={{
               borderRadius: 10,
-              marginTop: isFull ? "10%" : 0,
+              marginTop: "10%",
               width: "90%",
               position: isFull ? "relative" : "absolute",
               // top: "10%",
               transform: [{ translateX: 10 }],
             }}
           />
-          {isFull ? (
+          {isFull && (search || locationQuery) ? (
+            <ScrollView style={{ marginVertical: 10 }}>
+              {searchResult.map((place) => {
+                return (
+                  <Pressable
+                    style={{ borderBottomWidth: 1, marginVertical: 10 }}
+                  >
+                    <Text>{place.place_name}</Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          ) : (
+            <></>
+          )}
+          {isFull && !search && !locationQuery ? (
             <>
               <Pressable
                 style={{
@@ -137,6 +182,7 @@ const LocationScreen = () => {
 
                   marginTop: "5%",
                 }}
+                onPress={pressHandler}
               >
                 <FIcon name="location-arrow" size={20} />
                 <Text style={{ marginLeft: "5%", fontSize: 18 }}>
