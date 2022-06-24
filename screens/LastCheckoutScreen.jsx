@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { Checkbox } from "react-native-paper";
-const PriceScreen = () => {
+const LastCheckoutScreen = () => {
   const [checked, setChecked] = React.useState([false, false, false]);
   return (
     <View
@@ -35,11 +35,11 @@ const PriceScreen = () => {
           Now for the fun part--set Your price
         </Text>
         <View>
-          <Text style={{ fontWeight: 700, fontSize: 20 }}>
+          <Text style={{ fontWeight: "700", fontSize: 20 }}>
             Do you have any of these at your place?
           </Text>
           {["Security camera(s)", "Weapons", "Dangerous animals"].map(
-            (item) => {
+            (item, index) => {
               return (
                 <View
                   style={{
@@ -91,4 +91,4 @@ const PriceScreen = () => {
   );
 };
 
-export default PriceScreen;
+export default LastCheckoutScreen;

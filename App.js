@@ -26,6 +26,8 @@ import PlaceNameScreen from "./screens/PlaceNameScreen";
 import DescribePlaceScreen from "./screens/DescribePlaceScreen";
 import DetailPlaceDescription from "./screens/DetailPlaceDescriptionScreen";
 import PriceScreen from "./screens/PriceScreen";
+import ReviewListingScreen from "./screens/ReviewListingScreen";
+import LastCheckoutScreen from "./screens/LastCheckoutScreen";
 const DrawerNavigator = createDrawerNavigator();
 const StackNavigator = createStackNavigator();
 function Home() {
@@ -54,12 +56,21 @@ export default function App() {
         icon: (props) => <MaterialCommunityIcons {...props} />,
       }}
     >
+      {/*add id of lesse and lessor  */}
       <NavigationContainer>
         <StackNavigator.Navigator
-          initialRouteName="price"
+          initialRouteName="reviewlisting"
           screenOptions={{ headerShown: false }}
         >
           <StackNavigator.Screen name="price" component={PriceScreen} />
+          <StackNavigator.Screen
+            name="lastcheckout"
+            component={LastCheckoutScreen}
+          />
+          <StackNavigator.Screen
+            name="reviewlisting"
+            component={ReviewListingScreen}
+          />
           <StackNavigator.Screen name="placename" component={PlaceNameScreen} />
           <StackNavigator.Screen
             name="detilplacedescription"
