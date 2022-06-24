@@ -2,9 +2,9 @@ import { View, Text, StatusBar, Pressable, FlatList } from "react-native";
 import { Searchbar } from "react-native-paper";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import React, { useState } from "react";
-import Home from "../components/Home";
-import FilterModal from "../components/FilterModal";
-const Lessee = () => {
+import Home from "../../components/Home";
+import FilterModal from "../../components/FilterModal";
+const LesseeScreen = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
@@ -124,4 +124,4 @@ const Lessee = () => {
   );
 };
 
-export default Lessee;
+export default LesseeScreen;
