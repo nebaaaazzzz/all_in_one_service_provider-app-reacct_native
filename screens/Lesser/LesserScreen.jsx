@@ -15,9 +15,11 @@ import DetailPlaceDescription from "./screens/DetailPlaceDescriptionScreen";
 import PriceScreen from "./screens/PriceScreen";
 import ReviewListingScreen from "./screens/ReviewListingScreen";
 import LastCheckoutScreen from "./screens/LastCheckoutScreen";
+import HostScreen from "./screens/HostScreen";
 
 
 <StackNavigator.Screen name="price" component={PriceScreen} />
+<StackNavigator.Screen name="host" component={HostScreen} />
           <StackNavigator.Screen
             name="lastcheckout"
             component={LastCheckoutScreen}

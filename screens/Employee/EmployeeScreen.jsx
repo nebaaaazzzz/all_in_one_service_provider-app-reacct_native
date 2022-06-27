@@ -1,11 +1,9 @@
 import { View, Text, StatusBar, Pressable, FlatList } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { Searchbar } from "react-native-paper";
 import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Divider } from "react-native-paper";
-const Tab = createMaterialTopTabNavigator();
-const Try = () => {
+const Home = () => {
   const [bgColor, setBgColor] = useState(false);
   return (
     <>
@@ -52,82 +50,69 @@ const Try = () => {
     </>
   );
 };
-const MyPosts = () => {
+
+const EmployeeScreen = () => {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
   const [indexS, setIndex] = useState(0);
   const showModal = () => setVisible(true);
   // require('./assets/images/girl.jpg'),          // Local image
   const list = [
-    {
-      title: "All Homes",
-      name: "home",
-    },
-    {
-      title: "Islands",
-      name: "team",
-    },
-    {
-      title: "Arctic",
-      name: "setting",
-    },
-    {
-      title: "Amazing pools",
-      name: "picture",
-    },
-    {
-      title: "surfing",
-      name: "inbox",
-    },
-    {
-      title: "Bed & Breakfast",
-      name: "cloudo",
-    },
-    {
-      title: "Design",
-      name: "camera",
-    },
-    { title: "National parks", name: "phone" },
-    {
-      title: "shared homes",
-      name: "smileo",
-    },
-    {
-      title: "caves",
-      name: "piechart",
-    },
-    { title: "tropical", name: "dingding" },
-    {
-      title: "Amazing view",
-      name: "windowso",
-    },
-    {
-      title: "Earth Home",
-      name: "phone",
-    },
+    "All",
+    "Grapics & Design",
+    "Sells & Markating",
+    "Writing & Translation",
+    "Video & Animation",
+    "Finance & Accounting",
+    "Engineering & Architecture",
+    "Admin & Customer support",
+    "Music & Audio",
+    "Programming & Tech",
+    "Business",
+    "LifeStyle",
+    "Legal",
   ];
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
 
+      <Searchbar
+        placeholder="Search"
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+      />
+      <View>
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={list}
+          style={{ paddingTop: 10 }}
+          renderItem={({ item, index }) => {
+            return (
+              <Pressable
+                onPress={() => setIndex(index)}
+                style={{
+                  marginHorizontal: 10,
+                  borderBottomColor: "#3498db",
+                  borderBottomWidth: indexS == index ? 2 : 0,
+                }}
+              >
+                <Text style={{ color: "#3498db" }}>{item}</Text>
+              </Pressable>
+            );
+          }}
+        ></FlatList>
+      </View>
       <FlatList
+        style={{ marginTop: 20 }}
         data={list}
         renderItem={() => {
-          return <Try />;
+          return <Home />;
         }}
       ></FlatList>
     </View>
   );
 };
-function SettingsScreen() {
-  return <Text>hello</Text>;
-}
-function EmployerScreen() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="myposts" component={MyPosts} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-}
 
-export default EmployerScreen;
+export default EmployeeScreen;
