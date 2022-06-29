@@ -77,11 +77,9 @@ const LocationScreen = ({ navigation }) => {
       >
         <View
           style={{
-            marginTop: isFull ? 0 : "40%",
+            marginTop: isFull ? 0 : 0,
             backgroundColor: "#fff",
             flex: 1,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
             overflow: "hidden",
           }}
         >
@@ -222,6 +220,9 @@ const LocationScreen = ({ navigation }) => {
           }}
         >
           <Pressable
+            onPress={() => {
+              navigation.navigate("lesser/postjob/pinspot");
+            }}
             style={{
               backgroundColor: bgColor ? "#0099ff" : "rgba(0,0,0,0.2)",
               width: 100,

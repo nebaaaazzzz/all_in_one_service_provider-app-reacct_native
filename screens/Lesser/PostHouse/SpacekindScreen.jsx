@@ -1,9 +1,12 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState } from "react";
 import PlaceDescription from "./../../../components/PlaceDescription";
-const SpacekindScreen = () => {
-  const [bgColor] = useState(false);
+const SpacekindScreen = ({ navigation }) => {
+  const [active, setActive] = useState("");
   const placeKinds = ["An entire place", "A private room", "A shared room"];
+  const pressHandler = (id) => {
+    setActive(id);
+  };
   return (
     <View
       horizontal={false}
@@ -17,11 +20,8 @@ const SpacekindScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -33,10 +33,17 @@ const SpacekindScreen = () => {
             fontSize: 20,
           }}
         >
-          What of of space will guests have?
+          What kind of space will lesse have?
         </Text>
-        {placeKinds.map((place) => {
-          return <PlaceDescription title={place} />;
+        {placeKinds.map((place, index) => {
+          return (
+            <PlaceDescription
+              pressHandler={pressHandler}
+              active={active}
+              id={index}
+              title={place}
+            />
+          );
         })}
       </ScrollView>
       <View
@@ -50,8 +57,11 @@ const SpacekindScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/location");
+          }}
           style={{
-            backgroundColor: bgColor ? "#0099ff" : "rgba(0,0,0,0.2)",
+            backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

@@ -7,8 +7,46 @@ import {
   Image,
 } from "react-native";
 import React, { useState } from "react";
-const PropertyTypeScreen = () => {
-  const [bgColor, setBgColor] = useState(false);
+const PropertyTypeScreen = ({ navigation }) => {
+  const [active, setActive] = useState("");
+  const pressHandler = (id) => {
+    if (Number(id) === Number(active)) {
+      setActive("");
+    }
+    setActive(id + 1);
+  };
+  const list = [
+    {
+      title: "Apartment",
+      imgUrl:
+        "https://a0.muscache.com/im/pictures/eadbcbdb-d57d-44d9-9a76-665a7a4d1cd7.jpg?im_w=240",
+    },
+    {
+      title: "House",
+      imgUrl:
+        "https://a0.muscache.com/im/pictures/d1af74db-58eb-46bf-b3f5-e42b6c9892db.jpg?im_w=240",
+    },
+    {
+      title: "Secondary unit",
+      imgUrl:
+        "https://a0.muscache.com/im/pictures/32897901-1870-4895-8e23-f08dc0e61750.jpg?im_w=240",
+    },
+    {
+      title: "Unique space",
+      imgUrl:
+        "https://a0.muscache.com/im/pictures/7ad56bb1-ed9f-4dcb-a14c-2523da331b44.jpg?im_w=240",
+    },
+    {
+      title: "Bed and breakfast",
+      imgUrl:
+        "https://a0.muscache.com/im/pictures/d52fb4e7-39a4-46df-9bf9-67e56d35eeca.jpg?im_w=240",
+    },
+    {
+      title: "Boutique hotel",
+      imgUrl:
+        "https://a0.muscache.com/im/pictures/a2c9ad21-b159-4fd2-b417-d810fb23c6a9.jpg?im_w=240",
+    },
+  ];
   return (
     <View
       horizontal={false}
@@ -22,11 +60,8 @@ const PropertyTypeScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -38,233 +73,46 @@ const PropertyTypeScreen = () => {
             fontSize: 20,
           }}
         >
-          What Kind of place Will You Host ?
+          What Kind of place Will You Rent ?
         </Text>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>Apartment</Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/eadbcbdb-d57d-44d9-9a76-665a7a4d1cd7.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-              backgroundColor: "red",
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>House</Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/d1af74db-58eb-46bf-b3f5-e42b6c9892db.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-              backgroundColor: "red",
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>
-            Secondary unit
-          </Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/32897901-1870-4895-8e23-f08dc0e61750.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-              backgroundColor: "red",
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>Unique space</Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/7ad56bb1-ed9f-4dcb-a14c-2523da331b44.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>
-            Bed and breakfast
-          </Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/d52fb4e7-39a4-46df-9bf9-67e56d35eeca.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>
-            Boutique hotel
-          </Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/a2c9ad21-b159-4fd2-b417-d810fb23c6a9.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>Apartment</Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/eadbcbdb-d57d-44d9-9a76-665a7a4d1cd7.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-            }}
-          ></Image>
-        </Pressable>
-        <Pressable
-          style={{
-            borderWidth: 1,
-            width: "100%",
-            marginVertical: 10,
-            borderColor: "rgba(0,0,0,0.4)",
-            elevation: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 10,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "300" }}>Apartment</Text>
-          <Image
-            source={{
-              uri: "https://a0.muscache.com/im/pictures/eadbcbdb-d57d-44d9-9a76-665a7a4d1cd7.jpg?im_w=240",
-            }}
-            style={{
-              width: 50,
-              borderRadius: 5,
-              height: 50,
-            }}
-          ></Image>
-        </Pressable>
+        {list.map((item, index) => {
+          return (
+            <Pressable
+              onPress={() => {
+                pressHandler(index);
+              }}
+              style={{
+                borderWidth: 1,
+                width: "100%",
+                marginVertical: 10,
+                borderColor:
+                  Number(active) === index + 1 ? "#0244d0" : "rgba(0,0,0,0.4)",
+                elevation: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                borderRadius: 10,
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "300" }}>
+                {item.title}
+              </Text>
+              <Image
+                source={{
+                  uri: item.imgUrl,
+                }}
+                style={{
+                  width: 50,
+                  borderRadius: 5,
+                  height: 50,
+                  backgroundColor: "red",
+                }}
+              ></Image>
+            </Pressable>
+          );
+        })}
       </ScrollView>
       <View
         style={{
@@ -277,8 +125,11 @@ const PropertyTypeScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/houseimages");
+          }}
           style={{
-            backgroundColor: bgColor ? "#0099ff" : "rgba(0,0,0,0.2)",
+            backgroundColor: active ? "#0099ff" : "rgba(0,0,0,0.2)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-const DescribePlaceScreen = () => {
+const DescribePlaceScreen = ({ navigation }) => {
   const [active, setActive] = useState(Array(6).fill(false));
   const max = [-1, -1];
   const highLight = [
@@ -40,11 +40,8 @@ const DescribePlaceScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
         }}
       >
         <Text
@@ -114,18 +111,19 @@ const DescribePlaceScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/price");
+          }}
           style={{
             backgroundColor: "#0099ff",
             width: 100,
             right: 20,
-            flexDirection: "row",
-            flexWrap: "wrap",
             paddingHorizontal: 10,
             paddingVertical: 5,
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
         </Pressable>
       </View>
     </View>

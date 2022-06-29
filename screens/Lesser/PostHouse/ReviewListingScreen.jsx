@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { Divider } from "react-native-paper";
-const ReviewListingScreen = () => {
+const ReviewListingScreen = ({ navigation }) => {
   return (
     <View
       horizontal={false}
@@ -22,11 +22,8 @@ const ReviewListingScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -35,7 +32,7 @@ const ReviewListingScreen = () => {
             marginVertical: 20,
             textAlign: "center",
             color: "#000",
-            fontSize: 20,
+            fontSize: 18,
           }}
         >
           Check out your listing!
@@ -101,6 +98,9 @@ const ReviewListingScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/");
+          }}
           style={{
             backgroundColor: "rgba(0,0,0,0.9)",
             width: 100,

@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { Checkbox } from "react-native-paper";
-const LastCheckoutScreen = () => {
+const LastCheckoutScreen = ({ navigation }) => {
   const [checked, setChecked] = React.useState([false, false, false]);
   return (
     <View
@@ -13,14 +13,10 @@ const LastCheckoutScreen = () => {
         marginTop: StatusBar.currentHeight,
       }}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+      <View
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -34,7 +30,7 @@ const LastCheckoutScreen = () => {
         >
           Now for the fun part--set Your price
         </Text>
-        <View>
+        <View style={{ marginTop: "10%" }}>
           <Text style={{ fontWeight: "700", fontSize: 20 }}>
             Do you have any of these at your place?
           </Text>
@@ -43,11 +39,12 @@ const LastCheckoutScreen = () => {
               return (
                 <View
                   style={{
+                    marginTop: "2%",
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text>{item}</Text>
+                  <Text style={{ fontSize: 16 }}>{item}</Text>
                   <Checkbox
                     status={checked[index] ? "checked" : "unchecked"}
                     onPress={() => {
@@ -61,7 +58,7 @@ const LastCheckoutScreen = () => {
             }
           )}
         </View>
-      </ScrollView>
+      </View>
       <View
         style={{
           backgroundColor: "#fff",
@@ -73,6 +70,9 @@ const LastCheckoutScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/reviewlisting");
+          }}
           style={{
             backgroundColor: "rgba(0,0,0,0.9)",
             width: 100,

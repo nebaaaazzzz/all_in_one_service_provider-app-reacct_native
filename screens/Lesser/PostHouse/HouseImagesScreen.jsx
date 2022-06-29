@@ -15,8 +15,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 
-import * as MediaLibrary from "expo-media-library";
-const HouseImagesScreen = () => {
+const HouseImagesScreen = ({ navigation }) => {
   const [imgUri, setImgUri] = useState([]);
   const [visible, setVisible] = useState([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState(0);
@@ -51,11 +50,8 @@ const HouseImagesScreen = () => {
       <View
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -240,6 +236,9 @@ const HouseImagesScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/placename");
+          }}
           style={{
             backgroundColor: imgUri.length < 5 ? "rgba(0,0,0,0.7)" : "#0099ff",
             width: 100,

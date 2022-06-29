@@ -2,7 +2,7 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-const PriceScreen = () => {
+const PriceScreen = ({ navigation }) => {
   const [price, setPrice] = useState("1000");
   return (
     <View
@@ -14,19 +14,18 @@ const PriceScreen = () => {
         marginTop: StatusBar.currentHeight,
       }}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+      <View
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
+          alignItems: "center",
           paddingHorizontal: 10,
         }}
       >
         <Text
           style={{
+            marginTop: "20%",
+
             marginVertical: 20,
             textAlign: "center",
             color: "#000",
@@ -77,7 +76,7 @@ const PriceScreen = () => {
           </View>
           <Text style={{ textAlign: "center" }}> per month</Text>
         </View>
-      </ScrollView>
+      </View>
       <View
         style={{
           backgroundColor: "#fff",
@@ -89,6 +88,9 @@ const PriceScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/lastcheckout");
+          }}
           style={{
             backgroundColor: "#0099ff",
             width: 100,

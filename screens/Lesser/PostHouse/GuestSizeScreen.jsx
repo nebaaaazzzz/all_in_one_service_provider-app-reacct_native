@@ -7,8 +7,8 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import IncrementDecrement from "../components/IncrementDecrement";
-const GuestSizeScreen = () => {
+import IncrementDecrement from "../../../components/IncrementDecrement";
+const GuestSizeScreen = ({ navigation }) => {
   const size = ["Guests", "Beds", "Bedrooms", "Bathrooms"];
   return (
     <View
@@ -23,11 +23,8 @@ const GuestSizeScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -79,6 +76,9 @@ const GuestSizeScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/placeoffer");
+          }}
           style={{
             backgroundColor: "#0099ff",
             width: 100,

@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { TextInput } from "react-native-paper";
-const DetailPlaceDescription = () => {
+const DetailPlaceDescriptionScreen = ({ navigation }) => {
   const [text, setText] = useState("");
   return (
     <View
@@ -16,11 +16,8 @@ const DetailPlaceDescription = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -32,7 +29,7 @@ const DetailPlaceDescription = () => {
             fontSize: 20,
           }}
         >
-          Let's give your place a name
+          Now, let's describe your place
         </Text>
         <TextInput
           onChangeText={setText}
@@ -54,6 +51,9 @@ const DetailPlaceDescription = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/describeplace");
+          }}
           style={{
             backgroundColor: text.length > 0 ? "#0099ff" : "rgba(0,0,0,0.7)",
             width: 100,
@@ -70,4 +70,4 @@ const DetailPlaceDescription = () => {
   );
 };
 
-export default DetailPlaceDescription;
+export default DetailPlaceDescriptionScreen;

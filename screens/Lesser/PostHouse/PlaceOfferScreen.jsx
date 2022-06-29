@@ -47,7 +47,7 @@ const List = ({ question, arr }) => {
   );
 };
 
-const PlaceOfferScreen = () => {
+const PlaceOfferScreen = ({ navigation }) => {
   const amenities = [
     {
       name: "pool",
@@ -152,11 +152,8 @@ const PlaceOfferScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -168,7 +165,7 @@ const PlaceOfferScreen = () => {
             fontSize: 20,
           }}
         >
-          Let us know what your place has to offer
+          Let us know what your place has to offer!
         </Text>
         <List
           question={"Do you have any standout amenities?"}
@@ -188,6 +185,9 @@ const PlaceOfferScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/propertytype");
+          }}
           style={{
             backgroundColor: "#0099ff",
             width: 100,

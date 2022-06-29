@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { TextInput } from "react-native-paper";
-const PlaceNameScreen = () => {
+const PlaceNameScreen = ({ navigation }) => {
   const [text, setText] = useState("");
   return (
     <View
@@ -23,11 +23,8 @@ const PlaceNameScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -61,6 +58,9 @@ const PlaceNameScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/detailplacedescription");
+          }}
           style={{
             backgroundColor: text.length > 0 ? "#0099ff" : "rgba(0,0,0,0.7)",
             width: 100,

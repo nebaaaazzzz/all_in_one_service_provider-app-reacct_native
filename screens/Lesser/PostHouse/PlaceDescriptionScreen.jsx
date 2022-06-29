@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import PlaceDescription from "../../../components/PlaceDescription";
-const PlaceDescriptionScreen = () => {
+const PlaceDescriptionScreen = ({ navigation }) => {
   const [active, setActive] = useState("");
   const placeDescriptions = [
     {
@@ -175,6 +175,9 @@ const PlaceDescriptionScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/postjob/spacekind");
+          }}
           style={{
             backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",
             width: 100,
