@@ -6,15 +6,18 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Divider } from "react-native-paper";
 
-const JobDetailScreen = () => {
+const JobDetailScreen = ({ show, navigation }) => {
   const dimension = useWindowDimensions();
   return (
     <View>
       <ScrollView
-        style={{ marginTop: StatusBar.currentHeight, marginBottom: 60 }}
+        style={{
+          marginBottom: show ? 60 : 0,
+        }}
+        showsVerticalScrollIndicator={false}
       >
         <Text style={{ textAlign: "center", fontSize: 25 }}>
           AI ML consultant for financial start-up
@@ -369,32 +372,43 @@ const JobDetailScreen = () => {
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{
-          backgroundColor: "#fff",
-          borderTopWidth: 2,
-          height: 60,
-          alignItems: "flex-end",
-          width: "100%",
-          top: dimension.height - 60,
-          justifyContent: "center",
-          borderColor: "rgba(0,0,0,0.3)",
-          position: "absolute",
-        }}
-      >
-        <Pressable
+      {show ? (
+        <View
           style={{
-            backgroundColor: "#0099ff",
-            width: 100,
-            marginRight: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
+            position: "absolute",
+            top: dimension.height - 140,
+            alignItems: "center",
+            justifyContent: "center",
+            height: 60,
+            backgroundColor: "#fff",
+            width: "100%",
+            borderTopWidth: 1,
+            borderColor: "rgba(0,0,0,0.7)",
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Apply</Text>
-        </Pressable>
-      </View>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("employer/review", {
+                edit: true,
+              });
+            }}
+            style={{
+              width: "80%",
+              borderRadius: 20,
+              backgroundColor: true ? "blue" : "rgba(0,0,0,0.3)",
+              height: "70%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ color: true ? "#fff" : "rgba(0,0,0,0.5)" }}>
+              Edit Job
+            </Text>
+          </Pressable>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

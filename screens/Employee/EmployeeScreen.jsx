@@ -3,11 +3,19 @@ import { Searchbar } from "react-native-paper";
 import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
 import { Divider } from "react-native-paper";
-const Home = () => {
+import { createStackNavigator } from "@react-navigation/stack";
+import JobDetailScreen from "./JobDetailScreen";
+const EmployeeStackNavigator = createStackNavigator();
+const Jobs = ({ pressHandler }) => {
   const [bgColor, setBgColor] = useState(false);
   return (
     <>
       <Pressable
+        onPress={() => {
+          requestAnimationFrame(() => {
+            pressHandler("id");
+          });
+        }}
         onPressIn={() => setBgColor(true)}
         onPressOut={() => setBgColor(false)}
         style={{
@@ -51,12 +59,17 @@ const Home = () => {
   );
 };
 
-const EmployeeScreen = () => {
+const Home = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
   const [indexS, setIndex] = useState(0);
   const showModal = () => setVisible(true);
+  const onPressHandler = (id) => {
+    requestAnimationFrame(() => {
+      navigation.navigate("employee/jobdetail");
+    });
+  };
   // require('./assets/images/girl.jpg'),          // Local image
   const list = [
     "All",
@@ -73,6 +86,7 @@ const EmployeeScreen = () => {
     "LifeStyle",
     "Legal",
   ];
+
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
@@ -107,12 +121,28 @@ const EmployeeScreen = () => {
       <FlatList
         style={{ marginTop: 20 }}
         data={list}
+        showsVerticalScrollIndicator={false}
         renderItem={() => {
-          return <Home />;
+          return <Jobs pressHandler={onPressHandler} />;
         }}
       ></FlatList>
     </View>
   );
 };
-
+function EmployeeScreen() {
+  return (
+    <EmployeeStackNavigator.Navigator>
+      <EmployeeStackNavigator.Screen
+        options={{ headerShown: false }}
+        name="employee/home"
+        component={Home}
+      />
+      <EmployeeStackNavigator.Screen
+        name="employee/jobdetail"
+        options={{ title: "Job Detail" }}
+        component={JobDetailScreen}
+      />
+    </EmployeeStackNavigator.Navigator>
+  );
+}
 export default EmployeeScreen;

@@ -10,7 +10,7 @@ import {
 import { ProgressBar } from "react-native-paper";
 import { RadioButton, Divider, TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-const PaymentScreen = () => {
+const PaymentScreen = ({ navigation }) => {
   const dimension = useWindowDimensions();
   const [active, setActive] = useState(false);
   return (
@@ -55,7 +55,7 @@ const PaymentScreen = () => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 90,
+          top: dimension.height - 180,
           alignItems: "center",
           justifyContent: "center",
           height: 90,
@@ -65,6 +65,9 @@ const PaymentScreen = () => {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("employer/postjob/review");
+          }}
           style={{
             alignSelf: "flex-start",
             marginHorizontal: 10,
@@ -76,7 +79,10 @@ const PaymentScreen = () => {
           </Text>
         </Pressable>
         <Pressable
-          disabled={active}
+          // disabled={active}
+          onPress={() => {
+            navigation.navigate("employer/postjob/review");
+          }}
           style={{
             width: "80%",
             borderRadius: 20,

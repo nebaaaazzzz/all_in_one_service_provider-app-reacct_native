@@ -6,7 +6,6 @@ import {
   StatusBar,
   useWindowDimensions,
   Pressable,
-  Alert,
 } from "react-native";
 import {
   Checkbox,
@@ -16,14 +15,28 @@ import {
   TextInput,
 } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-const ReviewScreen = () => {
+import * as DocumentPicker from "expo-document-picker";
+
+const ReviewScreen = ({ route, edit }) => {
   const dimension = useWindowDimensions();
   const [active, setActive] = useState(false);
   const [expanded, setExpanded] = useState(true);
   const handlePress = () => setExpanded(!expanded);
-
   const [description, setDescription] = useState(false);
-
+  const fileSelector = async () => {
+    const docs = await DocumentPicker.getDocumentAsync({
+      multiple: true,
+      type: [
+        "application/pdf",
+        "image/*",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ],
+    });
+    {
+      /*file lastmodified mimeType name  output size type uri */
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -76,40 +89,60 @@ const ReviewScreen = () => {
             placeholder="Already have a job description?Paste it here!"
             onChangeText={(text) => setDescription(text)}
           />
+          <Pressable
+            onPress={fileSelector}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 15,
+              marginHorizontal: 20,
+              marginTop: 20,
+              paddingVertical: 5,
+              paddingHorizontal: 5,
+              borderWidth: 1,
+              alignSelf: "flex-start",
+            }}
+          >
+            <Icon size={16} name="attachment" />
+            <Text style={{ marginHorizontal: 5 }}>Attach file</Text>
+          </Pressable>
+          <Text
+            style={{
+              marginHorizontal: 20,
+              color: "rgba(0,0,0,0.6)",
+            }}
+          >
+            Max file size: 100MB
+          </Text>
         </View>
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 15,
-            paddingVertical: 10,
-            paddingHorizontal: 5,
-            borderWidth: 1,
-            alignSelf: "flex-start",
-          }}
-        >
-          <Icon name="attachment" />
-          <Text>Attach file</Text>
-        </Pressable>
-        <Text>Max file size: 100MB</Text>
-        <Divider />
-        <View>
+        <Divider style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }} />
+        <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
           <View>
-            <Text>Category</Text>
-            <View style={{ flexDirection: "row" }}>
+            <Text
+              style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
+            >
+              Category
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text>Web Design</Text>
-              <Pressable>
+              <Pressable style={{ marginHorizontal: 10 }}>
                 <Icon size={20} name="circle-edit-outline" />
               </Pressable>
             </View>
           </View>
-          <View>
-            <Text>skills</Text>
-            <View style={{ flexDirection: "row" }}>
+          <View style={{ marginVertical: 10 }}>
+            <Text
+              style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
+            >
+              skills
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={{
                   paddingHorizontal: 10,
                   paddingVertical: 5,
+                  paddingHorizontal: 10,
+                  color: "#fff",
                   borderRadius: 15,
                   backgroundColor: "blue",
                 }}
@@ -117,13 +150,17 @@ const ReviewScreen = () => {
                 Word press
               </Text>
 
-              <Pressable>
+              <Pressable style={{ marginHorizontal: 10 }}>
                 <Icon size={20} name="circle-edit-outline" />
               </Pressable>
             </View>
           </View>
           <View>
-            <Text>Budget</Text>
+            <Text
+              style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
+            >
+              Budget
+            </Text>
             <View style={{ flexDirection: "row" }}>
               <Text>$10.00 - $20.00 /hr</Text>
               <Pressable>
@@ -131,10 +168,9 @@ const ReviewScreen = () => {
               </Pressable>
             </View>
           </View>
-          <Divider />
         </View>
-        <Divider />
-        <List.Section title="Accordions">
+        <Divider style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }} />
+        <List.Section>
           <ScreeningQuestion expanded={expanded} handlePress={handlePress} />
           <AdvancedPred expanded={expanded} handlePress={handlePress} />
         </List.Section>
@@ -142,10 +178,10 @@ const ReviewScreen = () => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 90,
+          top: dimension.height - 140,
           alignItems: "center",
           justifyContent: "center",
-          height: 90,
+          height: 60,
           backgroundColor: "#fff",
           width: "100%",
           borderTopWidth: 1,
@@ -153,28 +189,20 @@ const ReviewScreen = () => {
         }}
       >
         <Pressable
-          style={{
-            alignSelf: "flex-start",
-            marginHorizontal: 10,
-            marginVertical: 10,
-          }}
-        >
-          <Text style={{ color: "blue" }}>
-            Not ready to set an hourly rate?
-          </Text>
-        </Pressable>
-        <Pressable
           disabled={active}
           style={{
             width: "80%",
             borderRadius: 20,
-            backgroundColor: "blue",
-            height: "50%",
+            backgroundColor:
+              description.length > 50 ? "blue" : "rgba(0,0,0,0.6)",
+            height: "70%",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff" }}>Next: Skills</Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>
+            {route?.params?.edit ? "Save" : "Post Job"}
+          </Text>
         </Pressable>
       </View>
     </View>
@@ -188,10 +216,12 @@ function ScreeningQuestion({ expanded, handlePress }) {
     "What frameworks have you worked with?",
     "Describe your approach to testing and improving QA",
   ];
-
+  const [questions, setQuestions] = useState([]);
   const [checked, setChecked] = useState(Array(suggested.length).fill(false));
   const [isTextInput, setIsTextInput] = useState(false);
   const [question, setQuestion] = useState("");
+  console.log(question);
+  console.log(questions);
   return (
     <List.Accordion
       left={(props) => (
@@ -246,19 +276,49 @@ function ScreeningQuestion({ expanded, handlePress }) {
           </View>
           <Text style={{ marginLeft: "70%" }}>{question.length}/255</Text>
           <Pressable
+            onPress={() => {
+              setIsTextInput(false);
+              setQuestion("");
+              setQuestions([...questions, question]);
+            }}
             style={{
               borderRadius: 20,
               borderWidth: 1,
               width: "80%",
               paddingVertical: 5,
               alignItems: "center",
-              color: question.length > 0 ? "#fff" : "",
+              color: question.length > 2 ? "#fff" : "",
               justifyContent: "center",
-              backgroundColor: question.length > 0 ? "blue" : "",
+              backgroundColor: question.length > 2 ? "blue" : "",
             }}
           >
             <Text>Save question</Text>
           </Pressable>
+        </View>
+      ) : (
+        <></>
+      )}
+      {questions.length > 0 ? (
+        <View>
+          <Text
+            style={{ fontWeight: "bold", fontSize: 20, marginVertical: 10 }}
+          >
+            Your questions
+          </Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            {questions.map((item) => {
+              return (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
+                    {item}
+                  </Text>
+                  <Pressable>
+                    <Icon size={20} name="circle-edit-outline" />
+                  </Pressable>
+                </View>
+              );
+            })}
+          </View>
         </View>
       ) : (
         <></>

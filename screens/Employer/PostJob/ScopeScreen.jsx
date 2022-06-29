@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import { ProgressBar } from "react-native-paper";
 import { RadioButton, Divider } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-const ScopeScreen = () => {
+const ScopeScreen = ({ navigation }) => {
   const dimension = useWindowDimensions();
   const [active, setActive] = useState(false);
   const [checked, setChecked] = React.useState("");
@@ -139,7 +139,7 @@ const ScopeScreen = () => {
         <View
           style={{
             position: "absolute",
-            top: dimension.height - 80,
+            top: dimension.height - 160,
             alignItems: "center",
             justifyContent: "center",
             height: 60,
@@ -149,7 +149,10 @@ const ScopeScreen = () => {
           }}
         >
           <Pressable
-            disabled={active}
+            // disabled={active}
+            onPress={() => {
+              navigation.navigate("employer/postjob/payment");
+            }}
             style={{
               width: "80%",
               borderRadius: 20,

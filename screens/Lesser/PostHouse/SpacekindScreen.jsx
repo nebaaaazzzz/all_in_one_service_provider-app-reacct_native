@@ -1,13 +1,6 @@
-import {
-  ScrollView,
-  View,
-  Text,
-  Pressable,
-  StatusBar,
-  Image,
-} from "react-native";
+import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState } from "react";
-import PlaceDescription from "./../components/PlaceDescription";
+import PlaceDescription from "./../../../components/PlaceDescription";
 const SpacekindScreen = () => {
   const [bgColor] = useState(false);
   const placeKinds = ["An entire place", "A private room", "A shared room"];

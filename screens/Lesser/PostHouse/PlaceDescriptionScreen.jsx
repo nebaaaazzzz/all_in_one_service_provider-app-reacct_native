@@ -7,8 +7,9 @@ import {
   Image,
 } from "react-native";
 import React, { useState } from "react";
-import PlaceDescription from "../components/PlaceDescription";
+import PlaceDescription from "../../../components/PlaceDescription";
 const PlaceDescriptionScreen = () => {
+  const [active, setActive] = useState("");
   const placeDescriptions = [
     {
       title: "Home",
@@ -113,6 +114,12 @@ const PlaceDescriptionScreen = () => {
         "A furnished rental propery that includes a kitchen and bathroom and may offer some guest services,like a reception desk.",
     },
   ];
+  const pressHandler = (id) => {
+    if (id == active) {
+      return setActive("");
+    }
+    setActive(id);
+  };
   const [bgColor, setBgColor] = useState(false);
   return (
     <View
@@ -127,11 +134,11 @@ const PlaceDescriptionScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          marginTop: "40%",
+          // marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
+          // borderTopLeftRadius: 15,
+          // borderTopRightRadius: 15,
           paddingHorizontal: 10,
         }}
       >
@@ -145,9 +152,12 @@ const PlaceDescriptionScreen = () => {
         >
           What of these best describes your place ?
         </Text>
-        {placeDescriptions.map((place) => {
+        {placeDescriptions.map((place, index) => {
           return (
             <PlaceDescription
+              active={active}
+              pressHandler={pressHandler}
+              id={index}
               title={place.title}
               description={place.description}
             />
@@ -166,7 +176,7 @@ const PlaceDescriptionScreen = () => {
       >
         <Pressable
           style={{
-            backgroundColor: bgColor ? "#0099ff" : "rgba(0,0,0,0.2)",
+            backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

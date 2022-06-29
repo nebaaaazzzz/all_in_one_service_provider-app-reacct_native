@@ -9,6 +9,7 @@ const SPressable = styled(Pressable).attrs({
     borderless: false,
   },
 })`
+  overflow: hidden;
   border-radius: 10px;
   border: 1px solid #3498db;
   width: 40%;
@@ -20,7 +21,7 @@ const SText = styled(Text)`
   font-size: 20px;
   margin-top: 10px;
 `;
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   return (
     <View
       style={{
@@ -40,24 +41,40 @@ const HomeScreen = () => {
             justifyContent: "center",
           }}
         >
-          <SPressable>
+          <SPressable
+            onPress={() => {
+              requestAnimationFrame(() => navigation.navigate("employee"));
+            }}
+          >
             <Icon name="phone" style={{ textAlign: "center" }} size={35} />
             <SText>Employee</SText>
           </SPressable>
-          <SPressable>
+          <SPressable
+            onPress={() => {
+              requestAnimationFrame(() => navigation.navigate("employer"));
+            }}
+          >
             <Icon name="phone" style={{ textAlign: "center" }} size={40} />
 
             <SText>Employer</SText>
           </SPressable>
-          <SPressable>
+          <SPressable
+            onPress={() =>
+              requestAnimationFrame(() => navigation.navigate("lessee"))
+            }
+          >
             <Icon name="phone" style={{ textAlign: "center" }} size={40} />
 
             <SText>Lessee</SText>
           </SPressable>
-          <SPressable>
+          <SPressable
+            onPress={() => {
+              requestAnimationFrame(() => navigation.navigate("lesser"));
+            }}
+          >
             <Icon name="phone" style={{ textAlign: "center" }} size={40} />
 
-            <SText>Lessor</SText>
+            <SText>Lesser</SText>
           </SPressable>
         </View>
       </View>

@@ -8,7 +8,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { TextInput, ProgressBar, MD3Colors } from "react-native-paper";
 import Icon from "@expo/vector-icons/Entypo";
-const HeadlineScreen = () => {
+const HeadlineScreen = ({ navigation }) => {
   const [headline, setHeadline] = useState("");
   const dimension = useWindowDimensions();
   const [active, setActive] = useState(false);
@@ -68,7 +68,10 @@ const HeadlineScreen = () => {
         }}
       >
         <Pressable
-          disabled={active}
+          onPress={() => {
+            console.log("hello world");
+            navigation.navigate("employer/postjob/category");
+          }}
           style={{
             width: "80%",
             borderRadius: 20,
