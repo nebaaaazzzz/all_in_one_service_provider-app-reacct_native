@@ -5,16 +5,18 @@ import {
   useWindowDimensions,
   StatusBar,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ProgressBar } from "react-native-paper";
 import { RadioButton, Divider } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { PostJobContext } from "./PostJobScreen";
 const ScopeScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
-  const [active, setActive] = useState(false);
   const [checked, setChecked] = React.useState("");
   const [select, setSelect] = React.useState("");
   const [experience, setExperience] = React.useState("");
+
   const a = {
     0: ["More than 6 months", "3 to 6 months", "1 to 3 months"],
     1: ["More than 6 months", "3 to 6 months", "1 to 3 months"],
@@ -139,7 +141,7 @@ const ScopeScreen = ({ navigation }) => {
         <View
           style={{
             position: "absolute",
-            top: dimension.height - 160,
+            top: dimension.height - 80,
             alignItems: "center",
             justifyContent: "center",
             height: 60,
@@ -149,9 +151,17 @@ const ScopeScreen = ({ navigation }) => {
           }}
         >
           <Pressable
-            // disabled={active}
+            disabled={!select}
             onPress={() => {
-              navigation.navigate("employer/postjob/payment");
+              dispatch({
+                type: "add",
+                payload: {
+                  size: b[checked],
+                  level: a[checked][select],
+                  experience: exp[experience],
+                },
+              });
+              navigation.navigate("employer/postjob/location");
             }}
             style={{
               width: "80%",
@@ -195,7 +205,6 @@ const ScopeScreen = ({ navigation }) => {
           <Text style={{ fontSize: 18 }}>How long will your work take?</Text>
           <View style={{ marginVertical: 10 }}>
             {a[checked].map((item, index) => {
-              console.log(select, checked);
               return (
                 <Pressable
                   style={{ flexDirection: "row", alignItems: "center" }}
@@ -226,10 +235,12 @@ const ScopeScreen = ({ navigation }) => {
       </Text>
 
       <View style={{ marginTop: "20%" }}>
+        <Text style={{ fontSize: 18, marginLeft: "5%" }}>Project size?</Text>
+
         {b.map((item) => {
           return (
             <Pressable
-              style={{ flexDirection: "row" }}
+              style={{ flexDirection: "row", marginVertical: "2%" }}
               onPress={() => setChecked(item.level)}
             >
               <RadioButton

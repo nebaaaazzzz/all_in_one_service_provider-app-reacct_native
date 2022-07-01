@@ -132,7 +132,11 @@ function Home({ navigation }) {
       </View>
 
       <Tab.Navigator>
-        <Tab.Screen name="employer/myposts" component={MyPosts} />
+        <Tab.Screen
+          name="employer/myposts"
+          options={{ title: "My Posts" }}
+          component={MyPosts}
+        />
         <Tab.Screen name="employer/ettings" component={SettingsScreen} />
       </Tab.Navigator>
     </View>

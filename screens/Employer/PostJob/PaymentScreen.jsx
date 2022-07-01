@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -7,12 +7,20 @@ import {
   useWindowDimensions,
   Pressable,
 } from "react-native";
+import * as yup from "yup";
+
+let schema = yup.object().shape({
+  fromBudget: yup.number().required().positive().integer(),
+  toBudget: yup.number().required().positive().integer(),
+});
 import { ProgressBar } from "react-native-paper";
-import { RadioButton, Divider, TextInput } from "react-native-paper";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { TextInput } from "react-native-paper";
+import { PostJobContext } from "./PostJobScreen";
 const PaymentScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
-  const [active, setActive] = useState(false);
+  const [fromBudget, setFromBudget] = useState("");
+  const [toBudget, setToBudget] = useState("");
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -22,13 +30,21 @@ const PaymentScreen = ({ navigation }) => {
         }}
       >
         <ProgressBar progress={1} />
-        <Text style={{ fontSize: 22, textAlign: "center", fontWeight: "bold" }}>
+        <Text
+          style={{
+            fontSize: 22,
+            marginTop: "10%",
+            textAlign: "center",
+            fontWeight: "bold",
+          }}
+        >
           Tell us about your buget
         </Text>
         <View
           style={{
             flexDirection: "row",
             paddingHorizontal: 20,
+            marginTop: "10%",
             alignSelf: "center",
           }}
         >
@@ -38,14 +54,22 @@ const PaymentScreen = ({ navigation }) => {
             <View
               style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
             >
-              <TextInput style={{ width: "60%" }} />
+              <TextInput
+                keyboardType="number-pad"
+                onChangeText={setFromBudget}
+                style={{ width: "60%" }}
+              />
               <Text>/hour</Text>
             </View>
           </View>
           <View style={{ flex: 1 }}>
             <Text>To</Text>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TextInput style={{ width: "60%" }} />
+              <TextInput
+                keyboardType="number-pad"
+                onChangeText={setToBudget}
+                style={{ width: "60%" }}
+              />
               <Text>/hour</Text>
             </View>
           </View>
@@ -55,7 +79,7 @@ const PaymentScreen = ({ navigation }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 180,
+          top: dimension.height - 100,
           alignItems: "center",
           justifyContent: "center",
           height: 90,
@@ -79,20 +103,40 @@ const PaymentScreen = ({ navigation }) => {
           </Text>
         </Pressable>
         <Pressable
-          // disabled={active}
+          disabled={!(fromBudget && toBudget)}
           onPress={() => {
-            navigation.navigate("employer/postjob/review");
+            if (
+              parseFloat(fromBudget) &&
+              parseFloat(toBudget) &&
+              parseFloat("2") < parseFloat("565")
+            ) {
+              dispatch({
+                type: "add",
+                payload: {
+                  budget: {
+                    from: fromBudget,
+                    to: toBudget,
+                  },
+                },
+              });
+              navigation.navigate("employer/postjob/review");
+            }
           }}
           style={{
             width: "80%",
             borderRadius: 20,
-            backgroundColor: "blue",
+            backgroundColor:
+              parseFloat(fromBudget) &&
+              parseFloat(toBudget) &&
+              parseFloat(fromBudget) < parseFloat(toBudget)
+                ? "#0244d0"
+                : "rgba(0,0,0,0.6)",
             height: "50%",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff" }}>Next: Skills</Text>
+          <Text style={{ color: "#fff", fontSize: 18 }}>Next</Text>
         </Pressable>
       </View>
     </View>

@@ -4,17 +4,14 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { createStackNavigator } from "@react-navigation/stack";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SliderBox } from "react-native-image-slider-box";
-import PostJobScreen from "../Employer/PostJob/PostJobScreen";
 import PostHouseScreen from "./PostHouse/PostHouseScreen";
 
 const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
 
 const MyPosts = (navigation) => {
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
   // require('./assets/images/girl.jpg'),          // Local image
-  const list = Array(10);
+  const list = Array(5);
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <FlatList

@@ -6,9 +6,10 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PlaceDescription from "../../../components/PlaceDescription";
 const PlaceDescriptionScreen = ({ navigation }) => {
+  const { dispatch } = useContext(Context);
   const [active, setActive] = useState("");
   const placeDescriptions = [
     {
