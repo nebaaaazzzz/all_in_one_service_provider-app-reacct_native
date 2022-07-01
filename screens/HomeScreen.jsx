@@ -1,7 +1,6 @@
 import { View, Text, StatusBar, Pressable, Image } from "react-native";
 import React from "react";
 import styled from "styled-components/native";
-import Icon from "@expo/vector-icons/FontAwesome5";
 
 const SPressable = styled(Pressable).attrs({
   android_ripple: {

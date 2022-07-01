@@ -20,6 +20,8 @@ const LocationScreen = ({ navigation }) => {
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
   const [searchResult, setSearchResut] = useState([]);
+  const [placeName, setPlaceName] = useState("");
+  const [center, setCenter] = useState();
   const inputRef = useRef();
   const pressHandler = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -28,36 +30,52 @@ const LocationScreen = ({ navigation }) => {
       return;
     }
     try {
-      let location = await Location.getCurrentPositionAsync({});
+      let location = await Location.getLastKnownPositionAsync({});
+      console.log("get location");
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
       )
         .then(async (res) => {
           const r = await res.json();
-          navigation.navigate("manualadress", {
-            context: r?.features[0]?.context,
-          });
+          setPlaceName(r?.features[0]?.place_name);
+          setCenter(r?.features[0]?.center);
+          if (center) {
+            navigation.navigate("lesser/posthouse/pinspot", {
+              center,
+              placeName,
+            });
+          }
         })
         .catch((err) => {
           throw err;
         });
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   };
+  const searchListPressHandler = (index) => {
+    navigation.navigate("lesser/posthouse/pinspot", {
+      center: searchResult[index].center,
+      placeName: searchResult[index].place_name,
+    });
+  };
   useEffect(() => {
-    fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
-    )
-      .then(async (res) => {
-        const s = await res.json();
-        if (s.features) {
-          setSearchResut(s.features);
-        }
-      })
-      .catch((err) => {
-        throw err;
-      });
+    const delayDebounceFn = setTimeout(() => {
+      fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+      )
+        .then(async (res) => {
+          const s = await res.json();
+          if (s.features) {
+            setSearchResut(s.features);
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [locationQuery]);
   return (
     <TouchableWithoutFeedback
@@ -67,7 +85,6 @@ const LocationScreen = ({ navigation }) => {
       }}
     >
       <View
-        horizontal={false}
         style={{
           flex: 1,
           // backgroundColor: "#0099ff",
@@ -77,10 +94,8 @@ const LocationScreen = ({ navigation }) => {
       >
         <View
           style={{
-            marginTop: isFull ? 0 : 0,
             backgroundColor: "#fff",
             flex: 1,
-            overflow: "hidden",
           }}
         >
           {isFull ? (
@@ -156,13 +171,21 @@ const LocationScreen = ({ navigation }) => {
             }}
           />
           {isFull && (search || locationQuery) ? (
-            <ScrollView style={{ marginVertical: 10 }}>
-              {searchResult.map((place) => {
+            <ScrollView
+              style={{ marginVertical: 10, paddingHorizontal: 20 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {searchResult.map((place, index) => {
                 return (
                   <Pressable
-                    style={{ borderBottomWidth: 1, marginVertical: 10 }}
+                    onPress={() => {
+                      searchListPressHandler(index);
+                    }}
+                    style={{ borderBottomWidth: 0.2, marginVertical: 5 }}
                   >
-                    <Text>{place.place_name}</Text>
+                    <Text style={{ marginVertical: "2%" }}>
+                      {place.place_name}
+                    </Text>
                   </Pressable>
                 );
               })}
@@ -187,7 +210,8 @@ const LocationScreen = ({ navigation }) => {
                   Use my current location
                 </Text>
               </Pressable>
-              <Pressable
+              {/* add this feature to add address manually */}
+              {/* <Pressable
                 style={{
                   marginVertical: 10,
 
@@ -203,37 +227,11 @@ const LocationScreen = ({ navigation }) => {
                 >
                   Enter address manually
                 </Text>
-              </Pressable>
+              </Pressable> */}
             </>
           ) : (
             <></>
           )}
-        </View>
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderTopWidth: 2,
-            alignItems: "flex-end",
-            height: 60,
-            justifyContent: "center",
-            borderColor: "rgba(0,0,0,0.3)",
-          }}
-        >
-          <Pressable
-            onPress={() => {
-              navigation.navigate("lesser/postjob/pinspot");
-            }}
-            style={{
-              backgroundColor: bgColor ? "#0099ff" : "rgba(0,0,0,0.2)",
-              width: 100,
-              right: 20,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-          </Pressable>
         </View>
       </View>
     </TouchableWithoutFeedback>

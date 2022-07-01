@@ -1,15 +1,13 @@
-import {
-  ScrollView,
-  View,
-  Text,
-  Pressable,
-  StatusBar,
-  Image,
-} from "react-native";
-import React from "react";
+import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
+import React, { useState } from "react";
 import IncrementDecrement from "../../../components/IncrementDecrement";
 const GuestSizeScreen = ({ navigation }) => {
   const size = ["Guests", "Beds", "Bedrooms", "Bathrooms"];
+  const [guests, setGuests] = useState(0);
+  const [beds, setBeds] = useState(0);
+  const [bedrooms, setBedrooms] = useState(0);
+  const [bathrooms, setBathrooms] = useState(0);
+  const setters = [setGuests, setBeds, setBedrooms, setBathrooms];
   return (
     <View
       horizontal={false}
@@ -38,7 +36,7 @@ const GuestSizeScreen = ({ navigation }) => {
         >
           How many guests would you like to welcome
         </Text>
-        {size.map((item) => {
+        {size.map((item, index) => {
           return (
             <View
               style={{
@@ -49,10 +47,11 @@ const GuestSizeScreen = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text>{item}</Text>
+              <Text style={{ fontSize: 17 }}>{item}</Text>
               <IncrementDecrement
-                value={1}
-                minValue={1}
+                value={0}
+                minValue={0}
+                setState={setters[index]}
                 style={{
                   borderWidth: 0,
                 }}

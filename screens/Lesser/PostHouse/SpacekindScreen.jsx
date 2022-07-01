@@ -1,7 +1,9 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PlaceDescription from "./../../../components/PlaceDescription";
+import { PostHouseContext } from "./PostHouseScreen";
 const SpacekindScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostHouseContext);
   const [active, setActive] = useState("");
   const placeKinds = ["An entire place", "A private room", "A shared room"];
   const pressHandler = (id) => {
@@ -57,8 +59,15 @@ const SpacekindScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={!active}
           onPress={() => {
-            navigation.navigate("lesser/postjob/location");
+            dispatch({
+              type: "add",
+              payload: {
+                placeKind: placeKinds[+active - 1],
+              },
+            });
+            navigation.navigate("lesser/posthouse/location");
           }}
           style={{
             backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",

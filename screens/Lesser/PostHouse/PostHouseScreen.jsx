@@ -1,6 +1,6 @@
 import SpacekindScreen from "./SpacekindScreen";
 
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import PlaceDescriptionScreen from "./PlaceDescriptionScreen";
 import LocationScreen from "./LocationScreen";
@@ -16,9 +16,8 @@ import PropertyTypeScreen from "./PropertyTypeScreen";
 import LastCheckoutScreen from "./LastCheckoutScreen";
 import ReviewListingScreen from "./ReviewListingScreen";
 const PostHouseStackNavigator = createStackNavigator();
-export const PostJobContext = React.createContext();
+export const PostHouseContext = React.createContext();
 const reducer = (state = {}, action) => {
-  // console.log(state);
   switch (action.type) {
     case "add":
       return Object.assign(state, action.payload);
@@ -28,67 +27,72 @@ const reducer = (state = {}, action) => {
 };
 const PostHouseScreen = () => {
   const [housePost, dispatch] = useReducer(reducer);
+  useEffect(() => {
+    dispatch({
+      type: "add",
+    });
+  });
   return (
-    <PostJobContext.Provider value={{ housePost, dispatch }}>
+    <PostHouseContext.Provider value={{ housePost, dispatch }}>
       <PostHouseStackNavigator.Navigator screenOptions={{ headerShown: false }}>
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/placedescription"
+          name="lesser/posthouse/placedescription"
           component={PlaceDescriptionScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/spacekind"
+          name="lesser/posthouse/spacekind"
           component={SpacekindScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/location"
+          name="lesser/posthouse/location"
           component={LocationScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/pinspot"
+          name="lesser/posthouse/pinspot"
           component={PinSpotScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/guestsize"
+          name="lesser/posthouse/guestsize"
           component={GuestSizeScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/placeoffer"
+          name="lesser/posthouse/placeoffer"
           component={PlaceOfferScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/propertytype"
+          name="lesser/posthouse/propertytype"
           component={PropertyTypeScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/houseimages"
+          name="lesser/posthouse/houseimages"
           component={HouseImagesScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/placename"
+          name="lesser/posthouse/placename"
           component={PlaceNameScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/detailplacedescription"
+          name="lesser/posthouse/detailplacedescription"
           component={DetailPlaceDescriptionScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/describeplace"
+          name="lesser/posthouse/describeplace"
           component={DescribePlaceScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/price"
+          name="lesser/posthouse/price"
           component={PriceScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/lastcheckout"
+          name="lesser/posthouse/lastcheckout"
           component={LastCheckoutScreen}
         />
         <PostHouseStackNavigator.Screen
-          name="lesser/postjob/reviewlisting"
+          name="lesser/posthouse/reviewlisting"
           component={ReviewListingScreen}
         />
       </PostHouseStackNavigator.Navigator>
-    </PostJobContext.Provider>
+    </PostHouseContext.Provider>
   );
 };
 

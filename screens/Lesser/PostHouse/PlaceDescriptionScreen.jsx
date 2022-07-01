@@ -1,16 +1,11 @@
-import {
-  ScrollView,
-  View,
-  Text,
-  Pressable,
-  StatusBar,
-  Image,
-} from "react-native";
+import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import PlaceDescription from "../../../components/PlaceDescription";
+import { PostHouseContext } from "./PostHouseScreen";
 const PlaceDescriptionScreen = ({ navigation }) => {
-  const { dispatch } = useContext(Context);
+  const { dispatch, housePost } = useContext(PostHouseContext);
   const [active, setActive] = useState("");
+  console.log(housePost);
   const placeDescriptions = [
     {
       title: "Home",
@@ -121,7 +116,6 @@ const PlaceDescriptionScreen = ({ navigation }) => {
     }
     setActive(id);
   };
-  const [bgColor, setBgColor] = useState(false);
   return (
     <View
       horizontal={false}
@@ -176,8 +170,15 @@ const PlaceDescriptionScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={!active}
           onPress={() => {
-            navigation.navigate("lesser/postjob/spacekind");
+            dispatch({
+              type: "add",
+              payload: {
+                placedescription: placeDescriptions[+active - 1],
+              },
+            });
+            navigation.navigate("lesser/posthouse/spacekind");
           }}
           style={{
             backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",

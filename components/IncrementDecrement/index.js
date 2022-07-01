@@ -58,7 +58,7 @@ class IncrementDecrement extends React.Component {
   checkMinMaxValue = () => {
     let currentValue = this.state.value;
     if (!this.props.decrementDisable) {
-      if (this.props.minValue != 0 && this.props.minValue >= currentValue) {
+      if (this.props.minValue >= currentValue) {
         this.setState({ decrementDisable: true });
       } else {
         this.setState({ decrementDisable: false });
@@ -66,7 +66,7 @@ class IncrementDecrement extends React.Component {
     }
 
     if (!this.props.incrementDisable) {
-      if (this.props.maxValue !== 0 && this.props.maxValue <= currentValue) {
+      if (this.props.maxValue <= currentValue) {
         this.setState({ incrementDisable: true });
       } else {
         this.setState({ incrementDisable: false });
@@ -86,6 +86,7 @@ class IncrementDecrement extends React.Component {
         }
       );
     }
+    this?.props?.setState(this.state.value);
   }
 
   decrementTapHandler() {
@@ -99,6 +100,7 @@ class IncrementDecrement extends React.Component {
         }
       );
     }
+    this?.props?.setState(this.state.value);
   }
 
   render() {
@@ -203,6 +205,7 @@ IncrementDecrement.propTypes = {
   decrementStyle: ViewPropTypes.style,
   incrementTapHandler: PropTypes.func,
   decrementTapHandler: PropTypes.func,
+  setState: PropTypes.func,
   style: ViewPropTypes.style,
   minValue: PropTypes.number,
   maxValue: PropTypes.number,

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,12 +19,18 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as DocumentPicker from "expo-document-picker";
 import { PostJobContext } from "./PostJobScreen";
 const ReviewScreen = ({ route, navigation }) => {
-  const { dispatch, jobPost } = useContext(PostJobContext);
-  console.log(jobPost);
+  let dispatch, jobPost;
+  const postJobContext = useContext(PostJobContext);
+  useEffect(() => {
+    if (PostJobContext) {
+      console.log(PostJobContext);
+      // ({ dispatch, jobPost } = postJobContext);
+    }
+  }, []);
   const dimension = useWindowDimensions();
   const [active, setActive] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [headline, setHeadline] = useState(jobPost.title || "");
+  const [headline, setHeadline] = useState(jobPost?.title || "");
   const handlePress = () => setExpanded(!expanded);
   const [file, setFile] = useState("");
   const [description, setDescription] = useState(false);
@@ -47,7 +53,6 @@ const ReviewScreen = ({ route, navigation }) => {
       /*file lastmodified mimeType name  output size type uri */
     }
   };
-  console.log(jobPost);
   return (
     <View style={{ flex: 1 }}>
       <Pressable
@@ -151,7 +156,7 @@ const ReviewScreen = ({ route, navigation }) => {
                 Category
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text>{jobPost.category}</Text>
+                <Text>{jobPost?.category && ""}</Text>
                 <Pressable
                   style={{ marginHorizontal: 10 }}
                   onPress={() => {
@@ -172,7 +177,7 @@ const ReviewScreen = ({ route, navigation }) => {
                 skills
               </Text>
               <View style={{}}>
-                {jobPost.skills.map((item, index) => {
+                {jobPost?.skills?.map((item, index) => {
                   return (
                     <View style={{ flexDirection: "row" }}>
                       <Text
@@ -202,7 +207,7 @@ const ReviewScreen = ({ route, navigation }) => {
               </View>
             </View>
             <View>
-              {jobPost.budget ? (
+              {jobPost?.budget ? (
                 <>
                   <Text
                     style={{
