@@ -6,9 +6,11 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { PostHouseContext } from "./PostHouseScreen";
 const PropertyTypeScreen = ({ navigation }) => {
   const [active, setActive] = useState("");
+  const { dispatch } = useContext(PostHouseContext);
   const pressHandler = (id) => {
     if (Number(id) === Number(active)) {
       setActive("");
@@ -87,7 +89,6 @@ const PropertyTypeScreen = ({ navigation }) => {
                 marginVertical: 10,
                 borderColor:
                   Number(active) === index + 1 ? "#0244d0" : "rgba(0,0,0,0.4)",
-                elevation: 1,
                 flexDirection: "row",
                 alignItems: "center",
                 borderRadius: 10,
@@ -107,7 +108,7 @@ const PropertyTypeScreen = ({ navigation }) => {
                   width: 50,
                   borderRadius: 5,
                   height: 50,
-                  backgroundColor: "red",
+                  backgroundColor: "rgba(0,0,0,0.3)",
                 }}
               ></Image>
             </Pressable>
@@ -125,11 +126,18 @@ const PropertyTypeScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={!active}
           onPress={() => {
-            navigation.navigate("lesser/postjob/houseimages");
+            dispatch({
+              type: "add",
+              payload: {
+                propertyType: list[active - 1]?.title,
+              },
+            });
+            navigation.navigate("lesser/posthouse/houseimages");
           }}
           style={{
-            backgroundColor: active ? "#0099ff" : "rgba(0,0,0,0.2)",
+            backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

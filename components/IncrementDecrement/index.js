@@ -86,7 +86,7 @@ class IncrementDecrement extends React.Component {
         }
       );
     }
-    this?.props?.setState(this.state.value);
+    this?.props?.setState(this.state.value + 1);
   }
 
   decrementTapHandler() {
@@ -100,7 +100,7 @@ class IncrementDecrement extends React.Component {
         }
       );
     }
-    this?.props?.setState(this.state.value);
+    this?.props?.setState(this.state.value - 1);
   }
 
   render() {

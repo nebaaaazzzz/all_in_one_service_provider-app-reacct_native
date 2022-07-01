@@ -2,6 +2,7 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import PlaceDescription from "./../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
+
 const SpacekindScreen = ({ navigation }) => {
   const { dispatch } = useContext(PostHouseContext);
   const [active, setActive] = useState("");

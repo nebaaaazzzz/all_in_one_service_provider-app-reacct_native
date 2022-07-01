@@ -5,17 +5,16 @@ import {
   Pressable,
   Image,
   StatusBar,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
 } from "react-native";
-import React, { useState, createRef, useEffect } from "react";
-import { Button, Menu, Divider, Provider } from "react-native-paper";
+import React, { useState, useEffect, useContext } from "react";
+import { Menu } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
+import { PostHouseContext } from "./PostHouseScreen";
 
 const HouseImagesScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostHouseContext);
   const [imgUri, setImgUri] = useState([]);
   const [visible, setVisible] = useState([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState(0);
@@ -63,9 +62,10 @@ const HouseImagesScreen = ({ navigation }) => {
             fontSize: 20,
           }}
         >
-          Let us know what your place has to offer
+          Let us know what place like
         </Text>
         <ScrollView
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: "center",
             justifyContent: "space-between",
@@ -146,17 +146,22 @@ const HouseImagesScreen = ({ navigation }) => {
                       </Pressable>
                     }
                   >
-                    {imgUri.length - 1 !== index ? (
-                      <Menu.Item onPress={() => {}} title="Move Forward" />
-                    ) : (
-                      <></>
-                    )}
+                    {/* add moving image forward and backward after major feature completion */}
+                    {/* {imgUri.length - 1 !== index ? (
+                      <Menu.Item onPress={() => {
 
-                    {index !== 0 ? (
-                      <Menu.Item onPress={() => {}} title="Move Backward" />
+                      }} title="Move Forward" />
                     ) : (
                       <></>
-                    )}
+                    )} */}
+                    {/* 
+                    {index !== 0 ? (
+                      <Menu.Item onPress={() => {
+
+                      }} title="Move Backward" />
+                    ) : (
+                      <></>
+                    )} */}
                     {coverPhotoIndex !== index ? (
                       <Menu.Item
                         onPress={() => {
@@ -172,10 +177,13 @@ const HouseImagesScreen = ({ navigation }) => {
                       titleStyle={{ color: "red" }}
                       onPress={() => {
                         setImgUri(
-                          imgUri.filter((i) => {
-                            return i != index;
+                          imgUri.filter((i, j) => {
+                            return j != index;
                           })
                         );
+                        if (index == coverPhotoIndex) {
+                          setCoverPhotoIndex(0);
+                        }
                       }}
                       title="Delete"
                     />
@@ -236,11 +244,18 @@ const HouseImagesScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={imgUri.length < 5}
           onPress={() => {
-            navigation.navigate("lesser/postjob/placename");
+            dispatch({
+              type: "add",
+              payload: {
+                houseimages: imgUri,
+              },
+            });
+            navigation.navigate("lesser/posthouse/placename");
           }}
           style={{
-            backgroundColor: imgUri.length < 5 ? "rgba(0,0,0,0.7)" : "#0099ff",
+            backgroundColor: imgUri.length < 5 ? "rgba(0,0,0,0.7)" : "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

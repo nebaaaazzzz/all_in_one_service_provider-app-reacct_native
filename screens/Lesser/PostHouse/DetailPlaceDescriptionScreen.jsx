@@ -1,7 +1,9 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
+import { PostHouseContext } from "./PostHouseScreen";
 const DetailPlaceDescriptionScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostHouseContext);
   const [text, setText] = useState("");
   return (
     <View
@@ -51,11 +53,18 @@ const DetailPlaceDescriptionScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={text.length < 50}
           onPress={() => {
-            navigation.navigate("lesser/postjob/describeplace");
+            dispatch({
+              type: "add",
+              payload: {
+                detaildescription: text,
+              },
+            });
+            navigation.navigate("lesser/posthouse/describeplace");
           }}
           style={{
-            backgroundColor: text.length > 0 ? "#0099ff" : "rgba(0,0,0,0.7)",
+            backgroundColor: text.length > 50 ? "#0244d0" : "rgba(0,0,0,0.7)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

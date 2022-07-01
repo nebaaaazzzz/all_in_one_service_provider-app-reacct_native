@@ -6,9 +6,11 @@ import {
   StatusBar,
   useWindowDimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
+import { PostHouseContext } from "./PostHouseScreen";
 const PlaceNameScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostHouseContext);
   const [text, setText] = useState("");
   return (
     <View
@@ -58,11 +60,18 @@ const PlaceNameScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={text.length < 5}
           onPress={() => {
-            navigation.navigate("lesser/postjob/detailplacedescription");
+            dispatch({
+              type: "add",
+              payload: {
+                placetitle: text,
+              },
+            });
+            navigation.navigate("lesser/posthouse/detailplacedescription");
           }}
           style={{
-            backgroundColor: text.length > 0 ? "#0099ff" : "rgba(0,0,0,0.7)",
+            backgroundColor: text.length > 5 ? "#0244d0" : "rgba(0,0,0,0.7)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

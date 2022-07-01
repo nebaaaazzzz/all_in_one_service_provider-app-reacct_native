@@ -1,9 +1,11 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { PostHouseContext } from "./PostHouseScreen";
 const DescribePlaceScreen = ({ navigation }) => {
+  //limit active
   const [active, setActive] = useState(Array(6).fill(false));
-  const max = [-1, -1];
+  const { dispatch } = useContext(PostHouseContext);
   const highLight = [
     {
       name: "Peaceful",
@@ -111,11 +113,27 @@ const DescribePlaceScreen = ({ navigation }) => {
         }}
       >
         <Pressable
+          disabled={!active}
           onPress={() => {
-            navigation.navigate("lesser/postjob/price");
+            const newArr = active
+              .map((i, j) => {
+                if (i) {
+                  return highLight[j].name;
+                }
+              })
+              .filter((i) => i);
+            if (newArr.length) {
+              dispatch({
+                type: "add",
+                payload: {
+                  bestdescribe: newArr,
+                },
+              });
+            }
+            navigation.navigate("lesser/posthouse/price");
           }}
           style={{
-            backgroundColor: "#0099ff",
+            backgroundColor: "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

@@ -1,9 +1,9 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { PostHouseContext } from "./PostHouseScreen";
 
-const List = ({ question, arr }) => {
-  const [state, setState] = useState(Array(arr.length).fill(false));
+const List = ({ question, arr, state, setState }) => {
   return (
     <View style={{ marginVertical: 10 }}>
       <Text style={{ fontSize: 18 }}> {question}</Text>
@@ -139,6 +139,18 @@ const PlaceOfferScreen = ({ navigation }) => {
     },
     { name: "Fire extinguisher", icon: "fire-extinguisher" },
   ];
+  const [amenitiesL, setAmenitiesL] = useState(
+    Array(amenities.length).fill(false)
+  );
+  const [favL, setFavL] = useState(Array(guestFav.length).fill(false));
+  const [saftyItemsL, setSaftyItemL] = useState(
+    Array(saftyItems.length).fill(false)
+  );
+  const list = [
+    [amenitiesL, favL, saftyItemsL],
+    [setAmenitiesL, setFavL, setSaftyItemL],
+  ];
+  const { dispatch } = useContext(PostHouseContext);
   return (
     <View
       horizontal={false}
@@ -167,12 +179,20 @@ const PlaceOfferScreen = ({ navigation }) => {
         >
           Let us know what your place has to offer!
         </Text>
-        <List
-          question={"Do you have any standout amenities?"}
-          arr={amenities}
-        />
-        <List question={"What about these guest favorites?"} arr={guestFav} />
-        <List question={"Have any of these saftey items ?"} arr={saftyItems} />
+        {[
+          { question: "Do you have any standout amenities?", arr: amenities },
+          { question: "What about these guest favorites?", arr: guestFav },
+          { question: "Have any of these saftey items ?", arr: saftyItems },
+        ].map((item, index) => {
+          return (
+            <List
+              question={item.question}
+              arr={item.arr}
+              state={list[0][index]}
+              setState={list[1][index]}
+            />
+          );
+        })}
       </ScrollView>
       <View
         style={{
@@ -186,10 +206,31 @@ const PlaceOfferScreen = ({ navigation }) => {
       >
         <Pressable
           onPress={() => {
-            navigation.navigate("lesser/postjob/propertytype");
+            function squash(arr, list) {
+              return arr
+                .map((i, j) => {
+                  if (i) {
+                    return list[j].name;
+                  }
+                })
+                .filter((i) => i);
+            }
+            const newAmenities = squash(amenitiesL, amenities);
+            const newFav = squash(favL, guestFav);
+            const newSafty = squash(saftyItemsL, saftyItems);
+            dispatch({
+              type: "add",
+              payload: {
+                amenities: newAmenities,
+                guestFav: newFav,
+                saftyItems: newSafty,
+              },
+            });
+
+            navigation.navigate("lesser/posthouse/propertytype");
           }}
           style={{
-            backgroundColor: "#0099ff",
+            backgroundColor: "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

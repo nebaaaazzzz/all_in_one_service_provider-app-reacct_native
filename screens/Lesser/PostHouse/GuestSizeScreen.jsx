@@ -1,7 +1,9 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import IncrementDecrement from "../../../components/IncrementDecrement";
+import { PostHouseContext } from "./PostHouseScreen";
 const GuestSizeScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostHouseContext);
   const size = ["Guests", "Beds", "Bedrooms", "Bathrooms"];
   const [guests, setGuests] = useState(0);
   const [beds, setBeds] = useState(0);
@@ -76,10 +78,21 @@ const GuestSizeScreen = ({ navigation }) => {
       >
         <Pressable
           onPress={() => {
-            navigation.navigate("lesser/postjob/placeoffer");
+            dispatch({
+              type: "add",
+              payload: {
+                guestSize: {
+                  guests,
+                  beds,
+                  bedrooms,
+                  bathrooms,
+                },
+              },
+            });
+            navigation.navigate("lesser/posthouse/placeoffer");
           }}
           style={{
-            backgroundColor: "#0099ff",
+            backgroundColor: "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

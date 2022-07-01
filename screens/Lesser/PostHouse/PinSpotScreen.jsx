@@ -85,7 +85,7 @@ const PinSpotScreen = ({ navigation, route }) => {
               });
           }}
           style={{
-            backgroundColor: "#0099ff",
+            backgroundColor: "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

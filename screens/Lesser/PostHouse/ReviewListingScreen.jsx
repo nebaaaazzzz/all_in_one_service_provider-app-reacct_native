@@ -6,9 +6,12 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
+import { PostHouseContext } from "./PostHouseScreen";
 const ReviewListingScreen = ({ navigation }) => {
+  const { housePost } = useContext(PostHouseContext);
+  console.log(housePost);
   return (
     <View
       horizontal={false}
@@ -39,7 +42,7 @@ const ReviewListingScreen = ({ navigation }) => {
         </Text>
         <View>
           <Image
-            source={{ uri: "file:///s.jpg" }}
+            source={{ uri: housePost.houseimages[1] }}
             style={{
               backgroundColor: "red",
               width: "90%",
@@ -49,7 +52,7 @@ const ReviewListingScreen = ({ navigation }) => {
             }}
           />
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
-            Fun place in BahirDar
+            Fun place {housePost.placeName}
           </Text>
           <Divider />
           <View
@@ -77,8 +80,7 @@ const ReviewListingScreen = ({ navigation }) => {
             2 guests.1bedrrom.1bed.1bath
           </Text>
           <Text style={{ marginVertical: 20 }}>
-            You'll have a great time at this comfortable place to stay.at bahir
-            dar
+            {housePost.detaildescription}
           </Text>
           <Divider />
           <View style={{ marginVertical: 20 }}>

@@ -1,8 +1,10 @@
 import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { PostHouseContext } from "./PostHouseScreen";
 const PriceScreen = ({ navigation }) => {
+  const { dispatch } = useContext(PostHouseContext);
   const [price, setPrice] = useState("1000");
   return (
     <View
@@ -37,6 +39,7 @@ const PriceScreen = ({ navigation }) => {
         <View>
           <View
             style={{
+              marginTop: "20%",
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-evenly",
@@ -89,10 +92,16 @@ const PriceScreen = ({ navigation }) => {
       >
         <Pressable
           onPress={() => {
-            navigation.navigate("lesser/postjob/lastcheckout");
+            dispatch({
+              type: "add",
+              payload: {
+                salary: price,
+              },
+            });
+            navigation.navigate("lesser/posthouse/lastcheckout");
           }}
           style={{
-            backgroundColor: "#0099ff",
+            backgroundColor: "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,
