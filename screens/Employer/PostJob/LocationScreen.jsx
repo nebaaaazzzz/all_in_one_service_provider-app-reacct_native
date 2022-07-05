@@ -5,17 +5,18 @@ import {
   StatusBar,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import Icon from "@expo/vector-icons/SimpleLineIcons";
 import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
+import { PostHouseContext } from "../../Lesser/PostHouse/PostHouseScreen";
 const LocationScreen = ({ navigation }) => {
   const [errorMsg, setErrorMsg] = useState(null);
-  const [bgColor, setBgColor] = useState(false);
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
@@ -29,6 +30,7 @@ const LocationScreen = ({ navigation }) => {
       setErrorMsg("Permission to access location was denied");
       return;
     }
+    s;
     try {
       let location = await Location.getCurrentPositionAsync({});
       fetch(
@@ -158,7 +160,6 @@ const LocationScreen = ({ navigation }) => {
             }}
             onBlur={() => {
               setSearch(false);
-              setBgColor(false);
             }}
             style={{
               borderRadius: 10,
@@ -177,6 +178,7 @@ const LocationScreen = ({ navigation }) => {
               {searchResult.map((place, index) => {
                 return (
                   <Pressable
+                    key={index + 1}
                     onPress={() => {
                       searchListPressHandler(index);
                     }}

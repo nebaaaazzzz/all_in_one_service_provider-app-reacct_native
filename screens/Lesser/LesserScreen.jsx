@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, Pressable, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  Image,
+  Pressable,
+  FlatList,
+} from "react-native";
 import React, { useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -102,11 +109,15 @@ const Post = () => {
         backgroundColor: bgColor ? "rgba(0,0,0,0.05)" : "transparent",
       }}
     >
-      <SliderBox
+      {/* <SliderBox
         images={images}
         disableOnPress
         circleLoop
         ImageComponentStyle={{ borderRadius: 10, width: "95%" }}
+      /> */}
+      <Image
+        source={{ uri: images[0] }}
+        style={{ width: "100%", height: 200, resizeMode: "cover" }}
       />
       <View style={{ marginHorizontal: 20 }}>
         <View

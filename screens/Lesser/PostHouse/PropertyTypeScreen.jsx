@@ -80,6 +80,7 @@ const PropertyTypeScreen = ({ navigation }) => {
         {list.map((item, index) => {
           return (
             <Pressable
+              key={index + 1}
               onPress={() => {
                 pressHandler(index);
               }}
@@ -108,7 +109,7 @@ const PropertyTypeScreen = ({ navigation }) => {
                   width: 50,
                   borderRadius: 5,
                   height: 50,
-                  backgroundColor: "rgba(0,0,0,0.3)",
+                  backgroundColor: "rgba(0,0,0,0.2)",
                 }}
               ></Image>
             </Pressable>

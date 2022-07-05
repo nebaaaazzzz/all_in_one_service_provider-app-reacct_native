@@ -3,9 +3,9 @@ import React, { useContext, useState } from "react";
 import PlaceDescription from "../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
 const PlaceDescriptionScreen = ({ navigation }) => {
-  const { dispatch, housePost } = useContext(PostHouseContext);
+  const { dispatch } = useContext(PostHouseContext);
   const [active, setActive] = useState("");
-  console.log(housePost);
+
   const placeDescriptions = [
     {
       title: "Home",
@@ -150,6 +150,7 @@ const PlaceDescriptionScreen = ({ navigation }) => {
         {placeDescriptions.map((place, index) => {
           return (
             <PlaceDescription
+              key={index + 1}
               active={active}
               pressHandler={pressHandler}
               id={index}
@@ -175,7 +176,7 @@ const PlaceDescriptionScreen = ({ navigation }) => {
             dispatch({
               type: "add",
               payload: {
-                placedescription: placeDescriptions[+active - 1],
+                placeDescription: placeDescriptions[+active - 1],
               },
             });
             navigation.navigate("lesser/posthouse/spacekind");

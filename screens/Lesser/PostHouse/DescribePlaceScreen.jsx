@@ -6,6 +6,7 @@ const DescribePlaceScreen = ({ navigation }) => {
   //limit active
   const [active, setActive] = useState(Array(6).fill(false));
   const { dispatch } = useContext(PostHouseContext);
+
   const highLight = [
     {
       name: "Peaceful",
@@ -70,12 +71,11 @@ const DescribePlaceScreen = ({ navigation }) => {
           {highLight.map((item, index) => {
             return (
               <Pressable
+                key={index + 1}
                 style={{
                   width: 100,
                   borderWidth: 1,
-                  borderColor: active[index]
-                    ? "rgba(0,0,0,0.7)"
-                    : "rgba(0,0,0,0.2)",
+                  borderColor: active[index] ? "#0244d0" : "rgba(0,0,0,0.2)",
                   margin: 10,
                   right: 20,
                   flexDirection: "row",
@@ -126,7 +126,7 @@ const DescribePlaceScreen = ({ navigation }) => {
               dispatch({
                 type: "add",
                 payload: {
-                  bestdescribe: newArr,
+                  bestDescribe: newArr,
                 },
               });
             }

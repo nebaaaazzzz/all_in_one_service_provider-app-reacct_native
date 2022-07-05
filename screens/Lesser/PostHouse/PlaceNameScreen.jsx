@@ -1,11 +1,4 @@
-import {
-  ScrollView,
-  View,
-  Text,
-  Pressable,
-  StatusBar,
-  useWindowDimensions,
-} from "react-native";
+import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
@@ -65,7 +58,7 @@ const PlaceNameScreen = ({ navigation }) => {
             dispatch({
               type: "add",
               payload: {
-                placetitle: text,
+                placeTitle: text,
               },
             });
             navigation.navigate("lesser/posthouse/detailplacedescription");

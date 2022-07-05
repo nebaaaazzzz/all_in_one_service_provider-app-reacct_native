@@ -1,7 +1,6 @@
 import { View, Text, StatusBar, Pressable, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components/native";
-
 const SPressable = styled(Pressable).attrs({
   android_ripple: {
     color: "#3498db",

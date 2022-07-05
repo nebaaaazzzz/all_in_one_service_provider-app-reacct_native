@@ -5,6 +5,9 @@ import {
   StatusBar,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
+  Modal,
+  ToastAndroid,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import MapView from "react-native-maps";
@@ -13,42 +16,80 @@ import Icon from "@expo/vector-icons/SimpleLineIcons";
 import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
+import NetInfo from "@react-native-community/netinfo";
+
 const LocationScreen = ({ navigation }) => {
   const [errorMsg, setErrorMsg] = useState(null);
-  const [bgColor, setBgColor] = useState(false);
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
   const [searchResult, setSearchResut] = useState([]);
   const [placeName, setPlaceName] = useState("");
   const [center, setCenter] = useState();
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const inputRef = useRef();
   const pressHandler = async () => {
+    await Location.enableNetworkProviderAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setErrorMsg("Permission to access location was denied");
       return;
     }
     try {
-      let location = await Location.getLastKnownPositionAsync({});
-      console.log("get location");
-      fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
-      )
-        .then(async (res) => {
-          const r = await res.json();
-          setPlaceName(r?.features[0]?.place_name);
-          setCenter(r?.features[0]?.center);
-          if (center) {
-            navigation.navigate("lesser/posthouse/pinspot", {
-              center,
-              placeName,
-            });
+      const getLocation = (location) => {
+        NetInfo.fetch().then((state) => {
+          if (state.isConnected && state.isInternetReachable) {
+            fetch(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+            )
+              .then(async (res) => {
+                setIsGettingLocation(false);
+
+                const r = await res.json();
+                setPlaceName(r?.features[0]?.place_name);
+                setCenter(r?.features[0]?.center);
+                if (center) {
+                  navigation.navigate("lesser/posthouse/pinspot", {
+                    center,
+                    placeName,
+                  });
+                }
+              })
+              .catch((err) => {
+                ToastAndroid.show(
+                  "check your internet connection",
+                  ToastAndroid.LONG
+                );
+                setIsGettingLocation(false);
+                throw err;
+              });
+          } else {
+            ToastAndroid.show("no internet connection", ToastAndroid.LONG);
+            setIsGettingLocation(false);
           }
-        })
-        .catch((err) => {
-          throw err;
         });
+      };
+      let location;
+
+      setIsGettingLocation(true);
+      const t = setTimeout(async () => {
+        try {
+          location = await Location.getLastKnownPositionAsync();
+        } catch (err) {
+          throw err;
+        }
+        getLocation(location);
+      }, 10000);
+      try {
+        location = await Location.getCurrentPositionAsync({});
+      } catch (err) {
+        console.log(err.message);
+      }
+      if (location) {
+        clearTimeout(t);
+        getLocation(location);
+      } else {
+      }
     } catch (err) {
       throw err;
     }
@@ -92,6 +133,17 @@ const LocationScreen = ({ navigation }) => {
           marginTop: StatusBar.currentHeight,
         }}
       >
+        <Modal visible={isGettingLocation} animationType="fade">
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <View>
+              <ActivityIndicator color={"#0244d0"} size="large" />
+              <Text style={{ marginTop: "10%" }}>Getting Current Location</Text>
+            </View>
+          </View>
+        </Modal>
+
         <View
           style={{
             backgroundColor: "#fff",
@@ -159,7 +211,6 @@ const LocationScreen = ({ navigation }) => {
             }}
             onBlur={() => {
               setSearch(false);
-              setBgColor(false);
             }}
             style={{
               borderRadius: 10,

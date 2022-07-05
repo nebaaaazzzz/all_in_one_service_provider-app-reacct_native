@@ -95,7 +95,7 @@ const PriceScreen = ({ navigation }) => {
             dispatch({
               type: "add",
               payload: {
-                salary: price,
+                price,
               },
             });
             navigation.navigate("lesser/posthouse/lastcheckout");

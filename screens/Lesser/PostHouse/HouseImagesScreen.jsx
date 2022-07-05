@@ -15,6 +15,7 @@ import { PostHouseContext } from "./PostHouseScreen";
 
 const HouseImagesScreen = ({ navigation }) => {
   const { dispatch } = useContext(PostHouseContext);
+
   const [imgUri, setImgUri] = useState([]);
   const [visible, setVisible] = useState([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState(0);
@@ -77,6 +78,7 @@ const HouseImagesScreen = ({ navigation }) => {
           {imgUri.map((item, index) => {
             return (
               <View
+                key={index + 1}
                 onPress={async () => {
                   let result = await ImagePicker.launchImageLibraryAsync({
                     mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -88,7 +90,7 @@ const HouseImagesScreen = ({ navigation }) => {
                     setImgUri(
                       imgUri.map((i, j) => {
                         if (j === i) {
-                          return result.uri;
+                          return result;
                         }
                         return i;
                       })
@@ -192,7 +194,7 @@ const HouseImagesScreen = ({ navigation }) => {
 
                 <Image
                   source={{
-                    uri: item,
+                    uri: item.uri,
                   }}
                   style={{
                     width: "100%",
@@ -212,7 +214,7 @@ const HouseImagesScreen = ({ navigation }) => {
               });
 
               if (!result.cancelled) {
-                setImgUri([...imgUri, result.uri]);
+                setImgUri([...imgUri, result]);
                 setVisible([...visible, false]);
               }
             }}
@@ -249,7 +251,7 @@ const HouseImagesScreen = ({ navigation }) => {
             dispatch({
               type: "add",
               payload: {
-                houseimages: imgUri,
+                houseImages: imgUri,
               },
             });
             navigation.navigate("lesser/posthouse/placename");

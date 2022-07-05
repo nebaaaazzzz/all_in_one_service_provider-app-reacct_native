@@ -44,6 +44,7 @@ const SpacekindScreen = ({ navigation }) => {
               pressHandler={pressHandler}
               active={active}
               id={index}
+              key={index + 1}
               title={place}
             />
           );

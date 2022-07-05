@@ -58,7 +58,7 @@ const DetailPlaceDescriptionScreen = ({ navigation }) => {
             dispatch({
               type: "add",
               payload: {
-                detaildescription: text,
+                detailDescription: text,
               },
             });
             navigation.navigate("lesser/posthouse/describeplace");

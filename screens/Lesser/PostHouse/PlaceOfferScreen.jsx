@@ -26,9 +26,7 @@ const List = ({ question, arr, state, setState }) => {
               }}
               style={{
                 borderWidth: 1,
-                borderColor: state[index]
-                  ? "rgba(0,0,0,0.8)"
-                  : "rgba(0,0,0,0.2)",
+                borderColor: state[index] ? "#0244d0" : "rgba(0,0,0,0.2)",
                 marginVertical: 10,
                 width: "40%",
                 paddingVertical: 20,
