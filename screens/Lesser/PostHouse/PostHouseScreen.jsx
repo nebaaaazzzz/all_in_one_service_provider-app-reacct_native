@@ -27,11 +27,7 @@ const reducer = (state = {}, action) => {
 };
 const PostHouseScreen = () => {
   const [housePost, dispatch] = useReducer(reducer);
-  useEffect(() => {
-    dispatch({
-      type: "add",
-    });
-  });
+
   return (
     <PostHouseContext.Provider value={{ housePost, dispatch }}>
       <PostHouseStackNavigator.Navigator screenOptions={{ headerShown: false }}>
@@ -78,6 +74,7 @@ const PostHouseScreen = () => {
         <PostHouseStackNavigator.Screen
           name="lesser/posthouse/describeplace"
           component={DescribePlaceScreen}
+          j
         />
         <PostHouseStackNavigator.Screen
           name="lesser/posthouse/price"
