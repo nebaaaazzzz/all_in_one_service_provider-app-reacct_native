@@ -34,7 +34,7 @@ function LoginScreen({ navigation }) {
         secureTextEntry
         left={<TextInput.Icon name="lock-outline" />}
       />
-      <SButton mode="contained" onPress={() => console.log("Pressed")}>
+      <SButton mode="contained" onPress={() => {}}>
         <Text style={{ color: "#fff", fontSize: 20 }}>Login</Text>
       </SButton>
       <View
@@ -57,7 +57,7 @@ function LoginScreen({ navigation }) {
           <Text style={{ textTransform: "none" }}>Signup</Text>
         </Button>
       </View>
-      <Button mode="text" onPress={() => console.log("Pressed")}>
+      <Button mode="text" onPress={() => {}}>
         <Text style={{ textTransform: "none" }}>Forgot Password ?</Text>
       </Button>
     </ScrollView>

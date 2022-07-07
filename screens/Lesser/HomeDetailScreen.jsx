@@ -5,67 +5,41 @@ import {
   Pressable,
   StatusBar,
   Image,
-  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Divider } from "react-native-paper";
-import { PostHouseContext } from "./PostHouseScreen";
-import NetInfo from "@react-native-community/netinfo";
-import * as axois from "axios";
-
-const ReviewListingScreen = ({ navigation }) => {
-  const { housePost } = useContext(PostHouseContext);
-
-  const postHouse = () => {
-    (async () => {
-      const formData = new FormData();
-      for await (const img of housePost.houseImages) {
-        const uri = img.uri;
-        const arr = uri.split(".");
-        const ext = arr[arr.length - 1];
-        formData.append("houseImage", {
-          uri: img.uri,
-          type: "image/" + ext,
-          name: uri,
-        });
-      }
-      const newObj = { ...housePost };
-      delete newObj.houseImages;
-      formData.append("body", JSON.stringify(newObj));
-      NetInfo.fetch().then((state) => {
-        if (state.isConnected && state.isInternetReachable) {
-          const url = "https://2c57-213-55-102-49.in.ngrok.io/lesser/posthouse";
-
-          fetch(url, {
-            method: "post",
-            body: formData,
-            headers: {
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0FkbWluIjpmYWxzZSwic3ViIjoiNjI5ZWViNWNlYzkyZjI0ZjdkMjNlMjdmIiwiZXhwIjoxNjU0NjU5OTk0MzAzLCJpYXQiOjE2NTQ1ODIyMzR9.OAD1NzoanHjNOAUMhua1N4F5LLM-X9nYsLZXmoPJyys",
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(async (res) => {
-              if ((await res.json()).success) {
-                navigation.navigate("lesser/");
-              }
-            })
-
-            .catch((err) => {
-              if (err) {
-                ToastAndroid.show(
-                  "check your internet connection",
-                  ToastAndroid.LONG
-                );
-              }
-            });
-        } else {
-          ToastAndroid.show("no intenet connection", ToastAndroid.LONG);
-        }
-      });
-    })();
-  };
-  useEffect(() => {});
+import { useQuery } from "react-query";
+import { BASEURI, BASETOKEN } from "../../urls";
+const fetchHouse = async (id) => {
+  console.log(`${BASEURI}/lesser/house/${id}`);
+  const house = await fetch(`${BASEURI}/lesser/house/${id}`, {
+    headers: {
+      Authorization: `Bearer ${BASETOKEN}`,
+    },
+  });
+  const response = await house.json();
+  con;
+  return response;
+};
+const HomeDetailScreen = ({ navigation, route }) => {
+  const { isLoading, isError, error, data, isFetching } = useQuery(
+    ["house", route.params.id],
+    () => {
+      fetchHouse(route.params.id);
+    }
+  );
+  console.log(data);
+  if (isLoading) {
+    return (
+      <View style={{ marginTop: "50%" }}>
+        <ActivityIndicator></ActivityIndicator>
+      </View>
+    );
+  }
+  if (isError) {
+    return <View>{error.message}</View>;
+  }
   return (
     <View
       horizontal={false}
@@ -73,7 +47,6 @@ const ReviewListingScreen = ({ navigation }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView
@@ -95,25 +68,16 @@ const ReviewListingScreen = ({ navigation }) => {
           Check out your listing!
         </Text>
         <View>
-          <Image
-            source={{ uri: housePost.houseImages[1].uri }}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.3)",
-              width: "90%",
-              aspectRatio: 2,
-              alignSelf: "center",
-              borderRadius: 10,
-            }}
-          />
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
-            Fun place {housePost.placeName}
+            Fun place
+            {data?.placeName}
           </Text>
           <Divider />
           <View style={{ marginVertical: "2%" }}>
             <Text style={{ marginVertical: "2%", fontSize: 16 }}>
               amenities
             </Text>
-            {housePost?.amenities?.map((item, index) => {
+            {data?.amenities?.map((item, index) => {
               return (
                 <View key={index + 1} style={{ flexDirection: "row" }}>
                   <Text
@@ -137,7 +101,7 @@ const ReviewListingScreen = ({ navigation }) => {
             <Text style={{ marginVertical: "2%", fontSize: 16 }}>
               Best Describe
             </Text>
-            {housePost?.bestdescribe?.map((item, index) => {
+            {data?.bestdescribe?.map((item, index) => {
               return (
                 <View style={{ flexDirection: "row" }}>
                   <Text
@@ -184,7 +148,7 @@ const ReviewListingScreen = ({ navigation }) => {
           <Divider />
           <Divider />
           <Text style={{ marginVertical: 20, fontSize: 16 }}>
-            Salary : {housePost?.price}
+            Price : {data?.price}
           </Text>
           <Divider />
           <Divider />
@@ -193,13 +157,13 @@ const ReviewListingScreen = ({ navigation }) => {
           </Text>
 
           <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {housePost?.propertyType}
+            {data?.propertyType}
           </Text>
           <Divider />
           <Text style={{ marginVertical: 10, fontSize: 16 }}>Place title</Text>
 
           <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {housePost?.placetitle}
+            {data?.placetTitle}
           </Text>
           <Divider />
           <Divider />
@@ -208,13 +172,11 @@ const ReviewListingScreen = ({ navigation }) => {
           </Text>
 
           <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {housePost?.placetitle}
+            {data?.placeTitle}
           </Text>
           <Divider />
           <Text style={{ marginVertical: 10, fontSize: 16 }}>Description</Text>
-          <Text style={{ marginVertical: 5 }}>
-            {housePost.detaildescription}
-          </Text>
+          {/* <Text style={{ marginVertical: 5 }}>{data.detailDescription}</Text> */}
           <Divider />
           <View style={{ marginVertical: 20 }}>
             <Text style={{ fontSize: 25 }}>Location</Text>
@@ -245,13 +207,11 @@ const ReviewListingScreen = ({ navigation }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>
-            Save your listing
-          </Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>Edit</Text>
         </Pressable>
       </View>
     </View>
   );
 };
 
-export default ReviewListingScreen;
+export default HomeDetailScreen;

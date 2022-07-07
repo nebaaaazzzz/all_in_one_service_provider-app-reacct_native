@@ -11,7 +11,6 @@ import PinSpotScreen from "./PinSpotScreen";
 const PostJobStackNavigation = createStackNavigator();
 export const PostJobContext = createContext();
 const reducer = (state = {}, action) => {
-  // console.log(state);
   switch (action.type) {
     case "add":
       return Object.assign(state, action.payload);

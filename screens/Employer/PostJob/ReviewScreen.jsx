@@ -23,7 +23,6 @@ const ReviewScreen = ({ route, navigation }) => {
   const postJobContext = useContext(PostJobContext);
   useEffect(() => {
     if (PostJobContext) {
-      console.log(PostJobContext);
       // ({ dispatch, jobPost } = postJobContext);
     }
   }, []);

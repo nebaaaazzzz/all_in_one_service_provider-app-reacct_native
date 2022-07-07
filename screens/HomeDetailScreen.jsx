@@ -37,12 +37,12 @@ const HomeDetailScreen = () => {
         resizeMode={"contain"}
         source={{ uri: "https://picsum.photos/300" }}
         // onLoadStart={() => Alert.alert("alert")}
-        onLoadStart={() => console.log("loading started")}
-        onLoad={() => console.log("loading end")}
-        onProgress={() => {
-          console.log("progress ....");
-        }}
-        onError={() => console.log("error")}
+        // onLoadStart={() => console.log("loading started")}
+        // onLoad={() => console.log("loading end")}
+        // onProgress={() => {
+        //   console.log("progress ....");
+        // }}
+        // onError={() => console.log("error")}
       />
       <Pressable
         style={{

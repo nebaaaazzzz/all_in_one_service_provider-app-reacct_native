@@ -69,7 +69,7 @@ function SignupScreen({ navigation }) {
         secureTextEntry
         left={<TextInput.Icon name="LockOpen" />}
       />
-      <SButton mode="contained" onPress={() => console.log("Pressed")}>
+      <SButton mode="contained" onPress={() => {}}>
         <Text style={{ color: "#fff", fontSize: 20, textTransform: "none" }}>
           Register
         </Text>

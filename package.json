@@ -32,6 +32,7 @@
     "react-native": "0.68.2",
     "react-native-actions-sheet": "^0.6.1",
     "react-native-actions-sheet-picker": "^0.3.4",
+    "react-native-dotenv": "^3.3.1",
     "react-native-gesture-handler": "~2.2.1",
     "react-native-image-slider-box": "^1.1.24",
     "react-native-maps": "0.30.2",

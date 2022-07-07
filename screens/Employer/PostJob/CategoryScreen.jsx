@@ -105,7 +105,6 @@ const CategoryScreen = ({ navigation, route }) => {
               }}
               data={category}
               onSelect={(selectedItem, index) => {
-                // console.log(selectedItem, index);
                 setCategorySelect(selectedItem);
               }}
               buttonTextAfterSelection={(selectedItem, index) => {

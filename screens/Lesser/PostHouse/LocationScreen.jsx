@@ -17,7 +17,7 @@ import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import NetInfo from "@react-native-community/netinfo";
-
+import { MAPBOXURI } from "./../../../urls.js";
 const LocationScreen = ({ navigation }) => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [isFull, setIsFull] = useState(false);
@@ -40,7 +40,7 @@ const LocationScreen = ({ navigation }) => {
         NetInfo.fetch().then((state) => {
           if (state.isConnected && state.isInternetReachable) {
             fetch(
-              `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+              `${MAPBOXURI}/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
             )
               .then(async (res) => {
                 setIsGettingLocation(false);
@@ -83,7 +83,7 @@ const LocationScreen = ({ navigation }) => {
       try {
         location = await Location.getCurrentPositionAsync({});
       } catch (err) {
-        console.log(err.message);
+        throw err;
       }
       if (location) {
         clearTimeout(t);
