@@ -13,6 +13,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import PostHouseScreen from "./PostHouse/PostHouseScreen";
 import HomeDetailScreen from "./HomeDetailScreen";
+import PaymentScreen from "./PaymentScreen";
 const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
 import { useInfiniteQuery } from "react-query";
@@ -93,7 +94,7 @@ const Home = ({ navigation }) => {
         <Pressable
           onPress={() => {
             requestAnimationFrame(() => {
-              navigation.navigate("lesser/posthouse");
+              navigation.navigate("lesser/payment");
             });
           }}
           style={{
@@ -141,6 +142,12 @@ const LesserScreen = () => {
           option={{ title: "detail" }}
           name="lesser/housedetail"
           component={HomeDetailScreen}
+        />
+        <LesserStackNavigator.Screen
+          options={{ headerShown: false }}
+          option={{ title: "detail" }}
+          name="lesser/payment"
+          component={PaymentScreen}
         />
       </LesserStackNavigator.Navigator>
     </View>

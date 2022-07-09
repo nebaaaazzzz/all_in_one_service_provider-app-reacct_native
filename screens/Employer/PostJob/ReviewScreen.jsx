@@ -8,26 +8,15 @@ import {
   Pressable,
   Keyboard,
 } from "react-native";
-import {
-  Checkbox,
-  RadioButton,
-  List,
-  Divider,
-  TextInput,
-} from "react-native-paper";
+import { RadioButton, List, Divider, TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as DocumentPicker from "expo-document-picker";
 import { PostJobContext } from "./PostJobScreen";
+import { useMutation } from "react-query";
+import { BASEURI, BASETOKEN } from "../../../urls";
 const ReviewScreen = ({ route, navigation }) => {
-  let dispatch, jobPost;
-  const postJobContext = useContext(PostJobContext);
-  useEffect(() => {
-    if (PostJobContext) {
-      // ({ dispatch, jobPost } = postJobContext);
-    }
-  }, []);
+  const { dispatch, jobPost } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
-  const [active, setActive] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [headline, setHeadline] = useState(jobPost?.title || "");
   const handlePress = () => setExpanded(!expanded);
@@ -52,6 +41,50 @@ const ReviewScreen = ({ route, navigation }) => {
       /*file lastmodified mimeType name  output size type uri */
     }
   };
+  const { error, isError, isLoading, isSuccess, mutate } = useMutation(
+    async (data) => {
+      console.log(`${BASEURI}/employer/postjob`);
+      const response = await fetch(`${BASEURI}/employer/postjob`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${BASETOKEN}`,
+        },
+        body: data,
+      });
+      return response.json();
+    }
+  );
+  const submitHandler = async () => {
+    const formData = new FormData();
+    if (file) {
+      formData.append("document", {
+        uri: file.uri,
+        name: file.name,
+        type: file.mimeType,
+      });
+    }
+    formData.append("body", JSON.stringify(jobPost));
+    mutate(formData);
+  };
+
+  if (isSuccess) {
+    navigation.navigate("employer/");
+  }
+
+  if (isError) {
+    return (
+      <View>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
+  if (isLoading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1 }}>
       <Pressable
@@ -178,7 +211,7 @@ const ReviewScreen = ({ route, navigation }) => {
               <View style={{}}>
                 {jobPost?.skills?.map((item, index) => {
                   return (
-                    <View style={{ flexDirection: "row" }}>
+                    <View key={index + 1} style={{ flexDirection: "row" }}>
                       <Text
                         style={{
                           paddingHorizontal: 10,
@@ -207,7 +240,7 @@ const ReviewScreen = ({ route, navigation }) => {
             </View>
             <View>
               {jobPost?.budget ? (
-                <>
+                <View>
                   <Text
                     style={{
                       fontWeight: "bold",
@@ -229,7 +262,7 @@ const ReviewScreen = ({ route, navigation }) => {
                       <Icon size={20} name="circle-edit-outline" />
                     </Pressable>
                   </View>
-                </>
+                </View>
               ) : (
                 <></>
               )}
@@ -284,7 +317,7 @@ const ReviewScreen = ({ route, navigation }) => {
                 questions,
               },
             });
-            navigation.navigate("");
+            submitHandler();
           }}
           style={{
             width: "80%",

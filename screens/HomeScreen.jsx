@@ -1,10 +1,19 @@
 import { View, Text, StatusBar, Pressable, Image } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
+import Svg, { Path } from "react-native-svg";
 import styled from "styled-components/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+const DrawerNavigator = createDrawerNavigator();
+import Ionicons from "react-native-vector-icons/Ionicons";
+import ProfileScreen from "./Common/ProfileScreen";
+import SettingsScreen from "./Common/SettingsScreen";
+import MessagesScreen from "./Common/MessagesScreen";
+import CustomDrawer from "../components/CustomDrawer";
+import * as SecureStore from "expo-secure-store";
+
 const SPressable = styled(Pressable).attrs({
   android_ripple: {
     color: "#3498db",
-    borderless: false,
   },
 })`
   overflow: hidden;
@@ -13,21 +22,37 @@ const SPressable = styled(Pressable).attrs({
   width: 35%;
   margin: 10px 10px;
 `;
+
 const SText = styled(Text)`
-  text-align: center;
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 10px;
 `;
-const HomeScreen = ({ navigation }) => {
+const Home = ({ navigation }) => {
   return (
     <View
       style={{
-        marginTop: StatusBar.currentHeight,
         justifyContent: "center",
         flex: 1,
+        backgroundColor: "#0244d0",
       }}
     >
-      <View style={{ marginTop: "40%" }}>
+      <View style={{ height: "5%" }}>
+        <Svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="375"
+          height="576.462"
+          viewBox="0 0 375 576.462"
+        >
+          <Path
+            id="Path_1"
+            data-name="Path 1"
+            d="M75.35-12.54H276.424C351.337-12.54,375-53.025,375-53.025V523.437H0V53.121C0,16.857,33.736-12.54,75.35-12.54Z"
+            transform="translate(0 53.025)"
+            fill="#fff"
+          />
+        </Svg>
+      </View>
+      <View style={{ paddingTop: "10%" }}>
         <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 20 }}>
           Continue as ...
         </Text>
@@ -113,4 +138,75 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
+const HomeScreen = () => {
+  return (
+    <DrawerNavigator.Navigator
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      screenOptions={{
+        drawerActiveBackgroundColor: "#0244d0",
+        drawerActiveTintColor: "#fff",
+        drawerInactiveTintColor: "#333",
+        drawerLabelStyle: {
+          marginLeft: -25,
+          fontFamily: "Roboto-Medium",
+          fontSize: 15,
+        },
+      }}
+    >
+      {/* <Drawer.Screen
+    name="Home"
+    component={TabNavigator}
+    options={{
+      drawerIcon: ({color}) => (
+        <Ionicons name="home-outline" size={22} color={color} />
+      ),
+    }}
+  /> */}
+
+      <DrawerNavigator.Screen
+        name="home"
+        component={Home}
+        options={{
+          headerTitle: "",
+          headerStyle: {
+            backgroundColor: "#0244d0",
+            elevation: 0,
+          },
+          headerTitleAlign: "center",
+          headerTintColor: "#fff",
+          drawerIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="Messages"
+        component={MessagesScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="settings-outline" size={22} color={color} />
+          ),
+        }}
+      />
+    </DrawerNavigator.Navigator>
+  );
+};
 export default HomeScreen;

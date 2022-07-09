@@ -2,6 +2,7 @@ import { Text, StyleSheet, View, StatusBar, ScrollView } from "react-native";
 import React from "react";
 import { TextInput, Button } from "react-native-paper";
 import styled from "styled-components/native";
+import * as SecureStore from "expo-secure-store";
 const STextInput = styled(TextInput)`
   height: 50;
   border-color: #000;

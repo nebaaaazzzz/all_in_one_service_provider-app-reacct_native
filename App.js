@@ -13,13 +13,25 @@ import HomeDetailScreen from "./screens/HomeDetailScreen";
 import EmployeeScreen from "./screens/Employee/EmployeeScreen";
 import JobDetailScreen from "./screens/Employee/JobDetailScreen";
 import EmployerScreen from "./screens/Employer/EmployerScreen";
-import LesseeScreen from "./screens/Lesse/LesseeScreen";
+import LesseeScreen from "./screens/Lessee/LesseeScreen";
 import LesserScreen from "./screens/Lesser/LesserScreen";
-import React from "react";
+import React, { useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
+import { BASEURI } from "./urls";
 const StackNavigator = createStackNavigator();
 
 const queryClient = new QueryClient();
 export default function App() {
+  const [token, setToken] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+  useEffect(() => {
+    (async () => {
+      const token = await SecureStore.getItemAsync("token");
+      if (token) {
+        fetch(`${BASEURI}/me`);
+      }
+    })();
+  }, []);
   return (
     <PaperProvider
       theme={theme}
@@ -48,10 +60,6 @@ export default function App() {
               <StackNavigator.Screen
                 name="jobdetail"
                 component={JobDetailScreen}
-              />
-              <StackNavigator.Screen
-                name="homedetail"
-                component={HomeDetailScreen}
               />
 
               <StackNavigator.Screen

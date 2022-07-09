@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Pressable,
-  StatusBar,
   Image,
   ActivityIndicator,
 } from "react-native";
@@ -12,7 +11,6 @@ import { Divider } from "react-native-paper";
 import { useQuery } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 const fetchHouse = async ({ queryKey }) => {
-  console.log();
   const response = await fetch(`${BASEURI}/lesser/house/${queryKey[1]}`, {
     headers: {
       Authorization: `Bearer ${BASETOKEN}`,
@@ -134,7 +132,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 20 }}>Entire villa hosted by Nebiyu</Text>
-            <Image
+            {/* <Image
               source={{ uri: "file://a.jph" }}
               style={{
                 backgroundColor: "red",
@@ -142,13 +140,12 @@ const HomeDetailScreen = ({ navigation, route }) => {
                 height: 50,
                 borderRadius: 50,
               }}
-            />
+            /> */}
           </View>
           <Divider />
           <Text style={{ marginVertical: 20, fontSize: 16 }}>
             2 guests.1bedrrom.1bed.1bath
           </Text>
-          <Divider />
           <Divider />
           <Text style={{ marginVertical: 20, fontSize: 16 }}>
             Price : {data?.price}
@@ -201,9 +198,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
         }}
       >
         <Pressable
-          onPress={() => {
-            postHouse();
-          }}
           style={{
             backgroundColor: "#0244d0",
             width: 100,
