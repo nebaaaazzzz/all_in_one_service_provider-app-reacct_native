@@ -1,16 +1,46 @@
 import {
   View,
   Text,
-  StatusBar,
+  ActivityIndicator,
   useWindowDimensions,
   ScrollView,
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { Divider } from "react-native-paper";
-
-const JobDetailScreen = ({ show, navigation }) => {
+import { useQuery } from "react-query";
+import { BASEURI, BASETOKEN } from "../../urls";
+const fetchJob = async ({ queryKey }) => {
+  const response = await fetch(`${BASEURI}/employee/job/${queryKey[1]}`, {
+    headers: {
+      Authorization: `Bearer ${BASETOKEN}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return (await response.json()).data;
+};
+const JobDetailScreen = ({ route, show, navigation }) => {
   const dimension = useWindowDimensions();
+  const { isLoading, isError, error, data, isFetching } = useQuery(
+    ["job", route.params.id],
+    fetchJob
+  );
+  if (isLoading || isFetching) {
+    return (
+      <View style={{ marginTop: "50%" }}>
+        <ActivityIndicator></ActivityIndicator>
+      </View>
+    );
+  }
+  if (isError) {
+    return (
+      <View>
+        <Text>{error.message}</Text>
+      </View>
+    );
+  }
   return (
     <View>
       <ScrollView

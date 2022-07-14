@@ -11,11 +11,7 @@ import MessagesScreen from "./Common/MessagesScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import * as SecureStore from "expo-secure-store";
 
-const SPressable = styled(Pressable).attrs({
-  android_ripple: {
-    color: "#3498db",
-  },
-})`
+const SPressable = styled(Pressable)`
   overflow: hidden;
   border-radius: 10px;
   border: 1px solid #3498db;
