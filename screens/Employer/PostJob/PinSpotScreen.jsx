@@ -2,10 +2,10 @@ import { View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { PostJobContext } from "./PostJobScreen";
+import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
 
 const PinSpotScreen = ({ navigation, route }) => {
   const [center, setCenter] = useState(route.params.center || [11, 21]);
-  const [placeName, setPlaceName] = useState(route?.params?.placeName || "");
   const { dispatch } = useContext(PostJobContext);
   return (
     <View
@@ -63,30 +63,38 @@ const PinSpotScreen = ({ navigation, route }) => {
         }}
       >
         <Pressable
-          onPress={() => {
-            fetch(
-              `https://api.mapbox.com/geocoding/v5/mapbox.places/${center[0]},${center[1]}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
-            )
-              .then(async (res) => {
-                const r = await res.json();
-                setPlaceName(r?.features[0]?.place_name);
-                if (center) {
-                  navigation.navigate("employer/postjob/payment");
-                  dispatch({
-                    type: "add",
-                    payload: {
-                      center,
-                      placeName,
-                    },
-                  });
-                }
-              })
-              .catch((err) => {
-                throw err;
-              });
+          onPress={async () => {
+            const response = await fetch(
+              `${MAPBOXURI}/mapbox.places/${center[0]},${center[1]}.json?access_token=${MAPBOXTOKEN}`
+            );
+            const r = await response.json();
+            if (r?.features[0]?.place_name && r.features[0].center) {
+              if (r.features[0].place_type[0] === "locality") {
+                const region = r.features[0].context.filter((i, j) => {
+                  return i.id.startsWith("region");
+                });
+                dispatch({
+                  type: "add",
+                  payload: {
+                    center: r.features[0].center,
+                    region: region[0].text,
+                    placeName: r.features[0].place_name,
+                  },
+                });
+              } else {
+                dispatch({
+                  type: "add",
+                  payload: {
+                    center: r.features[0].center,
+                    placeName: r?.features[0]?.place_name,
+                  },
+                });
+              }
+              navigation.navigate("employer/postjob/payment");
+            }
           }}
           style={{
-            backgroundColor: "#0099ff",
+            backgroundColor: "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

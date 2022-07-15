@@ -7,12 +7,7 @@ import {
   useWindowDimensions,
   Pressable,
 } from "react-native";
-import * as yup from "yup";
 
-let schema = yup.object().shape({
-  fromBudget: yup.number().required().positive().integer(),
-  toBudget: yup.number().required().positive().integer(),
-});
 import { ProgressBar } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import { PostJobContext } from "./PostJobScreen";
@@ -59,7 +54,6 @@ const PaymentScreen = ({ navigation }) => {
                 onChangeText={setFromBudget}
                 style={{ width: "60%" }}
               />
-              <Text>/hour</Text>
             </View>
           </View>
           <View style={{ flex: 1 }}>
@@ -70,22 +64,23 @@ const PaymentScreen = ({ navigation }) => {
                 onChangeText={setToBudget}
                 style={{ width: "60%" }}
               />
-              <Text>/hour</Text>
             </View>
           </View>
         </View>
         <View style={{ marginTop: "20%" }}></View>
       </ScrollView>
+
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 100,
+          top: dimension.height - 85,
           alignItems: "center",
           justifyContent: "center",
-          height: 90,
+          height: 85,
+          backgroundColor: "#fff",
           width: "100%",
           borderTopWidth: 1,
-          borderColor: "rgba(0,0,0,0.7)",
+          borderColor: "#000",
         }}
       >
         <Pressable
@@ -98,7 +93,7 @@ const PaymentScreen = ({ navigation }) => {
             marginVertical: 10,
           }}
         >
-          <Text style={{ color: "blue" }}>
+          <Text style={{ color: "#0244d0" }}>
             Not ready to set an hourly rate?
           </Text>
         </Pressable>
@@ -130,13 +125,19 @@ const PaymentScreen = ({ navigation }) => {
               parseFloat(toBudget) &&
               parseFloat(fromBudget) < parseFloat(toBudget)
                 ? "#0244d0"
-                : "rgba(0,0,0,0.6)",
+                : "rgba(0,0,0,0.3)",
             height: "50%",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 18 }}>Next</Text>
+          <Text
+            style={{
+              color: fromBudget && toBudget ? "#fff" : "rgba(0,0,0,0.5)",
+            }}
+          >
+            Next: Review
+          </Text>
         </Pressable>
       </View>
     </View>

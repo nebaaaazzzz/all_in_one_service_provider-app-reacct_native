@@ -22,8 +22,8 @@ import CustomButton from "../components/CustomButton";
 
 const SignupScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
-  const [dobLabel, setDobLabel] = useState("Date of Birth");
   const [date, setDate] = useState();
+  const [dobLabel, setDobLabel] = useState("Date of Birth");
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>

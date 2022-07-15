@@ -16,58 +16,52 @@ const CategoryScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const category = [
-    "Ecommerce Website Development",
-    "Desktop Software Development",
-    "Scriptiong & Automation",
-    "Manual Testing",
-    "Automation Testing",
-    "Prototyping",
-    "Mobile Design",
-    "Web Desgin",
-    "UX/UI Design",
-    "MobileApp Development",
-    "Mobile Game Developemnt",
-    "Crypto Coins & Tokens",
-    "Blockchain & NFT Development",
-    "Blosckchain & NFT Developmment",
-    "Blosckchain & NFT Developmment",
-    "Crypto Wallet Developemtn",
-    "Scrum Leadership",
-    "Agile Leadership",
-    "FIrmware Developemtn",
-    "Emerging Tech AR/VR Developement",
-    "CodingTutoring",
-    "Database Development",
-    "Back-end Development",
-    "Font-End Development",
-    "Full Stack Development",
-    "CMS Development",
-    "Video Game Development",
+    "Accounting and Finance",
+    "Admin, Secretarial and Clerk",
+    "Advetising and Media",
+    "Agriculture and Farming",
+    "Architecture and Construction",
+    "Automotive",
+    "Banking and Insurance",
+    "Business Development",
+    "Bussiness and Administration",
+    "communication, PR and Jornalism",
+    "Community Service Jobs",
+    "Consultancy and Training",
+    "Creative Arts Jobs",
+    "Customer Service",
+    "Development adn Project Management",
+    "Economics and Finance",
+    "Education",
+    "Engineering",
+    "Environment and Natural Resources",
+    "Healthcare",
+    "Hotel and Hospitality Jobs",
+    "Human Resources and Recruitment",
+    "Information Technology",
+    "Languages",
+    "Legal",
+    "Logistics, Transportation and Supply",
+    "Maintenance and Repair",
+    "Managment and Industrial",
+    "Manufacturing",
+    "Media and Journalism",
+    "Natural Sciences Jobs",
+    "Pharmaceutical",
+    "Purchasing and Procurement",
+    "Qualtity Assurance",
+    "Research and Development",
+    "Retail, Wholesale and Distribution",
+    "Sales and Marketing",
+    "Science and Technology",
+    "Security and Protection",
+    "Social Sciences and Communication",
+    "Strategic Planning",
+    "Telecommunications",
   ];
-  const [categorySelect, setCategorySelect] = useState(
-    route?.params?.category && ""
-  );
-  const [specificSelect, setSpecificSelect] = useState(
-    route?.params?.specificCategory && ""
-  );
-  const [categoryIndex, setCategoryIndex] = useState(route?.params?.category);
-  const [specificIndex, setSpecificIndex] = useState(
-    route?.params?.specificCategory
-  );
-  useEffect(() => {
-    if (route?.params?.category && route?.params?.specificCategory) {
-      setCategoryIndex(
-        category.findIndex((i, j) => {
-          return i == route.params.category;
-        })
-      );
-      setSpecificIndex(
-        category.findIndex((i, j) => {
-          return i == route.params.specificCategory;
-        })
-      );
-    }
-  }, []);
+
+  const [categorySelect, setCategorySelect] = useState("");
+
   return (
     <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
       <Pressable style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
@@ -95,7 +89,6 @@ const CategoryScreen = ({ navigation, route }) => {
                 color: "rgba(0,0,0,0.2)",
               }}
               dropdownOverlayColor="transparent"
-              defaultValueByIndex={categoryIndex}
               buttonStyle={{
                 borderWidth: 1,
                 marginTop: "5%",
@@ -120,80 +113,44 @@ const CategoryScreen = ({ navigation, route }) => {
               }}
             />
           </View>
-          <View style={{ alignItems: "center" }}>
-            <SelectDropdown
-              rowStyle={{
-                color: "#0244d0",
-              }}
-              defaultValueByIndex={specificIndex}
-              dropdownOverlayColor="transparent"
-              dropdownStyle={{}}
-              buttonStyle={{
-                borderWidth: 1,
-                marginTop: "5%",
-                borderColor: "#0244d0",
-                width: "90%",
-                borderRadius: 15,
-              }}
-              data={category}
-              onSelect={(selectedItem, index) => {
-                setSpecificSelect(selectedItem);
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                // text represented after item is selected
-                // if data array is an array of objects then return selectedItem.property to render after item is selected
-                return selectedItem;
-              }}
-              defaultButtonText="Select specific"
-              rowTextForSelection={(item, index) => {
-                // text represented for each item in dropdown
-                // if data array is an array of objects then return item.property to represent item in dropdown
-                return item;
-              }}
-            />
-          </View>
         </ScrollView>
       </Pressable>
-
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 100,
+          top: dimension.height - 80,
           alignItems: "center",
           justifyContent: "center",
-          height: 90,
+          height: 60,
           width: "100%",
           borderTopWidth: 1,
           borderColor: "rgba(0,0,0,0.7)",
         }}
       >
         <Pressable
-          disabled={!(categorySelect && specificSelect)}
+          disabled={!categorySelect}
           onPress={() => {
             dispatch({
               type: "add",
               payload: {
                 category: categorySelect,
-                specificCategory: specificSelect,
               },
             });
-            if (route?.params?.category && route?.params?.specificCategory) {
-              navigation.navigate("employer/postjob/review");
-            } else {
-              navigation.navigate("employer/postjob/skills");
-            }
+
+            navigation.navigate("employer/postjob/skills");
           }}
           style={{
             width: "80%",
             borderRadius: 20,
-            backgroundColor:
-              categorySelect && specificSelect ? "#0244d0" : "#rgba(0,0,0,0.4)",
-            height: "50%",
+            backgroundColor: categorySelect ? "#0244d0" : "#rgba(0,0,0,0.4)",
+            height: "70%",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 17 }}>Next: Skills</Text>
+          <Text style={{ color: categorySelect ? "#fff" : "rgba(0,0,0,0.5)" }}>
+            Next: Skills
+          </Text>
         </Pressable>
       </View>
     </View>

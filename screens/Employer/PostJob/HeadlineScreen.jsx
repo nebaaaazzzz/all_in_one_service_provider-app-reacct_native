@@ -78,6 +78,7 @@ const HeadlineScreen = ({ navigation }) => {
           }}
         >
           <Pressable
+            disabled={!active}
             onPress={() => {
               dispatch({ type: "add", payload: { title: headline } });
               navigation.navigate("employer/postjob/category");
@@ -92,7 +93,7 @@ const HeadlineScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: active ? "#fff" : "rgba(0,0,0,0.5)" }}>
-              Next: Skills
+              Next: Category
             </Text>
           </Pressable>
         </View>

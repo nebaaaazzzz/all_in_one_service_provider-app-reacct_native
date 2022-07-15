@@ -6,15 +6,27 @@ import {
   StatusBar,
   useWindowDimensions,
   Pressable,
+  TouchableOpacity,
   Keyboard,
 } from "react-native";
-import { RadioButton, List, Divider, TextInput } from "react-native-paper";
+import {
+  RadioButton,
+  Checkbox,
+  List,
+  Divider,
+  TextInput,
+} from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as DocumentPicker from "expo-document-picker";
 import { PostJobContext } from "./PostJobScreen";
+import DatePicker from "@react-native-community/datetimepicker";
+
 import { useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../../urls";
 const ReviewScreen = ({ route, navigation }) => {
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState();
+  const [cvRequired, setCvRequired] = useState(false);
   const { dispatch, jobPost } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const [expanded, setExpanded] = useState(false);
@@ -24,8 +36,8 @@ const ReviewScreen = ({ route, navigation }) => {
   const [description, setDescription] = useState(false);
   const [checkEnglish, setCheckEnglish] = useState("");
   const [questions, setQuestions] = useState([]);
-
   const [checkHour, setHour] = useState("");
+  const [gender, setGender] = useState("");
   const fileSelector = async () => {
     const doc = await DocumentPicker.getDocumentAsync({
       multiple: true,
@@ -41,6 +53,7 @@ const ReviewScreen = ({ route, navigation }) => {
       /*file lastmodified mimeType name  output size type uri */
     }
   };
+  console.log(date);
   const { error, isError, isLoading, isSuccess, mutate } = useMutation(
     async (data) => {
       console.log(`${BASEURI}/employer/postjob`);
@@ -63,8 +76,9 @@ const ReviewScreen = ({ route, navigation }) => {
         type: file.mimeType,
       });
     }
-    formData.append("body", JSON.stringify(jobPost));
-    mutate(formData);
+    // formData.append("body", JSON.stringify(jobPost));
+    // mutate(formData);
+    console.log(jobPost);
   };
 
   if (isSuccess) {
@@ -116,15 +130,7 @@ const ReviewScreen = ({ route, navigation }) => {
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>Headline</Text>
-            <TextInput
-              style={{ marginTop: 10 }}
-              multiline
-              numberOfLines={3}
-              onChangeText={(txt) => {
-                setHeadline(txt);
-              }}
-              value={headline}
-            />
+            <Text>{jobPost.title}</Text>
           </View>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
@@ -188,18 +194,7 @@ const ReviewScreen = ({ route, navigation }) => {
                 Category
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text>{jobPost?.category && ""}</Text>
-                <Pressable
-                  style={{ marginHorizontal: 10 }}
-                  onPress={() => {
-                    navigation.push("employer/postjob/category", {
-                      specificCategory: jobPost.specificCategory,
-                      category: jobPost.category,
-                    });
-                  }}
-                >
-                  <Icon size={20} name="circle-edit-outline" />
-                </Pressable>
+                <Text>{jobPost?.category}</Text>
               </View>
             </View>
             <View style={{ marginVertical: 10 }}>
@@ -208,32 +203,22 @@ const ReviewScreen = ({ route, navigation }) => {
               >
                 skills
               </Text>
-              <View style={{}}>
+              <View style={{ flexDirection: "row" }}>
                 {jobPost?.skills?.map((item, index) => {
                   return (
-                    <View key={index + 1} style={{ flexDirection: "row" }}>
-                      <Text
-                        style={{
-                          paddingHorizontal: 10,
-                          paddingVertical: 5,
-                          paddingHorizontal: 10,
-                          color: "#fff",
-                          borderRadius: 15,
-                          backgroundColor: "blue",
-                        }}
-                      >
-                        {item}
-                      </Text>
-
-                      <Pressable
-                        onPress={() => {
-                          navigation.navigate("employer/postjob/skills");
-                        }}
-                        style={{ marginHorizontal: 10 }}
-                      >
-                        <Icon size={20} name="circle-edit-outline" />
-                      </Pressable>
-                    </View>
+                    <Text
+                      key={index + 1}
+                      style={{
+                        paddingHorizontal: 13,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "blue",
+                      }}
+                    >
+                      {item}
+                    </Text>
                   );
                 })}
               </View>
@@ -251,22 +236,116 @@ const ReviewScreen = ({ route, navigation }) => {
                     Budget
                   </Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Text style={{ fontSize: 16 }}>
-                      {jobPost.budget.from} birr- {jobPost.budget.to} birr /hr
+                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
+                      {jobPost.budget.from} birr- {jobPost.budget.to} birr
                     </Text>
-                    <Pressable
-                      onPress={() => {
-                        navigation.push("employer/postjob/payment");
-                      }}
-                    >
-                      <Icon size={20} name="circle-edit-outline" />
-                    </Pressable>
                   </View>
                 </View>
               ) : (
                 <></>
               )}
             </View>
+            <View>
+              {jobPost?.placeName ? (
+                <View>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 17,
+                      marginVertical: 10,
+                    }}
+                  >
+                    Work place
+                  </Text>
+                  <View style={{ flexDirection: "row", marginLeft: "5%" }}>
+                    <Text style={{ fontSize: 16 }}>{jobPost.placeName}</Text>
+                  </View>
+                </View>
+              ) : (
+                <></>
+              )}
+            </View>
+            <View>
+              {jobPost?.experience ? (
+                <View>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 17,
+                      marginVertical: 10,
+                    }}
+                  >
+                    Experience
+                  </Text>
+                  <View style={{ marginLeft: "5%" }}>
+                    <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                      {jobPost.experience.title}
+                    </Text>
+                    <Text style={{ fontSize: 16 }}>
+                      {jobPost.experience.description}
+                    </Text>
+                  </View>
+                </View>
+              ) : (
+                <></>
+              )}
+            </View>
+          </View>
+          <Divider
+            style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              marginVertical: "5%",
+              alignItems: "center",
+              marginHorizontal: "5%",
+            }}
+          >
+            <Text>DeadLine</Text>
+            <TouchableOpacity onPress={() => setOpen(true)}>
+              {open ? (
+                <DatePicker
+                  value={date ? new Date(date) : new Date()} //initial date from state
+                  mode="date" //The enum of date, datetime and time
+                  display="calendar"
+                  maxDate="01-01-2002"
+                  minimumDate={new Date()}
+                  onChange={({ nativeEvent: { timestamp } }) => {
+                    if (timestamp) {
+                      const tempDate = new Date(timestamp);
+                      setDate(
+                        tempDate.getDay() +
+                          "/" +
+                          tempDate.getMonth() +
+                          "/" +
+                          tempDate.getFullYear()
+                      );
+                      setOpen(false);
+                    }
+                  }}
+                />
+              ) : (
+                <Text style={{ color: "#666", marginLeft: 25, marginTop: 5 }}>
+                  {date ? date : "Press to Set Dateline"}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: "5%",
+            }}
+          >
+            <Text>Cv Required</Text>
+            <Checkbox
+              status={cvRequired ? "checked" : "unchecked"}
+              onPress={() => {
+                setCvRequired(!cvRequired);
+              }}
+            />
           </View>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
@@ -282,6 +361,8 @@ const ReviewScreen = ({ route, navigation }) => {
               expanded={expanded}
               handlePress={handlePress}
               setHour={setHour}
+              gender={gender}
+              setGender={setGender}
               checkHour={checkHour}
               checkEnglish={checkEnglish}
               setCheckEnglish={setCheckEnglish}
@@ -309,10 +390,11 @@ const ReviewScreen = ({ route, navigation }) => {
             dispatch({
               type: "add",
               payload: {
-                title: headline,
                 description,
                 file,
+                deadline: date,
                 checkEnglish,
+                cvRequired,
                 checkHour,
                 questions,
               },
@@ -517,6 +599,8 @@ function AdvancedPred({
   handlePress,
   checkEnglish,
   setCheckEnglish,
+  gender,
+  setGender,
   checkHour,
   setHour,
 }) {
@@ -578,6 +662,23 @@ function AdvancedPred({
                 status={checkHour === item ? "checked" : "unchecked"}
               />
               <Text>{hourPerWeeks[index]}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+      <View>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
+        {["male", "female", "both"].map((item, index) => {
+          return (
+            <Pressable
+              onPress={() => setGender(item)}
+              style={{ flexDirection: "row", alignItems: "center" }}
+            >
+              <RadioButton
+                value={item}
+                status={gender === item ? "checked" : "unchecked"}
+              />
+              <Text>{item}</Text>
             </Pressable>
           );
         })}

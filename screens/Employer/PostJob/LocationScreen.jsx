@@ -5,51 +5,79 @@ import {
   StatusBar,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
+  ActivityIndicator,
+  Modal,
+  ToastAndroid,
 } from "react-native";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import Icon from "@expo/vector-icons/SimpleLineIcons";
 import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-import { PostHouseContext } from "../../Lesser/PostHouse/PostHouseScreen";
+import { MAPBOXTOKEN, MAPBOXURI } from "./../../../urls.js";
 const LocationScreen = ({ navigation }) => {
-  const [errorMsg, setErrorMsg] = useState(null);
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
   const [searchResult, setSearchResut] = useState([]);
-  const [placeName, setPlaceName] = useState("");
-  const [center, setCenter] = useState();
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const inputRef = useRef();
   const pressHandler = async () => {
+    await Location.enableNetworkProviderAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
+      ToastAndroid.show(
+        "Permission to access location was denied",
+        ToastAndroid.LONG
+      );
       return;
     }
-    s;
     try {
-      let location = await Location.getCurrentPositionAsync({});
-      fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
-      )
-        .then(async (res) => {
-          const r = await res.json();
-          setPlaceName(r?.features[0]?.place_name);
-          setCenter(r?.features[0]?.center);
-          if (center) {
+      const getLocation = async (location) => {
+        try {
+          const response = await fetch(
+            `${MAPBOXURI}/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=${MAPBOXTOKEN}`
+          );
+          const r = await response.json();
+          if (r.features[0].place_name && r.features[0].center) {
+            setIsGettingLocation(false);
             navigation.navigate("employer/postjob/pinspot", {
-              center,
-              placeName,
+              center: r.features[0].center,
             });
           }
-        })
-        .catch((err) => {
+        } catch (err) {
+          ToastAndroid.show(
+            "check your internet connection",
+            ToastAndroid.LONG
+          );
+          setIsGettingLocation(false);
           throw err;
-        });
+        }
+      };
+
+      setIsGettingLocation(true);
+      const t = setTimeout(async () => {
+        try {
+          const location = await Location.getLastKnownPositionAsync();
+          getLocation(location);
+        } catch (err) {
+          throw err;
+        }
+      }, 10000);
+      try {
+        const location = await Location.getCurrentPositionAsync();
+        clearTimeout(t);
+        getLocation(location);
+
+        // navigation.navigate("employer/postjob/pinspot", {
+        //   center,
+        //   placeName,
+        // });
+      } catch (err) {
+        throw err;
+      }
     } catch (err) {
       throw err;
     }
@@ -57,7 +85,6 @@ const LocationScreen = ({ navigation }) => {
   const searchListPressHandler = (index) => {
     navigation.navigate("employer/postjob/pinspot", {
       center: searchResult[index].center,
-      placeName: searchResult[index].place_name,
     });
   };
   useEffect(() => {
@@ -93,6 +120,17 @@ const LocationScreen = ({ navigation }) => {
           marginTop: StatusBar.currentHeight,
         }}
       >
+        <Modal visible={isGettingLocation} animationType="fade">
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <View>
+              <ActivityIndicator color={"#0244d0"} size="large" />
+              <Text style={{ marginTop: "10%" }}>Getting Current Location</Text>
+            </View>
+          </View>
+        </Modal>
+
         <View
           style={{
             backgroundColor: "#fff",

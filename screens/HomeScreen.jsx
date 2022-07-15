@@ -9,8 +9,7 @@ import ProfileScreen from "./Common/ProfileScreen";
 import SettingsScreen from "./Common/SettingsScreen";
 import MessagesScreen from "./Common/MessagesScreen";
 import CustomDrawer from "../components/CustomDrawer";
-import * as SecureStore from "expo-secure-store";
-
+import { UserContext } from "../App.Navigator";
 const SPressable = styled(Pressable)`
   overflow: hidden;
   border-radius: 10px;
@@ -135,6 +134,7 @@ const Home = ({ navigation }) => {
 };
 
 const HomeScreen = () => {
+  const user = React.useContext(UserContext);
   return (
     <DrawerNavigator.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}

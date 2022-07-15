@@ -1,6 +1,5 @@
 import { View, Text, ActivityIndicator } from "react-native";
 import React from "react";
-import JobDetailScreen from "./../Employee/JobDetailScreen";
 import { useQuery } from "react-query";
 import { BASETOKEN, BASEURI } from "../../urls";
 const fetchJob = async ({ queryKey }) => {
@@ -17,7 +16,7 @@ const fetchJob = async ({ queryKey }) => {
 };
 const JobDetailEditScreen = ({ navigation, route }) => {
   const { isLoading, isError, error, data, isFetching } = useQuery(
-    ["job", route.params.id],
+    ["job", "629ef13df462f9bdfebbde07"],
     fetchJob
   );
   if (isLoading || isFetching) {
