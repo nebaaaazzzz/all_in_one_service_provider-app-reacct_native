@@ -141,18 +141,27 @@ const Home = ({ navigation }) => {
     "LifeStyle",
     "Legal",
   ];
+  if (status === "loading") {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
+      </View>
+    );
+  }
+  if (status === "error") {
+    navigation.reset({
+      index: 1,
+      routes: [{ name: "error", params: { error } }],
+    });
 
-  return status === "loading" ? (
-    <View style={{ marginTop: "50%" }}>
-      <ActivityIndicator></ActivityIndicator>
-    </View>
-  ) : status === "error" ? (
-    <Text>Error: {error.message}</Text>
-  ) : (
+    return <View></View>;
+  }
+  return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
 
       <Searchbar
+        style={{ marginHorizontal: 10, borderRadius: 20 }}
         placeholder="Search"
         onChangeText={onChangeSearch}
         value={searchQuery}
@@ -173,7 +182,7 @@ const Home = ({ navigation }) => {
                   borderBottomWidth: indexS == index ? 2 : 0,
                 }}
               >
-                <Text style={{ color: "#3498db" }}>{item}</Text>
+                <Text style={{ color: "#0244d0" }}>{item}</Text>
               </Pressable>
             );
           }}

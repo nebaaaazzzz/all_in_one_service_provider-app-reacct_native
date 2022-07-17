@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,19 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-
+import { BASEURI, BASETOKEN } from "../../urls";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { UserContext } from "../../App.Navigator";
+import * as SecureStore from "expo-secure-store";
+
+import { useQuery, useQueryClient } from "react-query";
+
+// Get QueryClient from the context
 
 const CustomDrawer = (props) => {
+  const queryClient = useQueryClient();
+
+  const user = useContext(UserContext);
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView
@@ -26,7 +34,13 @@ const CustomDrawer = (props) => {
           style={{ padding: 20 }}
         >
           <Image
-            source={require("../../assets/images/user-profile.jpg")}
+            source={{
+              uri: `${BASEURI}/profile-pic/${user.profilePic}`,
+              // uri: `${BASEURI}/profile-pic/${userContext.profilePic}`,
+              headers: {
+                Authorization: `Bearer ${BASETOKEN}`,
+              },
+            }}
             style={{
               height: 80,
               width: 80,
@@ -42,7 +56,7 @@ const CustomDrawer = (props) => {
               marginBottom: 5,
             }}
           >
-            Nebiyu Daniel
+            {user.firstName + " " + user.lastName}
           </Text>
           {/* <View style={{ flexDirection: "row" }}>
             <Text
@@ -78,7 +92,13 @@ const CustomDrawer = (props) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
+        <TouchableOpacity
+          onPress={async () => {
+            await SecureStore.deleteItemAsync("token");
+            await queryClient.invalidateQueries("user");
+          }}
+          style={{ paddingVertical: 15 }}
+        >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Ionicons name="exit-outline" size={22} />
             <Text

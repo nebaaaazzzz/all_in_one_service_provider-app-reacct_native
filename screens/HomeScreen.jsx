@@ -10,6 +10,7 @@ import SettingsScreen from "./Common/SettingsScreen";
 import MessagesScreen from "./Common/MessagesScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import { UserContext } from "../App.Navigator";
+import EditProfileScreen from "./Common/EditProfileScreen";
 const SPressable = styled(Pressable)`
   overflow: hidden;
   border-radius: 10px;
@@ -134,7 +135,6 @@ const Home = ({ navigation }) => {
 };
 
 const HomeScreen = () => {
-  const user = React.useContext(UserContext);
   return (
     <DrawerNavigator.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
@@ -160,10 +160,11 @@ const HomeScreen = () => {
   /> */}
 
       <DrawerNavigator.Screen
-        name="home"
+        name="home/"
         component={Home}
         options={{
           headerTitle: "",
+          title: "Home",
           headerStyle: {
             backgroundColor: "#0244d0",
             elevation: 0,
@@ -178,6 +179,15 @@ const HomeScreen = () => {
       <DrawerNavigator.Screen
         name="Profile"
         component={ProfileScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="editProfile"
+        component={EditProfileScreen}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="person-outline" size={22} color={color} />

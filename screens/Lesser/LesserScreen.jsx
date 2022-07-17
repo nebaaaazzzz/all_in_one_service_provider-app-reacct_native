@@ -50,14 +50,24 @@ const MyPosts = ({ navigation }) => {
       id,
     });
   }
-  return status === "loading" ? (
-    <View style={{ marginTop: "50%" }}>
-      <ActivityIndicator></ActivityIndicator>
-    </View>
-  ) : status === "error" ? (
-    <Text>Error: {error.message}</Text>
-  ) : (
-    <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
+  if (status === "loading") {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
+      </View>
+    );
+  }
+  if (status === "error") {
+    navigation.reset({
+      index: 1,
+      routes: [{ name: "error", params: { error } }],
+    });
+
+    return <View></View>;
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
       <FlatList
         showsVerticalScrollIndicator={false}
         onEndReached={() => {
@@ -72,7 +82,7 @@ const MyPosts = ({ navigation }) => {
         }}
         ListFooterComponent={() => {
           if (isFetchingNextPage) {
-            return <ActivityIndicator></ActivityIndicator>;
+            return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
             <Text>Nothing more to load</Text>;
@@ -100,7 +110,7 @@ const Home = ({ navigation }) => {
           style={{
             backgroundColor: "#fff",
             borderRadius: 10,
-            backgroundColor: "green",
+            backgroundColor: "#0244d0",
             marginHorizontal: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,

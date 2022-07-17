@@ -16,9 +16,10 @@ import { ActivityIndicator } from "react-native";
 import { View, Text } from "react-native";
 import { useQuery } from "react-query";
 import { BASEURI } from "./urls";
+import ErrorScreen from "./screens/Common/ErrorScreen";
 const StackNavigator = createStackNavigator();
 export const UserContext = React.createContext();
-const AppNavigator = () => {
+const AppNavigator = ({ navigation }) => {
   const { data, isFetching, isError, error, isLoading, isSuccess } = useQuery(
     "user",
 
@@ -36,17 +37,17 @@ const AppNavigator = () => {
   );
   if (isLoading || isFetching) {
     return (
-      <View style={{ marginTop: "80%" }}>
-        <ActivityIndicator></ActivityIndicator>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
       </View>
     );
   }
   if (isError) {
-    return (
-      <View>
-        <Text>{error.message}</Text>
-      </View>
-    );
+    navigation.reset({
+      index: 1,
+      routes: [{ name: "error", params: { error } }],
+    });
+    return <View></View>;
   }
   return (
     <NavigationContainer>
@@ -77,10 +78,11 @@ const AppNavigator = () => {
             </StackNavigator.Group>
           ) : (
             <StackNavigator.Group>
-              <StackNavigator.Screen name="signup" component={SignupScreen} />
               <StackNavigator.Screen name="login" component={LoginScreen} />
+              <StackNavigator.Screen name="signup" component={SignupScreen} />
             </StackNavigator.Group>
           )}
+          <StackNavigator.Screen name="error" component={ErrorScreen} />
         </StackNavigator.Navigator>
       </UserContext.Provider>
     </NavigationContainer>

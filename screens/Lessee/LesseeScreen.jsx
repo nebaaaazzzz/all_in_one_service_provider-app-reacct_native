@@ -99,7 +99,7 @@ const Lessee = ({ navigation }) => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("myhouses", fetchHouses, {
+  } = useInfiniteQuery("house", fetchHouses, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;
@@ -160,38 +160,34 @@ const Lessee = ({ navigation }) => {
       id,
     });
   }
-  return status === "loading" ? (
-    <View style={{ marginTop: "50%" }}>
-      <ActivityIndicator></ActivityIndicator>
-    </View>
-  ) : status === "error" ? (
-    <Text>Error: {error.message}</Text>
-  ) : (
+  if (status === "loading") {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
+      </View>
+    );
+  }
+  if (status === "error") {
+    navigation.reset({
+      index: 1,
+      routes: [{ name: "error", params: { error } }],
+    });
+
+    return <View></View>;
+  }
+
+  return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
 
       <Searchbar
+        style={{ marginHorizontal: 10, borderRadius: 20 }}
         placeholder="Search"
+        iconColor="#0244d0"
         onChangeText={onChangeSearch}
         value={searchQuery}
       />
       <View style={{ flexDirection: "row", marginTop: 4 }}>
-        <Pressable
-          android_ripple={{ color: "rgba(0,0,0,0.4)" }}
-          onPress={() => requestAnimationFrame(() => showModal())}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            borderRightColor: "black",
-            paddingRight: 10,
-            borderRightWidth: 1,
-            borderColor: "blue",
-            marginRight: 10,
-          }}
-        >
-          <AntDesign name="filter" size={24} color="blue" />
-          <Text style={{ color: "blue" }}>Filters</Text>
-        </Pressable>
         <View>
           <FlatList
             horizontal
@@ -203,17 +199,17 @@ const Lessee = ({ navigation }) => {
                   onPress={() => setIndex(index)}
                   style={{
                     marginHorizontal: 10,
-                    borderBottomColor: "#3498db",
+                    borderBottomColor: "#0244d0",
                     borderBottomWidth: indexS == index ? 2 : 0,
                   }}
                 >
                   <AntDesign
                     name={item.name}
                     size={20}
-                    color="#3498db"
+                    color="#0244d0"
                     style={{ textAlign: "center" }}
                   />
-                  <Text style={{ color: "#3498db" }}>{item.title}</Text>
+                  <Text style={{ color: "#0244d0" }}>{item.title}</Text>
                 </Pressable>
               );
             }}

@@ -23,21 +23,21 @@ import DatePicker from "@react-native-community/datetimepicker";
 
 import { useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../../urls";
-const ReviewScreen = ({ route, navigation }) => {
+const ReviewScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
   const [cvRequired, setCvRequired] = useState(false);
   const { dispatch, jobPost } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const [expanded, setExpanded] = useState(false);
-  const [headline, setHeadline] = useState(jobPost?.title || "");
   const handlePress = () => setExpanded(!expanded);
   const [file, setFile] = useState("");
   const [description, setDescription] = useState(false);
-  const [checkEnglish, setCheckEnglish] = useState("");
+  const [englishLevel, setEnglishLevel] = useState();
   const [questions, setQuestions] = useState([]);
-  const [checkHour, setHour] = useState("");
-  const [gender, setGender] = useState("");
+  const [checkHour, setHour] = useState();
+  const [gender, setGender] = useState();
+  const [permanent, setPermanet] = useState(false);
   const fileSelector = async () => {
     const doc = await DocumentPicker.getDocumentAsync({
       multiple: true,
@@ -53,10 +53,8 @@ const ReviewScreen = ({ route, navigation }) => {
       /*file lastmodified mimeType name  output size type uri */
     }
   };
-  console.log(date);
   const { error, isError, isLoading, isSuccess, mutate } = useMutation(
     async (data) => {
-      console.log(`${BASEURI}/employer/postjob`);
       const response = await fetch(`${BASEURI}/employer/postjob`, {
         method: "POST",
         headers: {
@@ -76,9 +74,8 @@ const ReviewScreen = ({ route, navigation }) => {
         type: file.mimeType,
       });
     }
-    // formData.append("body", JSON.stringify(jobPost));
-    // mutate(formData);
-    console.log(jobPost);
+    formData.append("body", JSON.stringify(jobPost));
+    mutate(formData);
   };
 
   if (isSuccess) {
@@ -147,7 +144,7 @@ const ReviewScreen = ({ route, navigation }) => {
               <Text style={{ fontSize: 16, marginVertical: 10 }}>
                 Include your expectations about the task or deliverable, what
                 you’re looking for in a work relationship, and anything unique
-                about your project, team, or company.
+                about your project, team, or company.Minumun 50 characters.
               </Text>
             </View>
             <TextInput
@@ -214,7 +211,7 @@ const ReviewScreen = ({ route, navigation }) => {
                         paddingHorizontal: 10,
                         color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "blue",
+                        backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -339,8 +336,25 @@ const ReviewScreen = ({ route, navigation }) => {
               marginLeft: "5%",
             }}
           >
+            <Text>permanent</Text>
+            <Checkbox
+              color="#0244d0"
+              status={permanent ? "checked" : "unchecked"}
+              onPress={() => {
+                setPermanet(!permanent);
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: "5%",
+            }}
+          >
             <Text>Cv Required</Text>
             <Checkbox
+              color="#0244d0"
               status={cvRequired ? "checked" : "unchecked"}
               onPress={() => {
                 setCvRequired(!cvRequired);
@@ -364,8 +378,8 @@ const ReviewScreen = ({ route, navigation }) => {
               gender={gender}
               setGender={setGender}
               checkHour={checkHour}
-              checkEnglish={checkEnglish}
-              setCheckEnglish={setCheckEnglish}
+              englishLevel={englishLevel}
+              setEnglishLevel={setEnglishLevel}
             />
           </List.Section>
         </ScrollView>
@@ -385,7 +399,7 @@ const ReviewScreen = ({ route, navigation }) => {
         }}
       >
         <Pressable
-          disabled={headline.length < 5 && description.length < 50}
+          disabled={description.length < 50}
           onPress={() => {
             dispatch({
               type: "add",
@@ -393,9 +407,11 @@ const ReviewScreen = ({ route, navigation }) => {
                 description,
                 file,
                 deadline: date,
-                checkEnglish,
+                gender,
+                permanent,
+                englishLevel,
                 cvRequired,
-                checkHour,
+                hourPerWeek: checkHour,
                 questions,
               },
             });
@@ -411,9 +427,7 @@ const ReviewScreen = ({ route, navigation }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>
-            {route?.params?.edit ? "Save" : "Post Job"}
-          </Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>Post Job</Text>
         </Pressable>
       </View>
     </View>
@@ -452,7 +466,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
               elevation: 5,
               marginVertical: 10,
               justifyContent: "center",
-              backgroundColor: "blue",
+              backgroundColor: "#0244d0",
             }}
           >
             <Icon size={18} color="#fff" name="plus" />
@@ -597,8 +611,8 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
 function AdvancedPred({
   expanded,
   handlePress,
-  checkEnglish,
-  setCheckEnglish,
+  englishLevel,
+  setEnglishLevel,
   gender,
   setGender,
   checkHour,
@@ -633,15 +647,16 @@ function AdvancedPred({
       <View>
         <Text style={{ fontWeight: "bold" }}>English level</Text>
         <View>
-          {["first", "second", "third", "fourth"].map((item, index) => {
+          {englishLevels.map((item, index) => {
             return (
               <Pressable
-                onPress={() => setCheckEnglish(item)}
+                onPress={() => setEnglishLevel(item)}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
                 <RadioButton
+                  color="#0244d0"
                   value={item}
-                  status={checkEnglish === item ? "checked" : "unchecked"}
+                  status={englishLevel === item ? "checked" : "unchecked"}
                 />
                 <Text>{englishLevels[index]}</Text>
               </Pressable>
@@ -651,13 +666,14 @@ function AdvancedPred({
       </View>
       <View>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
-        {["first", "second", "third"].map((item, index) => {
+        {hourPerWeeks.map((item, index) => {
           return (
             <Pressable
               onPress={() => setHour(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
             >
               <RadioButton
+                color="#0244d0"
                 value={item}
                 status={checkHour === item ? "checked" : "unchecked"}
               />
@@ -667,7 +683,9 @@ function AdvancedPred({
         })}
       </View>
       <View>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          Gender required
+        </Text>
         {["male", "female", "both"].map((item, index) => {
           return (
             <Pressable
@@ -675,6 +693,7 @@ function AdvancedPred({
               style={{ flexDirection: "row", alignItems: "center" }}
             >
               <RadioButton
+                color="#0244d0"
                 value={item}
                 status={gender === item ? "checked" : "unchecked"}
               />

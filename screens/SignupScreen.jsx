@@ -19,11 +19,12 @@ import GoogleSVG from "../assets/images/misc/GoogleSvg";
 import FacebookSVG from "../assets/images/misc/FacebookSvg";
 import TwitterSVG from "../assets/images/misc/TwitterSvg";
 import CustomButton from "../components/CustomButton";
+import { roundToNearestPixel } from "react-native/Libraries/Utilities/PixelRatio";
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
+
   const [date, setDate] = useState();
-  const [dobLabel, setDobLabel] = useState("Date of Birth");
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
