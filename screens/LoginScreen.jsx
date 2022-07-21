@@ -9,15 +9,12 @@ import {
   ActivityIndicator,
   TextInput,
   StatusBar,
+  ToastAndroid,
 } from "react-native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import LoginSVG from "../assets/images/misc/LoginSVG";
 
-import GoogleSVG from "../assets/images/misc/GoogleSvg.jsx";
-import FacebookSVG from "../assets/images/misc/FacebookSvg.jsx";
-import TwitterSVG from "../assets/images/misc/TwitterSvg.jsx";
 import CustomButton from "../components/CustomButton";
 import { ScrollView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
@@ -25,8 +22,13 @@ import * as SecureStore from "expo-secure-store";
 import { useMutation, useQueryClient } from "react-query";
 import { BASEURI } from "../urls";
 import * as yup from "yup";
-const yupEmailSchema = yup.object().shape({
-  email: yup.string().email().required(),
+const yupPhoneSchema = yup.object().shape({
+  phoneNumber: yup
+    .string()
+    .matches(/^9/, "must stary with 9")
+    .max(9)
+    .min(9)
+    .required(),
 });
 const yupPasswordSchema = yup.object().shape({
   password: yup.string().required().min(6),
@@ -34,20 +36,24 @@ const yupPasswordSchema = yup.object().shape({
 const LoginScreen = ({ navigation, route }) => {
   const [password, setPassword] = React.useState("");
   const queryClient = useQueryClient();
-  const [emailError, setEmailError] = React.useState("");
+  const [phoneError, setPhoneError] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const { isLoading, data, error, isError, isSuccess, mutate } = useMutation(
     async () => {
       try {
-        if (!(passwordError && emailError)) {
+        if (!(passwordError && phoneError)) {
           const response = await fetch(`${BASEURI}/auth/login`, {
             method: "POST",
             headers: {
               "content-type": "application/json",
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ phoneNumber, password }),
           });
+          if (!response.ok) {
+            console.log("reponse text", response.statusText);
+            throw new Error((await response.json()).err);
+          }
           return await response.json();
         }
       } catch (err) {
@@ -56,24 +62,20 @@ const LoginScreen = ({ navigation, route }) => {
     }
   );
   if (isLoading) {
-    <View>
-      <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
-    </View>;
-  }
-  if (isError) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>{error.message}</Text>
+        <ActivityIndicator color={"#0244d0"} size={"large"}></ActivityIndicator>
       </View>
     );
   }
   if (isSuccess) {
     (async () => {
-      await SecureStore.setItemAsync("token", data.token);
-      await queryClient.invalidateQueries("user");
+      if (data.token) {
+        await SecureStore.setItemAsync("token", data.token);
+        await queryClient.invalidateQueries("user");
+      }
     })();
   }
-
   return (
     <SafeAreaView
       style={{
@@ -90,49 +92,55 @@ const LoginScreen = ({ navigation, route }) => {
                 fontSize: 28,
                 fontWeight: "500",
                 color: "#333",
-                marginBottom: 30,
+                marginBottom: 10,
               }}
             >
               Login
             </Text>
-
+            <View style={{ marginBottom: 10 }}>
+              {isError && (
+                <Text style={{ textAlign: "center", color: "red" }}>
+                  {error.message}
+                </Text>
+              )}
+            </View>
             <View style={{ marginBottom: 25 }}>
               <View
                 style={{
                   flexDirection: "row",
-                  borderColor: emailError ? "red" : "#ccc",
+                  borderColor: phoneError ? "red" : "#ccc",
                   borderBottomWidth: 1,
                   paddingBottom: 8,
                 }}
               >
                 <MaterialIcons
-                  name="alternate-email"
+                  name="phone"
                   size={20}
                   color="#666"
                   style={{ marginRight: 5 }}
                 />
                 <TextInput
-                  value={email}
+                  value={phoneNumber}
                   onChangeText={(text) => {
-                    yupEmailSchema
-                      .validate({ email: text })
+                    yupPhoneSchema
+                      .validate({ phoneNumber: text })
                       .then(() => {
-                        setEmailError("");
+                        setPhoneError("");
                       })
                       .catch((err) => {
-                        setEmailError(err.message);
+                        setPhoneError(err.message);
                       });
-                    setEmail(text);
+                    setPhoneNumber(text);
                   }}
-                  placeholder={"Email ID"}
-                  keyboardType={"email-address"}
+                  placeholder={"Phone number"}
+                  keyboardType={"phone-pad"}
                   style={{
                     flex: 1,
                     paddingVertical: 0,
                   }}
                 />
               </View>
-              {emailError ? <Text>{emailError}</Text> : <></>}
+              {phoneError ? <Text>{phoneError}</Text> : <></>}
             </View>
             <View style={{ marginBottom: 25 }}>
               <View
@@ -180,57 +188,17 @@ const LoginScreen = ({ navigation, route }) => {
                 mutate({ id: new Date(), title: "Do Laundry" });
               }}
             />
-
-            <Text
-              style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
-            >
-              Or, login with ...
-            </Text>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: 30,
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("forgotpassword");
               }}
             >
-              <TouchableOpacity
-                onPress={() => {}}
-                style={{
-                  borderColor: "#ddd",
-                  borderWidth: 2,
-                  borderRadius: 10,
-                  paddingHorizontal: 30,
-                  paddingVertical: 10,
-                }}
+              <Text
+                style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
               >
-                <GoogleSVG height={24} width={24} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {}}
-                style={{
-                  borderColor: "#ddd",
-                  borderWidth: 2,
-                  borderRadius: 10,
-                  paddingHorizontal: 30,
-                  paddingVertical: 10,
-                }}
-              >
-                <FacebookSVG height={24} width={24} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {}}
-                style={{
-                  borderColor: "#ddd",
-                  borderWidth: 2,
-                  borderRadius: 10,
-                  paddingHorizontal: 30,
-                  paddingVertical: 10,
-                }}
-              >
-                <TwitterSVG height={24} width={24} />
-              </TouchableOpacity>
-            </View>
+                forget password?
+              </Text>
+            </TouchableOpacity>
 
             <View
               style={{
@@ -240,7 +208,7 @@ const LoginScreen = ({ navigation, route }) => {
               }}
             >
               <Text>New to the app?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("register")}>
+              <TouchableOpacity onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: "#0244d0", fontWeight: "700" }}>
                   {" "}
                   Register

@@ -20,10 +20,11 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as DocumentPicker from "expo-document-picker";
 import { PostJobContext } from "./PostJobScreen";
 import DatePicker from "@react-native-community/datetimepicker";
-
+import { useQueryClient } from "react-query";
 import { useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../../urls";
 const ReviewScreen = ({ navigation }) => {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
   const [cvRequired, setCvRequired] = useState(false);
@@ -80,6 +81,7 @@ const ReviewScreen = ({ navigation }) => {
 
   if (isSuccess) {
     navigation.navigate("employer/");
+    queryClient.invalidateQueries("myhouses");
   }
 
   if (isError) {

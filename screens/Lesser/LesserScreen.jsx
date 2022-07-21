@@ -16,8 +16,10 @@ import HomeDetailScreen from "./HomeDetailScreen";
 import PaymentScreen from "./PaymentScreen";
 const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQueryClient } from "react-query";
 import { BASETOKEN, BASEURI } from "./../../urls";
+import ViewImagesScreen from "./ViewImagesScreen";
+import { useIsFocused } from "@react-navigation/native";
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/lesser/posts?page=${pageParam}`, {
     headers: {
@@ -44,6 +46,11 @@ const MyPosts = ({ navigation }) => {
       return;
     },
   });
+  const isFocused = useIsFocused();
+  const queryClient = useQueryClient();
+  if (!isFocused) {
+    queryClient.invalidateQueries("myhouses");
+  }
   // require('./assets/images/girl.jpg'),          // Local image
   function pressHandler(id) {
     navigation.navigate("lesser/housedetail", {
@@ -104,7 +111,8 @@ const Home = ({ navigation }) => {
         <Pressable
           onPress={() => {
             requestAnimationFrame(() => {
-              navigation.navigate("lesser/payment");
+              navigation.navigate("lesser/posthouse");
+              // navigation.navigate("lesser/payment");
             });
           }}
           style={{
@@ -149,9 +157,14 @@ const LesserScreen = () => {
           component={PostHouseScreen}
         />
         <LesserStackNavigator.Screen
-          option={{ title: "detail" }}
+          options={{ title: "House Detail" }}
           name="lesser/housedetail"
           component={HomeDetailScreen}
+        />
+        <LesserStackNavigator.Screen
+          options={{ title: "House Detail" }}
+          name="lesser/viewimages"
+          component={ViewImagesScreen}
         />
         <LesserStackNavigator.Screen
           options={{ headerShown: false }}
@@ -191,8 +204,7 @@ const Post = ({ item, pressHandler }) => {
               source={{
                 uri: `${BASEURI}/house/image/${i.houseImages[0]}`,
                 headers: {
-                  Authorization:
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0FkbWluIjpmYWxzZSwic3ViIjoiNjI5ZWViNWNlYzkyZjI0ZjdkMjNlMjdmIiwiZXhwIjoxNjU0NjU5OTk0MzAzLCJpYXQiOjE2NTQ1ODIyMzR9.OAD1NzoanHjNOAUMhua1N4F5LLM-X9nYsLZXmoPJyys",
+                  Authorization: `Bearer ${BASETOKEN}`,
                 },
               }}
               style={{ width: "100%", height: 200, resizeMode: "cover" }}
@@ -207,21 +219,9 @@ const Post = ({ item, pressHandler }) => {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   {i.placeName}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Text>4.6</Text>
-                  <AntDesign color="blue" name="star" />
-                </View>
               </View>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                3,869 kilometers away
-              </Text>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.price}</Text>
+
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.price} birr</Text>
             </View>
           </Pressable>
         );

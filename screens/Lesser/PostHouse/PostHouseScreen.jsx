@@ -15,6 +15,7 @@ import DetailPlaceDescriptionScreen from "./DetailPlaceDescriptionScreen";
 import PropertyTypeScreen from "./PropertyTypeScreen";
 import LastCheckoutScreen from "./LastCheckoutScreen";
 import ReviewListingScreen from "./ReviewListingScreen";
+import ViewImagesScreen from "./ViewImagesScreen";
 const PostHouseStackNavigator = createStackNavigator();
 export const PostHouseContext = React.createContext();
 const reducer = (state = {}, action) => {
@@ -87,6 +88,10 @@ const PostHouseScreen = () => {
         <PostHouseStackNavigator.Screen
           name="lesser/posthouse/reviewlisting"
           component={ReviewListingScreen}
+        />
+        <PostHouseStackNavigator.Screen
+          name="lesser/posthouse/viewimages"
+          component={ViewImagesScreen}
         />
       </PostHouseStackNavigator.Navigator>
     </PostHouseContext.Provider>

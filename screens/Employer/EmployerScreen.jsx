@@ -6,7 +6,6 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -16,8 +15,9 @@ import JobDetailEditScreen from "./JobDetailEditScreen";
 import ReviewScreen from "./PostJob/ReviewScreen";
 import PostJobScreen from "./PostJob/PostJobScreen";
 import fromNow from "../../utils/time";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
+import { useIsFocused } from "@react-navigation/native";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
 const fetchJobs = async ({ pageParam = 1 }) => {
@@ -94,6 +94,11 @@ const MyPosts = ({ navigation }) => {
       return;
     },
   });
+  const isFocused = useIsFocused();
+  const queryClient = useQueryClient();
+  if (!isFocused) {
+    queryClient.invalidateQueries("myjobs");
+  }
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
   const pressHandler = (id) => {

@@ -175,7 +175,7 @@ const JobDetailEditScreen = ({ navigation, route }) => {
               <Text>Place Name : {data.placeName}</Text>
             </View>
 
-            {!data.document ? (
+            {data.document ? (
               <Pressable
                 style={{
                   backgroundColor: "#0244d0",

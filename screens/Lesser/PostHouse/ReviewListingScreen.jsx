@@ -6,18 +6,20 @@ import {
   StatusBar,
   Image,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
-import NetInfo from "@react-native-community/netinfo";
-import * as axois from "axios";
-
+import { useMutation } from "react-query";
+import { useQueryClient } from "react-query";
+import { BASETOKEN, BASEURI } from "../../../urls";
 const ReviewListingScreen = ({ navigation }) => {
+  const clientQuery = useQueryClient();
   const { housePost } = useContext(PostHouseContext);
 
-  const postHouse = () => {
-    (async () => {
+  const { isSuccess, isLoading, isError, error, data, mutate } = useMutation(
+    async () => {
       const formData = new FormData();
       for await (const img of housePost.houseImages) {
         const uri = img.uri;
@@ -32,40 +34,40 @@ const ReviewListingScreen = ({ navigation }) => {
       const newObj = { ...housePost };
       delete newObj.houseImages;
       formData.append("body", JSON.stringify(newObj));
-      NetInfo.fetch().then((state) => {
-        if (state.isConnected && state.isInternetReachable) {
-          const url = "https://2c57-213-55-102-49.in.ngrok.io/lesser/posthouse";
-
-          fetch(url, {
-            method: "post",
-            body: formData,
-            headers: {
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0FkbWluIjpmYWxzZSwic3ViIjoiNjI5ZWViNWNlYzkyZjI0ZjdkMjNlMjdmIiwiZXhwIjoxNjU0NjU5OTk0MzAzLCJpYXQiOjE2NTQ1ODIyMzR9.OAD1NzoanHjNOAUMhua1N4F5LLM-X9nYsLZXmoPJyys",
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(async (res) => {
-              if ((await res.json()).success) {
-                navigation.navigate("lesser/");
-              }
-            })
-
-            .catch((err) => {
-              if (err) {
-                ToastAndroid.show(
-                  "check your internet connection",
-                  ToastAndroid.LONG
-                );
-              }
-            });
-        } else {
-          ToastAndroid.show("no intenet connection", ToastAndroid.LONG);
+      try {
+        const response = await fetch(`${BASEURI}/lesser/posthouse`, {
+          method: "post",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${BASETOKEN}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        if (!response.ok) {
+          throw new Error((await response.json()).message);
         }
-      });
-    })();
-  };
-  useEffect(() => {});
+        return response.json();
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    }
+  );
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
+      </View>
+    );
+  }
+  if (isSuccess) {
+    navigation.navigate("lesser/");
+    clientQuery.invalidateQueries("myhouses");
+  }
+  if (isError) {
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
+  }
+
   return (
     <View
       horizontal={false}
@@ -86,7 +88,7 @@ const ReviewListingScreen = ({ navigation }) => {
       >
         <Text
           style={{
-            marginVertical: 20,
+            marginVertical: 10,
             textAlign: "center",
             color: "#000",
             fontSize: 18,
@@ -94,7 +96,12 @@ const ReviewListingScreen = ({ navigation }) => {
         >
           Check out your listing!
         </Text>
+        <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
+          {housePost.placeTitle}
+        </Text>
+
         <View>
+          <Divider />
           <Image
             source={{ uri: housePost.houseImages[1].uri }}
             style={{
@@ -105,56 +112,277 @@ const ReviewListingScreen = ({ navigation }) => {
               borderRadius: 10,
             }}
           />
+          <Pressable
+            onPress={() => {
+              navigation.navigate("lesser/posthouse/viewimages", {
+                images: housePost.houseImages,
+              });
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              alignSelf: "center",
+              paddingVertical: 5,
+              marginVertical: 5,
+              elevation: 10,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ color: "#fff" }}>View All Images</Text>
+          </Pressable>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             Fun place {housePost.placeName}
           </Text>
-          <Divider />
-          <View style={{ marginVertical: "2%" }}>
-            <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-              amenities
+          {housePost.region ? (
+            <Text>
+              Region :{" "}
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                {housePost.region}
+              </Text>
             </Text>
-            {housePost?.amenities?.map((item, index) => {
-              return (
-                <View key={index + 1} style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      paddingHorizontal: 10,
-                      color: "#fff",
-                      borderRadius: 15,
-                      backgroundColor: "#0244d0",
-                    }}
-                  >
-                    {item}
-                  </Text>
-                </View>
-              );
-            })}
+          ) : (
+            <></>
+          )}
+          <Text></Text>
+          <Divider />
+          {housePost?.guestFav?.length ? (
+            <View style={{ marginVertical: "2%" }}>
+              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
+                guest favourite
+              </Text>
+              {housePost?.guestFav?.map((item, index) => {
+                return (
+                  <View key={index + 1} style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "#0244d0",
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <></>
+          )}
+          <Divider />
+          {housePost?.saftyItems?.length ? (
+            <View style={{ marginVertical: "2%" }}>
+              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
+                amenities
+              </Text>
+              {housePost?.saftyItems?.map((item, index) => {
+                return (
+                  <View key={index + 1} style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "#0244d0",
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <></>
+          )}
+          <Divider />
+          {housePost?.amenities?.length ? (
+            <View style={{ marginVertical: "2%" }}>
+              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
+                amenities
+              </Text>
+              {housePost?.amenities?.map((item, index) => {
+                return (
+                  <View key={index + 1} style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "#0244d0",
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <></>
+          )}
+          <Divider />
+          {housePost?.bestDescribe?.length ? (
+            <View style={{ marginVertical: "2%" }}>
+              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
+                Best Describe
+              </Text>
+              {housePost?.bestdescribe?.map((item, index) => {
+                return (
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      key={index + 1}
+                      style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "#0244d0",
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <></>
+          )}
+
+          <Divider />
+          {housePost?.contain?.length ? (
+            <View style={{ marginVertical: "2%" }}>
+              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
+                Contain
+              </Text>
+              {housePost?.contain?.map((item, index) => {
+                return (
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      key={index + 1}
+                      style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "#0244d0",
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <></>
+          )}
+
+          <Divider />
+          <View
+            style={{
+              marginVertical: 20,
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
+              Kitchens : {housePost.guestSize.kitchens}
+            </Text>
+            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
+              bedrooms : {housePost.guestSize.bedrooms}
+            </Text>
+            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
+              bathrooms : {housePost.guestSize.bathrooms}
+            </Text>
           </View>
           <Divider />
-          <View style={{ marginVertical: "2%" }}>
-            <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-              Best Describe
+          <View
+            style={{
+              marginVertical: 15,
+              width: "100%",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 17 }}>
+              Property Type :{" "}
+              <Text style={{ color: "rgba(0,0,0,0.7)" }}>
+                {housePost.propertyType}
+              </Text>
             </Text>
-            {housePost?.bestdescribe?.map((item, index) => {
-              return (
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                      paddingHorizontal: 10,
-                      color: "#fff",
-                      borderRadius: 15,
-                      backgroundColor: "#0244d0",
-                    }}
-                  >
-                    {item}
-                  </Text>
-                </View>
-              );
-            })}
+          </View>
+          <Divider />
+          <View
+            style={{
+              marginVertical: 15,
+              width: "100%",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 17 }}>
+              Price :{" "}
+              <Text style={{ color: "rgba(0,0,0,0.7)" }}>
+                {housePost.price}
+              </Text>
+            </Text>
+          </View>
+          <Divider />
+          <View
+            style={{
+              marginVertical: 15,
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontSize: 17 }}>
+              Place Kind :{" "}
+              <Text style={{ color: "rgba(0,0,0,0.7)" }}>
+                {housePost.placeKind}
+              </Text>
+            </Text>
+          </View>
+          <Divider />
+
+          <View
+            style={{
+              marginVertical: 20,
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}
+            >
+              Place Description
+            </Text>
+            <View>
+              <Text style={{ fontSize: 16 }}>
+                Type :{"  "}
+                <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                  {housePost.placeDescription.title}
+                </Text>
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                Description :{" "}
+                <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                  {housePost.placeDescription.description}
+                </Text>
+              </Text>
+            </View>
           </View>
           <Divider />
           <View
@@ -162,63 +390,14 @@ const ReviewListingScreen = ({ navigation }) => {
               marginVertical: 20,
               width: "100%",
               justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 20 }}>Entire villa hosted by Nebiyu</Text>
-            <Image
-              source={{ uri: "file://a.jph" }}
-              style={{
-                backgroundColor: "red",
-                width: 50,
-                height: 50,
-                borderRadius: 50,
-              }}
-            />
-          </View>
-          <Divider />
-          <Text style={{ marginVertical: 20, fontSize: 16 }}>
-            2 guests.1bedrrom.1bed.1bath
-          </Text>
-          <Divider />
-          <Divider />
-          <Text style={{ marginVertical: 20, fontSize: 16 }}>
-            Salary : {housePost?.price}
-          </Text>
-          <Divider />
-          <Divider />
-          <Text style={{ marginVertical: 10, fontSize: 16 }}>
-            Property Type
-          </Text>
-
-          <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {housePost?.propertyType}
-          </Text>
-          <Divider />
-          <Text style={{ marginVertical: 10, fontSize: 16 }}>Place title</Text>
-
-          <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {housePost?.placetitle}
-          </Text>
-          <Divider />
-          <Divider />
-          <Text style={{ marginVertical: 10, fontSize: 16 }}>
-            Place description
-          </Text>
-
-          <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {housePost?.placetitle}
-          </Text>
-          <Divider />
-          <Text style={{ marginVertical: 10, fontSize: 16 }}>Description</Text>
-          <Text style={{ marginVertical: 5 }}>
-            {housePost.detaildescription}
-          </Text>
-          <Divider />
-          <View style={{ marginVertical: 20 }}>
-            <Text style={{ fontSize: 25 }}>Location</Text>
-            <Text style={{ marginVertical: 15 }}> Yedi,Ethiopia</Text>
+            <Text
+              style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}
+            >
+              Detail Description
+            </Text>
+            <Text style={{ fontSize: 16 }}>{housePost.detailDescription}</Text>
           </View>
         </View>
       </ScrollView>
@@ -234,7 +413,7 @@ const ReviewListingScreen = ({ navigation }) => {
       >
         <Pressable
           onPress={() => {
-            postHouse();
+            mutate();
           }}
           style={{
             backgroundColor: "#0244d0",

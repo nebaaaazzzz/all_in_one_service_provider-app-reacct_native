@@ -15,6 +15,8 @@ import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeDetailScreen from "./HomeDetailScreen";
+import { useIsFocused } from "@react-navigation/native";
+import { useQueryClient } from "react-query";
 const LesseeStackNavigator = createStackNavigator();
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/lessee/?page=${pageParam}`, {
@@ -45,8 +47,7 @@ const Home = ({ item, pressHandler }) => {
               source={{
                 uri: `${BASEURI}/house/image/${i.houseImages[0]}`,
                 headers: {
-                  Authorization:
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0FkbWluIjpmYWxzZSwic3ViIjoiNjI5ZWViNWNlYzkyZjI0ZjdkMjNlMjdmIiwiZXhwIjoxNjU0NjU5OTk0MzAzLCJpYXQiOjE2NTQ1ODIyMzR9.OAD1NzoanHjNOAUMhua1N4F5LLM-X9nYsLZXmoPJyys",
+                  Authorization: `Bearer ${BASETOKEN}`,
                 },
               }}
               style={{ width: "100%", height: 200, resizeMode: "cover" }}
@@ -59,23 +60,10 @@ const Home = ({ item, pressHandler }) => {
                 }}
               >
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                  MV, Maldives
+                  {i.placeName}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Text>4.6</Text>
-                  <AntDesign color="blue" name="star" />
-                </View>
               </View>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                3,869 kilometers away
-              </Text>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>$616 month</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.price}</Text>
             </View>
           </Pressable>
         );
@@ -99,7 +87,7 @@ const Lessee = ({ navigation }) => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("house", fetchHouses, {
+  } = useInfiniteQuery("houses", fetchHouses, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;
@@ -107,6 +95,7 @@ const Lessee = ({ navigation }) => {
       return;
     },
   });
+
   const list = [
     {
       title: "All Homes",
@@ -160,6 +149,11 @@ const Lessee = ({ navigation }) => {
       id,
     });
   }
+  const isFocused = useIsFocused();
+  const queryClient = useQueryClient();
+  if (!isFocused) {
+    queryClient.invalidateQueries("houses");
+  }
   if (status === "loading") {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -181,7 +175,7 @@ const Lessee = ({ navigation }) => {
       <FilterModal visible={visible} setVisible={setVisible} />
 
       <Searchbar
-        style={{ marginHorizontal: 10, borderRadius: 20 }}
+        style={{ marginTop: "5%", marginHorizontal: 10, borderRadius: 20 }}
         placeholder="Search"
         iconColor="#0244d0"
         onChangeText={onChangeSearch}

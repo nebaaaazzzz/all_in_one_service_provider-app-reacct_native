@@ -4,12 +4,11 @@ import IncrementDecrement from "../../../components/IncrementDecrement";
 import { PostHouseContext } from "./PostHouseScreen";
 const GuestSizeScreen = ({ navigation }) => {
   const { dispatch } = useContext(PostHouseContext);
-  const size = ["Guests", "Beds", "Bedrooms", "Bathrooms"];
-  const [guests, setGuests] = useState(0);
-  const [beds, setBeds] = useState(0);
+  const size = ["kitchens", "Bedrooms", "Bathrooms"];
+  const [kitchens, setKitchens] = useState(0);
   const [bedrooms, setBedrooms] = useState(0);
   const [bathrooms, setBathrooms] = useState(0);
-  const setters = [setGuests, setBeds, setBedrooms, setBathrooms];
+  const setters = [setKitchens, setBedrooms, setBathrooms];
   return (
     <View
       horizontal={false}
@@ -36,11 +35,12 @@ const GuestSizeScreen = ({ navigation }) => {
             fontSize: 20,
           }}
         >
-          How many guests would you like to welcome
+          How many lesser can You support
         </Text>
         {size.map((item, index) => {
           return (
             <View
+              key={index + 1}
               style={{
                 marginVertical: 10,
 
@@ -82,8 +82,7 @@ const GuestSizeScreen = ({ navigation }) => {
               type: "add",
               payload: {
                 guestSize: {
-                  guests,
-                  beds,
+                  kitchens,
                   bedrooms,
                   bathrooms,
                 },

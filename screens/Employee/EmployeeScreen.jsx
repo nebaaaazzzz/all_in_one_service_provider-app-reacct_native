@@ -13,7 +13,8 @@ import { Divider } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
 import JobDetailScreen from "./JobDetailScreen";
 import { BASEURI, BASETOKEN } from "../../urls";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQueryClient } from "react-query";
+import { useIsFocused } from "@react-navigation/native";
 const fetchJobs = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/employee/?page=${pageParam}`, {
     headers: {
@@ -118,7 +119,7 @@ const Home = ({ navigation }) => {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("myjobd", fetchJobs, {
+  } = useInfiniteQuery("jobs", fetchJobs, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;
@@ -126,6 +127,11 @@ const Home = ({ navigation }) => {
       return;
     },
   });
+  const isFocused = useIsFocused();
+  const queryClient = useQueryClient();
+  if (!isFocused) {
+    queryClient.invalidateQueries("jobs");
+  }
   const list = [
     "All",
     "Grapics & Design",
@@ -161,7 +167,8 @@ const Home = ({ navigation }) => {
       <FilterModal visible={visible} setVisible={setVisible} />
 
       <Searchbar
-        style={{ marginHorizontal: 10, borderRadius: 20 }}
+        iconColor="#0244d0"
+        style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
         placeholder="Search"
         onChangeText={onChangeSearch}
         value={searchQuery}

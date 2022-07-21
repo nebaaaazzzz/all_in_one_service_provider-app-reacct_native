@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, Pressable, Image } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  Pressable,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import React from "react";
 import Svg, { Path } from "react-native-svg";
 import styled from "styled-components/native";
@@ -24,6 +31,7 @@ const SText = styled(Text)`
   margin-bottom: 10px;
 `;
 const Home = ({ navigation }) => {
+  const dimen = useWindowDimensions();
   return (
     <View
       style={{
@@ -35,9 +43,9 @@ const Home = ({ navigation }) => {
       <View style={{ height: "5%" }}>
         <Svg
           xmlns="http://www.w3.org/2000/svg"
-          width="375"
-          height="576.462"
-          viewBox="0 0 375 576.462"
+          width={dimen.width}
+          height={dimen.height}
+          viewBox={`0 0 ${dimen.width} ${dimen.height}`}
         >
           <Path
             id="Path_1"
@@ -56,6 +64,8 @@ const Home = ({ navigation }) => {
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
+            width: "100%",
+            bacgroundColor: "red",
             justifyContent: "center",
           }}
         >
