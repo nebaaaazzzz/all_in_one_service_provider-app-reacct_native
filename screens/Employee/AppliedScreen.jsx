@@ -5,7 +5,6 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
-  ToastAndroid,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 import React, { useState } from "react";
@@ -18,13 +17,15 @@ import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
 
 import { useIsFocused } from "@react-navigation/native";
-import AppliedScreen from "./AppliedScreen";
 const fetchJobs = async ({ pageParam = 1 }) => {
-  const response = await fetch(`${BASEURI}/employee/?page=${pageParam}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+  const response = await fetch(
+    `${BASEURI}/employee/applied/?page=${pageParam}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   return await response.json();
 };
 const EmployeeStackNavigator = createStackNavigator();
@@ -76,13 +77,10 @@ const Jobs = ({ pressHandler, item }) => {
 };
 
 const Home = ({ navigation }) => {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
-  const [indexS, setIndex] = useState(0);
   const onPressHandler = (id) => {
     requestAnimationFrame(() => {
-      navigation.navigate("employee/jobdetail", {
+      navigation.navigate("employee/applied/jobdetail", {
         id,
       });
     });
@@ -95,7 +93,7 @@ const Home = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("jobs", fetchJobs, {
+  } = useInfiniteQuery("appliedjobs", fetchJobs, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;
@@ -108,21 +106,7 @@ const Home = ({ navigation }) => {
   if (!isFocused) {
     queryClient.invalidateQueries("jobs");
   }
-  const list = [
-    "All",
-    "Grapics & Design",
-    "Sells & Markating",
-    "Writing & Translation",
-    "Video & Animation",
-    "Finance & Accounting",
-    "Engineering & Architecture",
-    "Admin & Customer support",
-    "Music & Audio",
-    "Programming & Tech",
-    "Business",
-    "LifeStyle",
-    "Legal",
-  ];
+
   if (status === "loading") {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -131,59 +115,18 @@ const Home = ({ navigation }) => {
     );
   }
   if (status === "error") {
-    ToastAndroid.show(error.message, ToastAndroid.LONG);
+    navigation.reset({
+      index: 1,
+      routes: [{ name: "error", params: { error } }],
+    });
+
+    return <View></View>;
   }
   return (
-    <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
-      <Pressable
-        style={{
-          marginTop: "2%",
-          alignSelf: "flex-end",
-          backgroundColor: "#0244d0",
-          paddingHorizontal: 10,
-          paddingVertical: 3,
-          borderRadius: 5,
-          marginHorizontal: "4%",
-          elevation: 10,
-        }}
-        onPress={() => {
-          navigation.navigate("employee/applied");
-        }}
-      >
-        <Text style={{ color: "#fff" }}>Applied</Text>
-      </Pressable>
-      <Searchbar
-        iconColor="#0244d0"
-        style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-      />
-      <View>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={list}
-          style={{ paddingTop: 10 }}
-          renderItem={({ item, index }) => {
-            return (
-              <Pressable
-                onPress={() => setIndex(index)}
-                style={{
-                  marginHorizontal: 10,
-                  borderBottomColor: "#3498db",
-                  borderBottomWidth: indexS == index ? 2 : 0,
-                }}
-              >
-                <Text style={{ color: "#0244d0" }}>{item}</Text>
-              </Pressable>
-            );
-          }}
-        ></FlatList>
-      </View>
+
       <FlatList
-        style={{ marginTop: 20 }}
         showsVerticalScrollIndicator={false}
         data={data.pages}
         onEndReached={() => {
@@ -207,25 +150,20 @@ const Home = ({ navigation }) => {
     </View>
   );
 };
-function EmployeeScreen() {
+function AppliedScreen() {
   return (
     <EmployeeStackNavigator.Navigator>
       <EmployeeStackNavigator.Screen
-        options={{ headerShown: false }}
-        name="employee/home"
+        options={{ title: "Applied" }}
+        name="employee/applied/home"
         component={Home}
       />
       <EmployeeStackNavigator.Screen
-        name="employee/jobdetail"
+        name="employee/applied/jobdetail"
         options={{ title: "Job Detail" }}
         component={JobDetailScreen}
-      />
-      <EmployeeStackNavigator.Screen
-        name="employee/applied"
-        options={{ headerShown: false }}
-        component={AppliedScreen}
       />
     </EmployeeStackNavigator.Navigator>
   );
 }
-export default EmployeeScreen;
+export default AppliedScreen;

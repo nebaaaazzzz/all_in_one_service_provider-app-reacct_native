@@ -34,7 +34,6 @@ const Post = ({ pressHandler, item }) => {
   return (
     <View>
       {item.map((i, index) => {
-        const ms = new Date(i.createdAt).getTime();
         return (
           <Pressable
             key={index + 1}

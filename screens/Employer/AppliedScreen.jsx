@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from "react-native";
-import { Searchbar } from "react-native-paper";
 import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
 import { Divider } from "react-native-paper";
@@ -18,7 +17,6 @@ import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
 
 import { useIsFocused } from "@react-navigation/native";
-import AppliedScreen from "./AppliedScreen";
 const fetchJobs = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/employee/?page=${pageParam}`, {
     headers: {
@@ -76,8 +74,6 @@ const Jobs = ({ pressHandler, item }) => {
 };
 
 const Home = ({ navigation }) => {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
   const [indexS, setIndex] = useState(0);
   const onPressHandler = (id) => {
@@ -108,21 +104,7 @@ const Home = ({ navigation }) => {
   if (!isFocused) {
     queryClient.invalidateQueries("jobs");
   }
-  const list = [
-    "All",
-    "Grapics & Design",
-    "Sells & Markating",
-    "Writing & Translation",
-    "Video & Animation",
-    "Finance & Accounting",
-    "Engineering & Architecture",
-    "Admin & Customer support",
-    "Music & Audio",
-    "Programming & Tech",
-    "Business",
-    "LifeStyle",
-    "Legal",
-  ];
+
   if (status === "loading") {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -136,30 +118,6 @@ const Home = ({ navigation }) => {
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
-      <Pressable
-        style={{
-          marginTop: "2%",
-          alignSelf: "flex-end",
-          backgroundColor: "#0244d0",
-          paddingHorizontal: 10,
-          paddingVertical: 3,
-          borderRadius: 5,
-          marginHorizontal: "4%",
-          elevation: 10,
-        }}
-        onPress={() => {
-          navigation.navigate("employee/applied");
-        }}
-      >
-        <Text style={{ color: "#fff" }}>Applied</Text>
-      </Pressable>
-      <Searchbar
-        iconColor="#0244d0"
-        style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-      />
       <View>
         <FlatList
           horizontal
@@ -207,12 +165,12 @@ const Home = ({ navigation }) => {
     </View>
   );
 };
-function EmployeeScreen() {
+function AppliedScreen() {
   return (
     <EmployeeStackNavigator.Navigator>
       <EmployeeStackNavigator.Screen
         options={{ headerShown: false }}
-        name="employee/home"
+        name="employee/applied/"
         component={Home}
       />
       <EmployeeStackNavigator.Screen
@@ -220,12 +178,7 @@ function EmployeeScreen() {
         options={{ title: "Job Detail" }}
         component={JobDetailScreen}
       />
-      <EmployeeStackNavigator.Screen
-        name="employee/applied"
-        options={{ headerShown: false }}
-        component={AppliedScreen}
-      />
     </EmployeeStackNavigator.Navigator>
   );
 }
-export default EmployeeScreen;
+export default AppliedScreen;

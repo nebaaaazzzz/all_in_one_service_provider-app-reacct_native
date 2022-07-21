@@ -8,12 +8,12 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from "react-native";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import React from "react";
 import { Divider } from "react-native-paper";
 const fetchHouse = async ({ queryKey }) => {
-  const response = await fetch(`${BASEURI}/lesser/house/${queryKey[1]}`, {
+  const response = await fetch(`${BASEURI}/lessee/house/${queryKey[1]}`, {
     headers: {
       Authorization: `Bearer ${BASETOKEN}`,
     },
@@ -27,11 +27,23 @@ const fetchHouse = async ({ queryKey }) => {
 
 const HomeDetailScreen = ({ navigation, route }) => {
   const clientQuery = useQueryClient();
-  const { isLoading, isError, error, data, isFetching } = useQuery(
+  const { isLoading, isError, error, data, isFetching, isSuccess } = useQuery(
     ["house", route.params.id],
     fetchHouse
   );
-  if (isLoading || isFetching) {
+  const applyMutuation = useMutation(async () => {
+    const response = await fetch(`${BASEURI}/lessee/apply/${data._id}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("error occured");
+    }
+    return response.json();
+  });
+  if (isLoading || isFetching || applyMutuation.isLoading) {
     return (
       <View style={{ marginTop: "50%" }}>
         <ActivityIndicator></ActivityIndicator>
@@ -39,13 +51,19 @@ const HomeDetailScreen = ({ navigation, route }) => {
     );
   }
   if (isError) {
-    return (
-      <View>
-        <Text>{error.message}</Text>
-      </View>
+    ToastAndroid.show(
+      error.message || applyMutuation.error.message,
+      ToastAndroid.LONG
     );
   }
-
+  if (applyMutuation.isSuccess) {
+    if (data.applied) {
+      ToastAndroid.show("successfully removed", ToastAndroid.LONG);
+    } else {
+      ToastAndroid.show("successfully applied", ToastAndroid.LONG);
+    }
+    navigation.navigate("lessee");
+  }
   if (isLoading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -54,13 +72,11 @@ const HomeDetailScreen = ({ navigation, route }) => {
     );
   }
   if (isSuccess) {
-    navigation.navigate("lesser/");
-    clientQuery.invalidateQueries("myhouses");
+    clientQuery.invalidateQueries("appliedhouses");
   }
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
-
   return (
     <View
       horizontal={false}
@@ -68,7 +84,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView
@@ -79,16 +94,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
           paddingHorizontal: 10,
         }}
       >
-        <Text
-          style={{
-            marginVertical: 10,
-            textAlign: "center",
-            color: "#000",
-            fontSize: 18,
-          }}
-        >
-          Check out your listing!
-        </Text>
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
@@ -107,7 +112,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           />
           <Pressable
             onPress={() => {
-              navigation.navigate("lesser/posthouse/viewimages", {
+              navigation.navigate("lessee/viewimages", {
                 images: data.houseImages,
               });
             }}
@@ -326,7 +331,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
           >
             <Text style={{ fontSize: 17 }}>
               Price :{" "}
-              <Text style={{ color: "rgba(0,0,0,0.7)" }}>{data.price}</Text>
+              <Text style={{ color: "rgba(0,0,0,0.7)" }}>
+                {data.price} birr
+              </Text>
             </Text>
           </View>
           <Divider />
@@ -400,10 +407,10 @@ const HomeDetailScreen = ({ navigation, route }) => {
       >
         <Pressable
           onPress={() => {
-            mutate();
+            applyMutuation.mutate();
           }}
           style={{
-            backgroundColor: "#0244d0",
+            backgroundColor: data.applied ? "red" : "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,
@@ -411,9 +418,11 @@ const HomeDetailScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>
-            Save your listing
-          </Text>
+          {data.applied ? (
+            <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
+          ) : (
+            <Text style={{ textAlign: "center", color: "#fff" }}>apply</Text>
+          )}
         </Pressable>
       </View>
     </View>

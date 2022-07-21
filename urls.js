@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
-const BASEURI = `https://c6f7-213-55-102-49.in.ngrok.io`;
+const BASEURI = `http://10.42.0.1:5000`;
 let BASETOKEN;
 (async () => {
   BASETOKEN = await SecureStore.getItemAsync("token");

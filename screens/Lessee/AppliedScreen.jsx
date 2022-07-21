@@ -1,14 +1,12 @@
 import {
   View,
   Text,
-  StatusBar,
   Pressable,
   FlatList,
   Image,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
-import { Searchbar } from "react-native-paper";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
@@ -19,10 +17,9 @@ import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import ViewImagesScreen from "./ViewImagesScreen";
 import fromNow from "../../utils/time";
-import AppliedScreen from "./AppliedScreen";
 const LesseeStackNavigator = createStackNavigator();
 const fetchHouses = async ({ pageParam = 1 }) => {
-  const response = await fetch(`${BASEURI}/lessee/?page=${pageParam}`, {
+  const response = await fetch(`${BASEURI}/lessee/applied/?page=${pageParam}`, {
     headers: {
       Authorization: `Bearer ${BASETOKEN}`,
     },
@@ -78,12 +75,11 @@ const Home = ({ item, pressHandler }) => {
 };
 
 const Lessee = ({ navigation }) => {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
-  const [indexS, setIndex] = useState(0);
-  const showModal = () => setVisible(true);
   // require('./assets/images/girl.jpg'),          // Local image
+  navigation.setOptions({
+    headerShown: true,
+  });
   const {
     data,
     error,
@@ -91,7 +87,7 @@ const Lessee = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("houses", fetchHouses, {
+  } = useInfiniteQuery("appliedhouses", fetchHouses, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;
@@ -100,63 +96,18 @@ const Lessee = ({ navigation }) => {
     },
   });
 
-  const list = [
-    {
-      title: "All Homes",
-      name: "home",
-    },
-    {
-      title: "Islands",
-      name: "team",
-    },
-    {
-      title: "Arctic",
-      name: "setting",
-    },
-    {
-      title: "Amazing pools",
-      name: "picture",
-    },
-    {
-      title: "surfing",
-      name: "inbox",
-    },
-    {
-      title: "Bed & Breakfast",
-      name: "cloudo",
-    },
-    {
-      title: "Design",
-      name: "camera",
-    },
-    { title: "National parks", name: "phone" },
-    {
-      title: "shared homes",
-      name: "smileo",
-    },
-    {
-      title: "caves",
-      name: "piechart",
-    },
-    { title: "tropical", name: "dingding" },
-    {
-      title: "Amazing view",
-      name: "windowso",
-    },
-    {
-      title: "Earth Home",
-      name: "phone",
-    },
-  ];
   function pressHandler(id) {
-    navigation.navigate("lessee/housedetail", {
+    navigation.setOptions({
+      headerShown: false,
+    });
+    navigation.navigate("lessee/applied/housedetail", {
       id,
     });
   }
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {
-    queryClient.invalidateQueries("houses");
+    queryClient.invalidateQueries("appliedhouses");
   }
   if (status === "loading") {
     return (
@@ -166,70 +117,16 @@ const Lessee = ({ navigation }) => {
     );
   }
   if (status === "error") {
-    navigation.reset({
-      index: 1,
-      routes: [{ name: "error", params: { error } }],
-    });
-
-    return <View></View>;
+    // navigation.reset({
+    //   index: 1,
+    //   routes: [{ name: "error", params: { error } }],
+    // });
+    ToastAndroid(error.message, ToastAndroid.LONG);
   }
 
   return (
-    <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <FilterModal visible={visible} setVisible={setVisible} />
-      <Pressable
-        style={{
-          marginTop: "2%",
-          alignSelf: "flex-end",
-          backgroundColor: "#0244d0",
-          paddingHorizontal: 10,
-          paddingVertical: 3,
-          borderRadius: 5,
-          marginHorizontal: "4%",
-          elevation: 10,
-        }}
-        onPress={() => {
-          navigation.navigate("lessee/applied");
-        }}
-      >
-        <Text style={{ color: "#fff" }}>Applied</Text>
-      </Pressable>
-      <Searchbar
-        style={{ marginTop: "2%", marginHorizontal: 10, borderRadius: 20 }}
-        placeholder="Search"
-        iconColor="#0244d0"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-      />
-      <View style={{ flexDirection: "row", marginTop: 4 }}>
-        <View>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={list}
-            renderItem={({ item, index }) => {
-              return (
-                <Pressable
-                  onPress={() => setIndex(index)}
-                  style={{
-                    marginHorizontal: 10,
-                    borderBottomColor: "#0244d0",
-                    borderBottomWidth: indexS == index ? 2 : 0,
-                  }}
-                >
-                  <AntDesign
-                    name={item.name}
-                    size={20}
-                    color="#0244d0"
-                    style={{ textAlign: "center" }}
-                  />
-                  <Text style={{ color: "#0244d0" }}>{item.title}</Text>
-                </Pressable>
-              );
-            }}
-          ></FlatList>
-        </View>
-      </View>
       <FlatList
         style={{ marginTop: 20 }}
         data={data.pages}
@@ -255,32 +152,28 @@ const Lessee = ({ navigation }) => {
   );
 };
 
-const LesseeScreen = () => {
+const AppliedScreen = () => {
   return (
     <LesseeStackNavigator.Navigator>
       <LesseeStackNavigator.Screen
-        options={{ headerShown: false }}
-        name="lessee/"
+        options={{
+          title: "Applied",
+          headerTitleContainerStyle: { textAlign: "center" },
+        }}
+        name="lessee/applied/"
         component={Lessee}
       />
       <LesseeStackNavigator.Screen
         options={{ title: "detail" }}
-        name="lessee/housedetail"
+        name="lessee/applied/housedetail"
         component={HomeDetailScreen}
       />
       <LesseeStackNavigator.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="lessee/applied"
-        component={AppliedScreen}
-      />
-      <LesseeStackNavigator.Screen
         options={{ title: "detail" }}
-        name="lessee/viewimages"
+        name="lessee/applied/viewimages"
         component={ViewImagesScreen}
       />
     </LesseeStackNavigator.Navigator>
   );
 };
-export default LesseeScreen;
+export default AppliedScreen;
