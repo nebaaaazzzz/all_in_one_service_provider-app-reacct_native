@@ -12,9 +12,9 @@ import {
 } from "react-native";
 
 import DatePicker from "@react-native-community/datetimepicker";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { RadioButton } from "react-native-paper";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useMutation } from "react-query";
 import RegistrationSVG from "../assets/images/misc/RegistrationSvg";
 import * as yup from "yup";
@@ -110,7 +110,6 @@ const SignupScreen = ({ navigation }) => {
 
         <Text
           style={{
-            fontFamily: "Roboto-Medium",
             fontSize: 28,
             fontWeight: "500",
             color: "#333",

@@ -16,8 +16,8 @@ import ProfileScreen from "./Common/ProfileScreen";
 import SettingsScreen from "./Common/SettingsScreen";
 import MessagesScreen from "./Common/MessagesScreen";
 import CustomDrawer from "../components/CustomDrawer";
-import { UserContext } from "../App.Navigator";
-import EditProfileScreen from "./Common/EditProfileScreen";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+
 const SPressable = styled(Pressable)`
   overflow: hidden;
   border-radius: 10px;
@@ -154,7 +154,6 @@ const HomeScreen = () => {
         drawerInactiveTintColor: "#333",
         drawerLabelStyle: {
           marginLeft: -25,
-          fontFamily: "Roboto-Medium",
           fontSize: 15,
         },
       }}
@@ -189,21 +188,17 @@ const HomeScreen = () => {
       <DrawerNavigator.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons name="person-outline" size={22} color={color} />
-          ),
+        options={({ route }) => {
+          const bool = getFocusedRouteNameFromRoute(route) == "profile/edit";
+          return {
+            headerShown: bool ? false : true,
+            drawerIcon: ({ color }) => (
+              <Ionicons name="person-outline" size={22} color={color} />
+            ),
+          };
         }}
       />
-      <DrawerNavigator.Screen
-        name="editProfile"
-        component={EditProfileScreen}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons name="person-outline" size={22} color={color} />
-          ),
-        }}
-      />
+
       <DrawerNavigator.Screen
         name="Messages"
         component={MessagesScreen}

@@ -3,18 +3,17 @@ import {
   Text,
   ActivityIndicator,
   ScrollView,
-  Linking,
+  useWindowDimensions,
   Pressable,
+  ToastAndroid,
 } from "react-native";
-import React, { useState } from "react";
-import { Divider } from "react-native-paper";
+import React from "react";
+import { Divider, Badge } from "react-native-paper";
 import { useQuery } from "react-query";
-import * as Sharing from "expo-sharing";
 
 import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
 import { BASEURI, BASETOKEN } from "../../urls";
-import * as MediaLibrary from "expo-media-library";
 
 // Requests permissions for external directory
 
@@ -32,6 +31,31 @@ const fetchJob = async ({ queryKey }) => {
 };
 
 const JobDetailEditScreen = ({ navigation, route }) => {
+  navigation.setOptions({
+    headerRight: () => (
+      <Pressable
+        style={{
+          marginVertical: 10,
+          paddingHorizontal: 10,
+          paddingVertical: 3,
+          elevation: 10,
+          borderRadius: 5,
+          marginHorizontal: 10,
+          backgroundColor: "#0244d0",
+          alignSelf: "flex-end",
+        }}
+        onPress={() => {
+          navigation.navigate("employer/appicants", {
+            id: data._id,
+          });
+        }}
+      >
+        <Badge>{data?.applicants?.length || 0} </Badge>
+        <Text style={{ color: "#fff" }}>Applicants</Text>
+      </Pressable>
+    ),
+  });
+  const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching } = useQuery(
     ["job", route.params.id],
     fetchJob
@@ -47,15 +71,14 @@ const JobDetailEditScreen = ({ navigation, route }) => {
     );
   }
   if (isError) {
-    navigation.reset({
-      index: 1,
-      routes: [{ name: "error", params: { error } }],
-    });
-    return <View></View>;
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
   return (
     <View>
-      <ScrollView style={{}} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ marginBottom: 50 }}
+        showsVerticalScrollIndicator={false}
+      >
         <Text
           style={{ textAlign: "center", fontSize: 25, marginVertical: "5%" }}
         >
@@ -284,6 +307,37 @@ const JobDetailEditScreen = ({ navigation, route }) => {
           <Divider />
         </View>
       </ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          top: dimension.height - 130,
+          backgroundColor: "#fff",
+          borderTopWidth: 2,
+          width: "100%",
+          height: 60,
+          justifyContent: "center",
+          borderColor: "rgba(0,0,0,0.3)",
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            navigation.navigate("employer/editpost", {
+              data,
+            });
+          }}
+          style={{
+            backgroundColor: "#0244d0",
+            width: 100,
+            alignSelf: "flex-end",
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>Edit Post</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

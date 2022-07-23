@@ -4,7 +4,6 @@ import {
   Pressable,
   useWindowDimensions,
   StatusBar,
-  TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
 } from "react-native";

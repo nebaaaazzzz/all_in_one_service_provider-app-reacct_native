@@ -12,53 +12,10 @@ import { ProgressBar } from "react-native-paper";
 import { Divider } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import { PostJobContext } from "./PostJobScreen";
+import { categoryList } from "../../../constants/data";
 const CategoryScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
-  const category = [
-    "Accounting and Finance",
-    "Admin, Secretarial and Clerk",
-    "Advetising and Media",
-    "Agriculture and Farming",
-    "Architecture and Construction",
-    "Automotive",
-    "Banking and Insurance",
-    "Business Development",
-    "Bussiness and Administration",
-    "communication, PR and Jornalism",
-    "Community Service Jobs",
-    "Consultancy and Training",
-    "Creative Arts Jobs",
-    "Customer Service",
-    "Development adn Project Management",
-    "Economics and Finance",
-    "Education",
-    "Engineering",
-    "Environment and Natural Resources",
-    "Healthcare",
-    "Hotel and Hospitality Jobs",
-    "Human Resources and Recruitment",
-    "Information Technology",
-    "Languages",
-    "Legal",
-    "Logistics, Transportation and Supply",
-    "Maintenance and Repair",
-    "Managment and Industrial",
-    "Manufacturing",
-    "Media and Journalism",
-    "Natural Sciences Jobs",
-    "Pharmaceutical",
-    "Purchasing and Procurement",
-    "Qualtity Assurance",
-    "Research and Development",
-    "Retail, Wholesale and Distribution",
-    "Sales and Marketing",
-    "Science and Technology",
-    "Security and Protection",
-    "Social Sciences and Communication",
-    "Strategic Planning",
-    "Telecommunications",
-  ];
 
   const [categorySelect, setCategorySelect] = useState("");
 
@@ -96,7 +53,7 @@ const CategoryScreen = ({ navigation, route }) => {
                 width: "90%",
                 borderRadius: 15,
               }}
-              data={category}
+              data={categoryList}
               onSelect={(selectedItem, index) => {
                 setCategorySelect(selectedItem);
               }}

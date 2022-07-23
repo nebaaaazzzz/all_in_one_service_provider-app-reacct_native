@@ -20,6 +20,16 @@ import ErrorScreen from "./screens/Common/ErrorScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ValidateScreen from "./screens/ValidateScreen";
 const StackNavigator = createStackNavigator();
+
+/*
+
+check  react-native-debugger
+check  react-native-debugger
+check  react-native-debugger
+check  react-native-debugger
+
+
+*/
 export const UserContext = React.createContext();
 const AppNavigator = ({ navigation }) => {
   const [tokenG, setTokenG] = useState();

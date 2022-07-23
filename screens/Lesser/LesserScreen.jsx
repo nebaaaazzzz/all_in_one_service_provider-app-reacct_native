@@ -13,6 +13,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import PostHouseScreen from "./PostHouse/PostHouseScreen";
 import HomeDetailScreen from "./HomeDetailScreen";
+import ApplicantsScreen from "./ApplicantsScreen";
 import PaymentScreen from "./PaymentScreen";
 const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
@@ -165,6 +166,11 @@ const LesserScreen = () => {
           options={{ title: "House Detail" }}
           name="lesser/viewimages"
           component={ViewImagesScreen}
+        />
+        <LesserStackNavigator.Screen
+          options={{ headerShown: false }}
+          name="lesser/applicants"
+          component={ApplicantsScreen}
         />
         <LesserStackNavigator.Screen
           options={{ headerShown: false }}

@@ -5,6 +5,7 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
@@ -18,6 +19,8 @@ import fromNow from "../../utils/time";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useIsFocused } from "@react-navigation/native";
+import ApplicantsScreen from "./ApplicantsScreen";
+import EditPostScreen from "./EditPostScreen";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
 const fetchJobs = async ({ pageParam = 1 }) => {
@@ -115,12 +118,7 @@ const MyPosts = ({ navigation }) => {
     );
   }
   if (status === "error") {
-    navigation.reset({
-      index: 1,
-      routes: [{ name: "error", params: { error } }],
-    });
-
-    return <View></View>;
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
   return (
     <View style={{ flex: 1 }}>
@@ -211,6 +209,20 @@ const EmployerScreen = () => {
           options={{ title: "Edit Post" }}
           name="employer/review"
           component={ReviewScreen}
+        />
+        <EmployerStackNavigator.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="employer/appicants"
+          component={ApplicantsScreen}
+        />
+        <EmployerStackNavigator.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="employer/editpost"
+          component={EditPostScreen}
         />
       </EmployerStackNavigator.Navigator>
     </View>

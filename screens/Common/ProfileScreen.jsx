@@ -20,25 +20,10 @@ import {
 } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
-const ProfileScreen = ({ navigation }) => {
-  navigation.setOptions({
-    title: "profile",
-    headerTitle: "",
-    headerStyle: {
-      elevation: 0,
-    },
-    headerRight: () => (
-      <Pressable
-        style={{ marginHorizontal: "5%" }}
-        onPress={() => {
-          navigation.go("editProfile");
-        }}
-      >
-        <FontAwesome5 name="user-edit" size={24} color="black" />
-      </Pressable>
-    ),
-  });
+import { createStackNavigator } from "@react-navigation/stack";
+import EditProfileScreen from "./EditProfileScreen";
+const ProfileStackNavigator = createStackNavigator();
+const Profile = ({ navigation }) => {
   const user = useContext(UserContext);
   return (
     <SafeAreaView style={styles.container}>
@@ -117,6 +102,40 @@ const ProfileScreen = ({ navigation }) => {
         </TouchableRipple>
       </View>
     </SafeAreaView>
+  );
+};
+const ProfileScreen = ({ navigation }) => {
+  return (
+    <ProfileStackNavigator.Navigator>
+      <ProfileStackNavigator.Screen
+        options={{
+          title: "profile",
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+          },
+          headerRight: () => (
+            <Pressable
+              style={{ marginHorizontal: "5%" }}
+              onPress={() => {
+                navigation.navigate("profile/edit");
+              }}
+            >
+              <FontAwesome5 name="user-edit" size={24} color="black" />
+            </Pressable>
+          ),
+        }}
+        name="profile/"
+        component={Profile}
+      />
+      <ProfileStackNavigator.Screen
+        name="profile/edit"
+        options={{
+          title: "Edit profile",
+        }}
+        component={EditProfileScreen}
+      />
+    </ProfileStackNavigator.Navigator>
   );
 };
 

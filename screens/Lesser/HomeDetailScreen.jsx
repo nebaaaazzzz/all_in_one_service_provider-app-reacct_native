@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { useQuery } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
-import { Divider } from "react-native-paper";
+import { Divider, Badge } from "react-native-paper";
 
 const fetchHouse = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/lesser/house/${queryKey[1]}`, {
@@ -43,7 +43,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
       </View>
     );
   }
-  console.log(data);
   return (
     <View
       style={{
@@ -59,6 +58,26 @@ const HomeDetailScreen = ({ navigation, route }) => {
           paddingHorizontal: 10,
         }}
       >
+        <Pressable
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            elevation: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#0244d0",
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            navigation.navigate("lesser/applicants", {
+              id: data._id,
+            });
+          }}
+        >
+          <Badge>{data?.applicants?.length || 0} </Badge>
+          <Text style={{ color: "#fff" }}>Applicants</Text>
+        </Pressable>
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
