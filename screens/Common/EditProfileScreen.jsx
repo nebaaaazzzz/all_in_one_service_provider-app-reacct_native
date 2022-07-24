@@ -9,8 +9,10 @@ import {
   Modal,
   TextInput,
   StyleSheet,
-  Button,
   StatusBar,
+  Keyboard,
+  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import * as yup from "yup";
 import { Divider, useTheme } from "react-native-paper";
@@ -19,8 +21,15 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DatePicker from "@react-native-community/datetimepicker";
 import AddEducation from "../../components/AddEducation";
+import * as DocumentPicker from "expo-document-picker";
+
 import AddLanguage from "../../components/AddLanguage";
+import { useMutation } from "react-query";
+import SelectDropdown from "react-native-select-dropdown";
+import { useQueryClient } from "react-query";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as ImagePicker from "expo-image-picker";
+
 import { BASEURI, BASETOKEN } from "../../urls";
 import Animated from "react-native-reanimated";
 import { RadioButton } from "react-native-paper";
@@ -29,35 +38,10 @@ import { RadioButton } from "react-native-paper";
 const EditProfileScreen = () => {
   const user = useContext(UserContext);
   const { colors } = useTheme();
-  const takePhotoFromCamera = () => {
-    // ImagePicker.openCamera({
-    //   compressImageMaxWidth: 300,
-    //   compressImageMaxHeight: 300,
-    //   cropping: true,
-    //   compressImageQuality: 0.7,
-    // }).then((image) => {
-    //   console.log(image);
-    //   setImage(image.path);
-    //   this.bs.current.snapTo(1);
-    // });
-  };
+  const [image, setImage] = useState(null);
 
-  const choosePhotoFromLibrary = () => {
-    // ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 300,
-    //   cropping: true,
-    //   compressImageQuality: 0.7,
-    // }).then((image) => {
-    //   console.log(image);
-    //   setImage(image.path);
-    //   this.bs.current.snapTo(1);
-    // });
-  };
-  const bs = React.createRef();
   let fall = new Animated.Value(1);
 
-  const languageLevel = ["beginner", "conversational", " fluent"];
   const [open, setOpen] = useState(false);
 
   /* user info states */
@@ -67,35 +51,131 @@ const EditProfileScreen = () => {
   const [date, setDate] = useState(new Date(user.dateOfBirth));
   const [skills, setSkills] = useState(user.skills || []);
   const [skill, setSkill] = useState("");
+
   const [education, setEducation] = useState(
-    user.education.length
-      ? user.education
-      : [
-          {
-            place: "Bahir Dar university",
-            from: "Jan/2016",
-            to: "Sep/2022",
-            degree: "Bachelor",
-            major: "Computer Science",
-          },
-        ]
+    user.education.length ? user.education : []
   );
   const [gender, setGender] = useState(
     user.gender ? (user.gender == "male" ? "male" : "female") : undefiend
   );
   const [email, setEmail] = useState(user.email);
-  const [description, setDescriptio] = useState();
-  const [languages, setLanguages] = useState(
-    user.languages || [{ name: "English", level: "fluen" }]
-  );
-
+  const [description, setDescription] = useState();
+  const [languages, setLanguages] = useState(user.languages || []);
+  const [city, setCity] = useState();
+  const [region, setRegion] = useState();
   /*user info error state */
   const [firstNameError, setFirstNameError] = useState();
   const [lastNameError, setLastNameError] = useState();
   const [emailError, setEmailError] = useState();
-  const [descriptionError, setDescriptionError] = useState();
   /* */
+  const regionsList = [
+    "Addis Ababa",
+    "Afar",
+    "Amhara",
+    "Benishangul-gumuz",
+    "Dire Dawa",
+    "Gambela",
+    "Harari",
+    "Oromia",
+    "Sidama",
+    "Somali",
+    "South West Ethiopia Peoples' Region",
+    "Tigray",
+    "Southern",
+  ];
+  const [file, setFile] = useState();
+
+  const [isEducation, setIsEducation] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const queryClient = useQueryClient();
+  const fileSelector = async () => {
+    const doc = await DocumentPicker.getDocumentAsync({
+      multiple: true,
+      type: [
+        "application/pdf",
+        "image/*",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ],
+    });
+    setFile(doc);
+    {
+      /*file lastmodified mimeType name  output size type uri */
+    }
+  };
+  const mutation = useMutation(async () => {
+    const formData = new FormData();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${BASETOKEN}`);
+    if (file) {
+      formData.append("cv", {
+        uri: file.uri,
+        name: file.name,
+        type: file.mimeType,
+      });
+    }
+    if (image) {
+      formData.append("profile", {
+        uri: image.uri,
+        name: image.name,
+        type: image.mimeType,
+      });
+    }
+    const obj = {
+      firstName,
+      lastName,
+      gender,
+      dateOfBirth: date,
+      email,
+      description,
+      city,
+      region,
+    };
+    if (education.length) {
+      obj.education = education;
+    }
+    if (languages.length) {
+      obj.languages = languages;
+    }
+    if (skills.length) {
+      obj.skills = skills;
+    }
+    formData.append("data", JSON.stringify(obj));
+
+    const requestOptions = {
+      method: "PATCH",
+      headers: myHeaders,
+      body: formData,
+    };
+
+    try {
+      const response = await fetch(
+        `${BASEURI}/user/update-profile`,
+        requestOptions
+      );
+
+      if (!response.ok) {
+        throw new Error((await response.json()).message);
+      }
+      return await response.json();
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  });
+  if (mutation.isLoading) {
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator color="#0244d0" size={"large"}></ActivityIndicator>
+    </View>;
+  }
+  if (mutation.isError) {
+    ToastAndroid.show(mutation.error.message, ToastAndroid.LONG);
+    console.log(error.message);
+  }
+  if (mutation.isSuccess) {
+    queryClient.refetchQueries("user");
+    navigation.navigate("profile/");
+  }
+
   return (
     <View style={[styles.container]}>
       <Modal
@@ -103,14 +183,21 @@ const EditProfileScreen = () => {
         style={{ marginTop: StatusBar.currentHeight, flex: 1 }}
         collapsable
       >
-        <AddEducation />
-        <AddLanguage />
-        <Button
-          title="close"
-          onPress={() => {
-            setOpenModal(false);
-          }}
-        />
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          {isEducation ? (
+            <AddEducation
+              education={education}
+              setOpenModal={setOpenModal}
+              addEducation={setEducation}
+            />
+          ) : (
+            <AddLanguage
+              setOpenModal={setOpenModal}
+              languages={languages}
+              addLanguage={setLanguages}
+            />
+          )}
+        </Pressable>
       </Modal>
       <ScrollView
         style={styles.subContainer}
@@ -123,7 +210,28 @@ const EditProfileScreen = () => {
           }}
         >
           <View style={{ alignItems: "center" }}>
-            <TouchableOpacity onPress={() => this.bs.current.snapTo(0)}>
+            <TouchableOpacity
+              onPress={async () => {
+                const permission =
+                  await ImagePicker.requestCameraPermissionsAsync();
+                if (permission.granted) {
+                  let result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    allowsEditing: true,
+                    aspect: [2, 2],
+                    quality: 1,
+                  });
+                  /*
+                    if you want to discard them image just set imageUri to null
+                  
+                  
+                   */
+                  if (!result.cancelled) {
+                    setImage(result);
+                  }
+                }
+              }}
+            >
               <View
                 style={{
                   height: 100,
@@ -134,12 +242,18 @@ const EditProfileScreen = () => {
                 }}
               >
                 <ImageBackground
-                  source={{
-                    uri: `${BASEURI}/profile-pic/${user.profilePic}`,
-                    headers: {
-                      Authorization: `Bearer ${BASETOKEN}`,
-                    },
-                  }}
+                  source={
+                    image
+                      ? {
+                          uri: image.uri,
+                        }
+                      : {
+                          uri: `${BASEURI}/profile-pic/${user.profilePic}`,
+                          headers: {
+                            Authorization: `Bearer ${BASETOKEN}`,
+                          },
+                        }
+                  }
                   style={{
                     height: 100,
                     width: 100,
@@ -310,21 +424,7 @@ const EditProfileScreen = () => {
               />
             </View>
           </View>
-          <View style={styles.action}>
-            <FontAwesome name="globe" color={colors.text} size={20} />
-            <TextInput
-              selectionColor={"black"}
-              placeholder="Country"
-              placeholderTextColor="#666666"
-              autoCorrect={false}
-              style={[
-                styles.textInput,
-                {
-                  color: colors.text,
-                },
-              ]}
-            />
-          </View>
+
           <TouchableOpacity
             onPress={() => setOpen(true)}
             style={{
@@ -367,9 +467,42 @@ const EditProfileScreen = () => {
               </Text>
             )}
           </TouchableOpacity>
+          <View style={{ marginVertical: "5%" }}>
+            <SelectDropdown
+              rowStyle={{
+                color: "rgba(0,0,0,0.2)",
+              }}
+              dropdownOverlayColor="transparent"
+              buttonStyle={{
+                borderWidth: 1,
+                marginTop: "5%",
+                borderColor: "#0244d0",
+                width: "90%",
+                borderRadius: 15,
+              }}
+              data={regionsList}
+              onSelect={(selectedItem, index) => {
+                setRegion(selectedItem);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
+              }}
+              defaultButtonText="Select Region"
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
+            />
+          </View>
+
           <View style={styles.action}>
             <Icon name="map-marker-outline" color={colors.text} size={20} />
             <TextInput
+              value={city}
+              onChangeText={(text) => setCity(text)}
               selectionColor={"black"}
               placeholder="City"
               placeholderTextColor="#666666"
@@ -382,6 +515,7 @@ const EditProfileScreen = () => {
               ]}
             />
           </View>
+
           <View
             style={{
               alignItems: "center",
@@ -460,6 +594,7 @@ const EditProfileScreen = () => {
             <Text style={{ marginBottom: "5%", fontSize: 16 }}>Languages</Text>
             <Pressable
               onPress={() => {
+                setIsEducation(false);
                 setOpenModal(true);
               }}
               style={{
@@ -493,25 +628,24 @@ const EditProfileScreen = () => {
                     key={index + 1}
                     style={{
                       flexDirection: "row",
-
                       alignItems: "center",
                       justifyContent: "space-around",
                     }}
                   >
                     <View
                       style={{
+                        paddingRight: "10%",
                         flex: 1,
                         alignItems: "center",
                         justifyContent: "space-between",
                         flexDirection: "row",
                       }}
                     >
-                      <Text>{item.name}</Text>
+                      <Text>{item.language}</Text>
                       <Text>{item.level}</Text>
                     </View>
                     <Pressable
                       style={{
-                        flex: 1,
                         alignItems: "flex-end",
                       }}
                     >
@@ -519,8 +653,14 @@ const EditProfileScreen = () => {
                     </Pressable>
                     <Pressable
                       style={{
-                        flex: 1,
+                        marginHorizontal: "2%",
                         alignItems: "flex-end",
+                      }}
+                      onPress={() => {
+                        const lang = languages.filter((i, j) => {
+                          return i != index;
+                        });
+                        setLanguages(lang);
                       }}
                     >
                       <Icon color="red" size={20} name="delete" />
@@ -534,6 +674,7 @@ const EditProfileScreen = () => {
             <Text style={{ marginBottom: "5%", fontSize: 16 }}>Education</Text>
             <Pressable
               onPress={() => {
+                setIsEducation(true);
                 setOpenModal(true);
               }}
               style={{
@@ -565,7 +706,7 @@ const EditProfileScreen = () => {
                 return (
                   <View key={index + 1}>
                     <Divider style={{ borderWidth: 0.5 }} />
-                    <Text>{item.place}</Text>
+                    <Text>{item.institution}</Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -573,11 +714,25 @@ const EditProfileScreen = () => {
                       }}
                     >
                       <View style={{ flexDirection: "row" }}>
-                        <Text>{item.from} - </Text>
-                        <Text>{item.to}</Text>
+                        <Text>
+                          {item.start.getMonth() +
+                            "/" +
+                            item.start.getFullYear()}{" "}
+                          -
+                        </Text>
+                        <Text>
+                          {item.end.getMonth() + "/" + item.end.getFullYear()}
+                        </Text>
                       </View>
 
-                      <Pressable>
+                      <Pressable
+                        onPress={() => {
+                          const edu = education.filter((i, j) => {
+                            return i != index;
+                          });
+                          setEducation(edu);
+                        }}
+                      >
                         <Icon name="delete" size={20} color="red" />
                       </Pressable>
                     </View>
@@ -591,9 +746,47 @@ const EditProfileScreen = () => {
                 );
               })}
             </View>
+            <View style={{ marginVertical: "5%" }}>
+              <Text>bio</Text>
+              <TextInput
+                value={description}
+                onChangeText={(text) => setDescription(text)}
+                style={{
+                  borderWidth: 0.6,
+                  borderRadius: 5,
+                  padding: 5,
+                  borderColor: "#0244d0",
+                  selectionColor: "#fff",
+                }}
+                selectionColor="#000"
+                multiline={true}
+                numberOfLines={4}
+              />
+            </View>
           </View>
-
-          <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+          <Pressable
+            onPress={fileSelector}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 15,
+              marginHorizontal: 20,
+              marginTop: 20,
+              paddingVertical: 5,
+              paddingHorizontal: 5,
+              borderWidth: 1,
+              alignSelf: "flex-start",
+            }}
+          >
+            <Icon size={16} name="attachment" />
+            <Text style={{ marginHorizontal: 5 }}>upload Cv</Text>
+          </Pressable>
+          <TouchableOpacity
+            style={styles.commandButton}
+            onPress={() => {
+              mutation.mutate();
+            }}
+          >
             <Text style={styles.panelButtonTitle}>Submit</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -616,8 +809,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#0244d0",
     alignItems: "center",
-    marginTop: "15%",
-    marginBottom: "15%",
+    marginTop: "5%",
+    marginBottom: "5%",
   },
   panel: {
     padding: 20,

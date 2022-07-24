@@ -60,7 +60,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.row}>
           <Icon name="map-marker-radius" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
-            Addis Ababa, Ethiopia
+            {user.city},{user.region} Ethiopia
           </Text>
         </View>
         <View style={styles.row}>
@@ -72,6 +72,110 @@ const Profile = ({ navigation }) => {
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>{user.email}</Text>
+        </View>
+      </View>
+      <Divider style={{ borderWidth: 0.2 }} />
+      <View>
+        <Text>gender {user.gender}</Text>
+        <Text>description {user.description}</Text>
+        <View style={{ alignItems: "flex-start", marginTop: "2%" }}>
+          <Text>Skills</Text>
+          {user.skills.map((item, index) => (
+            <View
+              key={index + 1}
+              style={{
+                flexDirection: "row",
+                backgroundColor: "#0244d0",
+                margin: 5,
+                padding: "3%",
+                paddingVertical: 5,
+                borderRadius: 20,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 16,
+                  marginHorizontal: "3%",
+                }}
+              >
+                {item}
+              </Text>
+              <Pressable
+                onPress={() => {
+                  setSkills(
+                    skills.filter((i) => {
+                      return item != i;
+                    })
+                  );
+                }}
+              >
+                <Icon name="close" color="red" size={20} />
+              </Pressable>
+            </View>
+          ))}
+        </View>
+
+        <View>
+          <Text>Education</Text>
+          {user.education.map((item, index) => {
+            return (
+              <View key={index + 1}>
+                <Divider style={{ borderWidth: 0.5 }} />
+                <Text>{item.institution}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <Text>
+                      {item.start.getMonth() + "/" + item.start.getFullYear()} -
+                    </Text>
+                    <Text>
+                      {item.end.getMonth() + "/" + item.end.getFullYear()}
+                    </Text>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <Text>
+                    {item.major} {"    "}
+                  </Text>
+                  <Text>{item.degree}</Text>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+        <View>
+          <Text>Languages</Text>
+          {languages.map((item, index) => {
+            return (
+              <View
+                key={index + 1}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                }}
+              >
+                <View
+                  style={{
+                    paddingRight: "10%",
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text>{item.language}</Text>
+                  <Text>{item.level}</Text>
+                </View>
+              </View>
+            );
+          })}
+          <></>
         </View>
       </View>
       <Divider style={{ borderWidth: 0.2 }} />
