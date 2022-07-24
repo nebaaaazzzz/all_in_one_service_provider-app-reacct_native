@@ -9,7 +9,13 @@ import { BASETOKEN, BASEURI } from "../../urls";
 //           return <Text key={index + 1}>{skill}</Text>;
 //         })}
 //       </View>
-import { View, SafeAreaView, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import {
   Avatar,
   Title,
@@ -27,184 +33,216 @@ const Profile = ({ navigation }) => {
   const user = useContext(UserContext);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.userInfoSection}>
-        <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Avatar.Image
-            source={{
-              uri: `${BASEURI}/profile-pic/${user.profilePic}`,
-              // uri: `${BASEURI}/profile-pic/${userContext.profilePic}`,
-              headers: {
-                Authorization: `Bearer ${BASETOKEN}`,
-              },
-            }}
-            size={80}
-          />
-          <View style={{ marginLeft: 20 }}>
-            <Title
-              style={[
-                styles.title,
-                {
-                  marginTop: 15,
-                  marginBottom: 5,
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.userInfoSection}>
+          <View style={{ flexDirection: "row", marginTop: 15 }}>
+            <Avatar.Image
+              source={{
+                uri: `${BASEURI}/profile-pic/${user.profilePic}`,
+                // uri: `${BASEURI}/profile-pic/${userContext.profilePic}`,
+                headers: {
+                  Authorization: `Bearer ${BASETOKEN}`,
                 },
-              ]}
-            >
-              {user.firstName + " " + user.lastName}
-            </Title>
-            <Caption style={styles.caption}>{user.userName}</Caption>
+              }}
+              size={80}
+            />
+            <View style={{ marginLeft: 20 }}>
+              <Title
+                style={[
+                  styles.title,
+                  {
+                    marginTop: 15,
+                    marginBottom: 5,
+                  },
+                ]}
+              >
+                {user.firstName + " " + user.lastName}
+              </Title>
+              <Caption style={styles.caption}>{user.userName}</Caption>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.userInfoSection}>
-        <View style={styles.row}>
-          <Icon name="map-marker-radius" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            {user.city},{user.region} Ethiopia
-          </Text>
+        <View style={styles.userInfoSection}>
+          <View style={styles.row}>
+            <Icon name="map-marker-radius" color="#777777" size={20} />
+            <Text style={{ color: "#777777", marginLeft: 20 }}>
+              {user.city} {user.region} Ethiopia
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Icon name="phone" color="#777777" size={20} />
+            <Text style={{ color: "#777777", marginLeft: 20 }}>
+              {user.phoneNumber}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Icon name="email" color="#777777" size={20} />
+            <Text style={{ color: "#777777", marginLeft: 20 }}>
+              {user.email}
+            </Text>
+          </View>
         </View>
-        <View style={styles.row}>
-          <Icon name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            {user.phoneNumber}
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>{user.email}</Text>
-        </View>
-      </View>
-      <Divider style={{ borderWidth: 0.2 }} />
-      <View>
-        <Text>gender {user.gender}</Text>
-        <Text>description {user.description}</Text>
-        <View style={{ alignItems: "flex-start", marginTop: "2%" }}>
-          <Text>Skills</Text>
-          {user.skills.map((item, index) => (
-            <View
-              key={index + 1}
+        <Divider />
+        <View style={{ paddingHorizontal: "10%", marginTop: "2%" }}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontSize: 18 }}>gender</Text>
+            <Text style={{ color: "rgba(0,0,0,0.6)", marginHorizontal: 20 }}>
+              {user.gender}
+            </Text>
+          </View>
+
+          {user.skills || (
+            <View style={{ alignItems: "flex-start", marginTop: "2%" }}>
+              <Text>Skills</Text>
+
+              {user.skills.map((item, index) => (
+                <View
+                  key={index + 1}
+                  style={{
+                    flexDirection: "row",
+                    backgroundColor: "#0244d0",
+                    margin: 5,
+                    padding: "3%",
+                    paddingVertical: 5,
+                    borderRadius: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontSize: 16,
+                      marginHorizontal: "3%",
+                    }}
+                  >
+                    {item}
+                  </Text>
+                  <Pressable
+                    onPress={() => {
+                      setSkills(
+                        skills.filter((i) => {
+                          return item != i;
+                        })
+                      );
+                    }}
+                  >
+                    <Icon name="close" color="red" size={20} />
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+          )}
+          {user.education || (
+            <View>
+              <Text>Education</Text>
+              {user.education.map((item, index) => {
+                return (
+                  <View key={index + 1}>
+                    <Divider style={{ borderWidth: 0.5 }} />
+                    <Text>{item.institution}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View style={{ flexDirection: "row" }}>
+                        <Text>
+                          {item.start.getMonth() +
+                            "/" +
+                            item.start.getFullYear()}{" "}
+                          -
+                        </Text>
+                        <Text>
+                          {item.end.getMonth() + "/" + item.end.getFullYear()}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text>
+                        {item.major} {"    "}
+                      </Text>
+                      <Text>{item.degree}</Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          )}
+          {user.languages || (
+            <View>
+              <Text>Languages</Text>
+              {user.languages.map((item, index) => {
+                return (
+                  <View
+                    key={index + 1}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <View
+                      style={{
+                        paddingRight: "10%",
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Text>{item.language}</Text>
+                      <Text>{item.level}</Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          )}
+
+          <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
+            <Text
               style={{
-                flexDirection: "row",
-                backgroundColor: "#0244d0",
-                margin: 5,
-                padding: "3%",
-                paddingVertical: 5,
-                borderRadius: 20,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginVertical: "5%",
               }}
             >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 16,
-                  marginHorizontal: "3%",
-                }}
-              >
-                {item}
-              </Text>
-              <Pressable
-                onPress={() => {
-                  setSkills(
-                    skills.filter((i) => {
-                      return item != i;
-                    })
-                  );
-                }}
-              >
-                <Icon name="close" color="red" size={20} />
-              </Pressable>
+              Bio
+            </Text>
+            <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
+              {user.description}
+            </Text>
+          </View>
+        </View>
+        <Divider style={{ borderWidth: 0.2 }} />
+        <View style={styles.menuWrapper}>
+          <TouchableRipple onPress={() => {}}>
+            <View style={styles.menuItem}>
+              <Icon name="heart-outline" color="#0244d0" size={25} />
+              <Text style={styles.menuItemText}>Your Favorites</Text>
             </View>
-          ))}
+          </TouchableRipple>
+          <TouchableRipple onPress={() => {}}>
+            <View style={styles.menuItem}>
+              <Icon name="credit-card" color="#0244d0" size={25} />
+              <Text style={styles.menuItemText}>Payment</Text>
+            </View>
+          </TouchableRipple>
+          <TouchableRipple>
+            <View style={styles.menuItem}>
+              <Icon name="share-outline" color="#0244d0" size={25} />
+              <Text style={styles.menuItemText}>Tell Your Friends</Text>
+            </View>
+          </TouchableRipple>
+          <TouchableRipple onPress={() => {}}>
+            <View style={styles.menuItem}>
+              <Icon name="account-check-outline" color="#0244d0" size={25} />
+              <Text style={styles.menuItemText}>Support</Text>
+            </View>
+          </TouchableRipple>
         </View>
-
-        <View>
-          <Text>Education</Text>
-          {user.education.map((item, index) => {
-            return (
-              <View key={index + 1}>
-                <Divider style={{ borderWidth: 0.5 }} />
-                <Text>{item.institution}</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View style={{ flexDirection: "row" }}>
-                    <Text>
-                      {item.start.getMonth() + "/" + item.start.getFullYear()} -
-                    </Text>
-                    <Text>
-                      {item.end.getMonth() + "/" + item.end.getFullYear()}
-                    </Text>
-                  </View>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <Text>
-                    {item.major} {"    "}
-                  </Text>
-                  <Text>{item.degree}</Text>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-        <View>
-          <Text>Languages</Text>
-          {languages.map((item, index) => {
-            return (
-              <View
-                key={index + 1}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-around",
-                }}
-              >
-                <View
-                  style={{
-                    paddingRight: "10%",
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexDirection: "row",
-                  }}
-                >
-                  <Text>{item.language}</Text>
-                  <Text>{item.level}</Text>
-                </View>
-              </View>
-            );
-          })}
-          <></>
-        </View>
-      </View>
-      <Divider style={{ borderWidth: 0.2 }} />
-      <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#0244d0" size={25} />
-            <Text style={styles.menuItemText}>Your Favorites</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="credit-card" color="#0244d0" size={25} />
-            <Text style={styles.menuItemText}>Payment</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple>
-          <View style={styles.menuItem}>
-            <Icon name="share-outline" color="#0244d0" size={25} />
-            <Text style={styles.menuItemText}>Tell Your Friends</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color="#0244d0" size={25} />
-            <Text style={styles.menuItemText}>Support</Text>
-          </View>
-        </TouchableRipple>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

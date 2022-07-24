@@ -91,7 +91,7 @@ const LocationScreen = ({ navigation }) => {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?country=et&access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
       )
         .then(async (res) => {
           const s = await res.json();

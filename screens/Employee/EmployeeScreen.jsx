@@ -110,6 +110,7 @@ const Home = ({ navigation }) => {
   }
   const list = [
     "All",
+    "NearBy",
     "Grapics & Design",
     "Sells & Markating",
     "Writing & Translation",
@@ -169,7 +170,9 @@ const Home = ({ navigation }) => {
           renderItem={({ item, index }) => {
             return (
               <Pressable
-                onPress={() => setIndex(index)}
+                onPress={() => {
+                  setIndex(index);
+                }}
                 style={{
                   marginHorizontal: 10,
                   borderBottomColor: "#3498db",

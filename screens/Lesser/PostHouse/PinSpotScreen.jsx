@@ -79,7 +79,7 @@ const PinSpotScreen = ({ navigation, route }) => {
                   type: "add",
                   payload: {
                     center: r.features[0].center,
-                    region: region[0].text,
+                    ...(region[0].text && { region: region[0].text }),
                     placeName: r.features[0].place_name,
                   },
                 });

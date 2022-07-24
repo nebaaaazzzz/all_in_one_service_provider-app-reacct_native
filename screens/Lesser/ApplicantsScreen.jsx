@@ -99,6 +99,7 @@ const Lessee = ({ navigation, route }) => {
     });
     navigation.navigate("lesser/applicants/userdetail", {
       id,
+      houseId: route.params.id,
     });
   }
   const isFocused = useIsFocused();

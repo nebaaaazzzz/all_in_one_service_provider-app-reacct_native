@@ -100,6 +100,7 @@ const Employer = ({ navigation, route }) => {
     });
     navigation.navigate("employer/applicants/userdetail", {
       id,
+      jobId: route.params.id,
     });
   }
   const isFocused = useIsFocused();

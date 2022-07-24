@@ -15,7 +15,6 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import CustomButton from "../components/CustomButton";
 import { ScrollView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
 
@@ -140,7 +139,11 @@ const LoginScreen = ({ navigation, route }) => {
                   }}
                 />
               </View>
-              {phoneError ? <Text>{phoneError}</Text> : <></>}
+              {phoneError ? (
+                <Text style={{ color: "red" }}>{phoneError}</Text>
+              ) : (
+                <></>
+              )}
             </View>
             <View style={{ marginBottom: 25 }}>
               <View
@@ -182,12 +185,29 @@ const LoginScreen = ({ navigation, route }) => {
               )}
             </View>
 
-            <CustomButton
-              label={"Login"}
-              onPress={() => {
-                mutate({ id: new Date(), title: "Do Laundry" });
+            <TouchableOpacity
+              disabled={passwordError && phoneError}
+              onPress={() => mutate({ id: new Date() })}
+              style={{
+                backgroundColor: !(passwordError && phoneError)
+                  ? "#0244d0"
+                  : "rgba(0,0,0,0.6)",
+                padding: 20,
+                borderRadius: 10,
+                marginBottom: 30,
               }}
-            />
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontWeight: "700",
+                  fontSize: 16,
+                  color: "#fff",
+                }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("forgotpassword");

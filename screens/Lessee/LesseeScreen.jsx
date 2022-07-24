@@ -82,23 +82,7 @@ const Lessee = ({ navigation }) => {
   const onChangeSearch = () => {};
   const [visible, setVisible] = React.useState(false);
   const [indexS, setIndex] = useState(0);
-  const showModal = () => setVisible(true);
   // require('./assets/images/girl.jpg'),          // Local image
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery("houses", fetchHouses, {
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage.length) {
-        return pages.length + 1;
-      }
-      return;
-    },
-  });
 
   const list = [
     {
@@ -158,6 +142,21 @@ const Lessee = ({ navigation }) => {
   if (!isFocused) {
     queryClient.invalidateQueries("houses");
   }
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery(["houses"], fetchHouses, {
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length) {
+        return pages.length + 1;
+      }
+      return;
+    },
+  });
   if (status === "loading") {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -210,7 +209,9 @@ const Lessee = ({ navigation }) => {
             renderItem={({ item, index }) => {
               return (
                 <Pressable
-                  onPress={() => setIndex(index)}
+                  onPress={() => {
+                    setIndex(index);
+                  }}
                   style={{
                     marginHorizontal: 10,
                     borderBottomColor: "#0244d0",

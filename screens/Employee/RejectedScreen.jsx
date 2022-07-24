@@ -1,29 +1,21 @@
 import {
   View,
   Text,
-  StatusBar,
   Pressable,
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import { Searchbar } from "react-native-paper";
-import React, { useState } from "react";
+import React from "react";
 import FilterModal from "../../components/FilterModal";
 import { Divider } from "react-native-paper";
-import { createStackNavigator } from "@react-navigation/stack";
-import JobDetailScreen from "./JobDetailScreen";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
-const ApplyTabNavigator = createMaterialTopTabNavigator();
 
 import { useIsFocused } from "@react-navigation/native";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import ApprovedScreen from "./ApprovedScreen";
-import RejectedScreen from "./RejectedScreen";
 const fetchJobs = async ({ pageParam = 1 }) => {
   const response = await fetch(
-    `${BASEURI}/employee/applied/?page=${pageParam}`,
+    `${BASEURI}/employee/rejected/?page=${pageParam}`,
     {
       headers: {
         Authorization: `Bearer ${BASETOKEN}`,
@@ -32,7 +24,6 @@ const fetchJobs = async ({ pageParam = 1 }) => {
   );
   return await response.json();
 };
-const EmployeeStackNavigator = createStackNavigator();
 const Jobs = ({ pressHandler, item }) => {
   return (
     <View>
@@ -80,7 +71,7 @@ const Jobs = ({ pressHandler, item }) => {
   );
 };
 
-const Home = ({ navigation }) => {
+const RejectedScreen = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
   const onPressHandler = (id) => {
     requestAnimationFrame(() => {
@@ -154,41 +145,4 @@ const Home = ({ navigation }) => {
     </View>
   );
 };
-const ApplyNavigation = () => {
-  return (
-    <ApplyTabNavigator.Navigator>
-      <ApplyTabNavigator.Screen
-        options={{ title: "Pending" }}
-        name="employee/applied/home/"
-        component={Home}
-      />
-      <ApplyTabNavigator.Screen
-        options={{ title: "Approved" }}
-        name="employee/applied/approved"
-        component={ApprovedScreen}
-      />
-      <ApplyTabNavigator.Screen
-        options={{ title: "Rejected" }}
-        name="employee/applied/rejected"
-        component={RejectedScreen}
-      />
-    </ApplyTabNavigator.Navigator>
-  );
-};
-function AppliedScreen() {
-  return (
-    <EmployeeStackNavigator.Navigator>
-      <EmployeeStackNavigator.Screen
-        options={{ title: "Applied" }}
-        name="employee/applied/home"
-        component={ApplyNavigation}
-      />
-      <EmployeeStackNavigator.Screen
-        name="employee/applied/jobdetail"
-        options={{ title: "Job Detail" }}
-        component={JobDetailScreen}
-      />
-    </EmployeeStackNavigator.Navigator>
-  );
-}
-export default AppliedScreen;
+export default RejectedScreen;

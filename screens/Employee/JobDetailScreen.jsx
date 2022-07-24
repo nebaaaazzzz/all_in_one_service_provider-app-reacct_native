@@ -320,6 +320,20 @@ const JobDetailScreen = ({ navigation, route }) => {
           </View>
           <Divider />
         </View>
+        {data.approved || (
+          <View style={{ paddingHorizontal: "5%", marginTop: "5%" }}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontSize: 18 }}>phone Number</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                data.user.phoneNumber
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontSize: 18 }}>Email</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>data.user.email</Text>
+            </View>
+          </View>
+        )}
       </ScrollView>
       <View
         style={{

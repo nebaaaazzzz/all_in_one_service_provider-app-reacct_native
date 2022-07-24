@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -35,13 +35,11 @@ import Animated from "react-native-reanimated";
 import { RadioButton } from "react-native-paper";
 // import ImagePicker from "react-native-image-crop-picker";
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ navigation }) => {
   const user = useContext(UserContext);
   const { colors } = useTheme();
   const [image, setImage] = useState(null);
-
   let fall = new Animated.Value(1);
-
   const [open, setOpen] = useState(false);
 
   /* user info states */
@@ -103,6 +101,7 @@ const EditProfileScreen = () => {
       /*file lastmodified mimeType name  output size type uri */
     }
   };
+
   const mutation = useMutation(async () => {
     const formData = new FormData();
     const myHeaders = new Headers();
@@ -115,10 +114,13 @@ const EditProfileScreen = () => {
       });
     }
     if (image) {
+      const uri = image.uri;
+      const arr = uri.split(".");
+      const ext = arr[arr.length - 1];
       formData.append("profile", {
         uri: image.uri,
-        name: image.name,
-        type: image.mimeType,
+        type: "image/" + ext,
+        name: uri,
       });
     }
     const obj = {
@@ -169,7 +171,7 @@ const EditProfileScreen = () => {
   }
   if (mutation.isError) {
     ToastAndroid.show(mutation.error.message, ToastAndroid.LONG);
-    console.log(error.message);
+    console.log(mutation.error.message);
   }
   if (mutation.isSuccess) {
     queryClient.refetchQueries("user");
@@ -242,13 +244,18 @@ const EditProfileScreen = () => {
                 }}
               >
                 <ImageBackground
+                  onError={(e) => {
+                    console.l;
+                    console.log("error loading image");
+                  }}
                   source={
                     image
                       ? {
                           uri: image.uri,
                         }
                       : {
-                          uri: `${BASEURI}/profile-pic/${user.profilePic}`,
+                          uri: `${BASEURI}/profile-pic/62dd308d856d7ab6e95214ae`,
+                          // uri: `${BASEURI}/profile-pic/${user.profilePic}`,
                           headers: {
                             Authorization: `Bearer ${BASETOKEN}`,
                           },

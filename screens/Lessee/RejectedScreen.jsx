@@ -11,23 +11,18 @@ import React, { useState } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeDetailScreen from "./HomeDetailScreen";
-import RejectedScreen from "./RejectedScreen";
-import ApprovedScreen from "./ApprovedScreen";
 import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
-import ViewImagesScreen from "./ViewImagesScreen";
 import fromNow from "../../utils/time";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-const LesseeStackNavigator = createStackNavigator();
-const AppliedTabNavigator = createMaterialTopTabNavigator();
 const fetchHouses = async ({ pageParam = 1 }) => {
-  const response = await fetch(`${BASEURI}/lessee/applied/?page=${pageParam}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+  const response = await fetch(
+    `${BASEURI}/lessee/rejected/?page=${pageParam}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   return await response.json();
 };
 
@@ -78,7 +73,7 @@ const Home = ({ item, pressHandler }) => {
   );
 };
 
-const Lessee = ({ navigation }) => {
+const RejectedScreen = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
   navigation.setOptions({
@@ -155,50 +150,4 @@ const Lessee = ({ navigation }) => {
     </View>
   );
 };
-
-const AppiedNavigation = () => {
-  return (
-    <AppliedTabNavigator.Navigator>
-      <AppliedTabNavigator.Screen
-        options={{ title: "Pending" }}
-        name="lessee/applied/home"
-        component={Lessee}
-      />
-      <AppliedTabNavigator.Screen
-        options={{ title: "Approved" }}
-        name="lessee/approved"
-        component={ApprovedScreen}
-      />
-      <AppliedTabNavigator.Screen
-        options={{ title: "Rejected" }}
-        name="lessee/rejected"
-        component={RejectedScreen}
-      />
-    </AppliedTabNavigator.Navigator>
-  );
-};
-const AppliedScreen = () => {
-  return (
-    <LesseeStackNavigator.Navigator>
-      <LesseeStackNavigator.Screen
-        options={{
-          title: "Applied",
-          headerTitleContainerStyle: { textAlign: "center" },
-        }}
-        name="lessee/applied/"
-        component={AppiedNavigation}
-      />
-      <LesseeStackNavigator.Screen
-        options={{ title: "detail" }}
-        name="lessee/applied/housedetail"
-        component={HomeDetailScreen}
-      />
-      <LesseeStackNavigator.Screen
-        options={{ title: "detail" }}
-        name="lessee/applied/viewimages"
-        component={ViewImagesScreen}
-      />
-    </LesseeStackNavigator.Navigator>
-  );
-};
-export default AppliedScreen;
+export default RejectedScreen;
