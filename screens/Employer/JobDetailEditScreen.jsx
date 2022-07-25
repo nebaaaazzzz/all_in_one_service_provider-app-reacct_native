@@ -31,30 +31,11 @@ const fetchJob = async ({ queryKey }) => {
 };
 
 const JobDetailEditScreen = ({ navigation, route }) => {
-  navigation.setOptions({
-    headerRight: () => (
-      <Pressable
-        style={{
-          marginVertical: 10,
-          paddingHorizontal: 10,
-          paddingVertical: 3,
-          elevation: 10,
-          borderRadius: 5,
-          marginHorizontal: 10,
-          backgroundColor: "#0244d0",
-          alignSelf: "flex-end",
-        }}
-        onPress={() => {
-          navigation.navigate("employer/appicants", {
-            id: data._id,
-          });
-        }}
-      >
-        <Badge>{data?.applicants?.length || 0} </Badge>
-        <Text style={{ color: "#fff" }}>Applicants</Text>
-      </Pressable>
-    ),
-  });
+  // navigation.setOptions({
+  //   headerRight: () => (
+
+  //   ),
+  // });
   const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching } = useQuery(
     ["job", route.params.id],
@@ -75,8 +56,76 @@ const JobDetailEditScreen = ({ navigation, route }) => {
   }
   return (
     <View>
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: "#fff",
+          justifyContent: "center",
+        }}
+      >
+        <Pressable
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            elevation: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#0244d0",
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            navigation.navigate("employer/appicants", {
+              id: data._id,
+            });
+          }}
+        >
+          <Badge>{data?.applicants?.length || 0} </Badge>
+          <Text style={{ color: "#fff" }}>Applicants</Text>
+        </Pressable>
+        <Pressable
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            elevation: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#0244d0",
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            navigation.navigate("employer/approved", {
+              id: data._id,
+            });
+          }}
+        >
+          <Badge>{data?.approved?.length || 0} </Badge>
+          <Text style={{ color: "#fff" }}>Approved</Text>
+        </Pressable>
+        <Pressable
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            elevation: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#0244d0",
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            navigation.navigate("employer/rejected", {
+              id: data._id,
+            });
+          }}
+        >
+          <Badge>{data?.rejected?.length || 0} </Badge>
+          <Text style={{ color: "#fff" }}>Rejected</Text>
+        </Pressable>
+      </View>
       <ScrollView
-        style={{ marginBottom: 50 }}
+        style={{ marginBottom: 100, backgroundColor: "#fff" }}
         showsVerticalScrollIndicator={false}
       >
         <Text

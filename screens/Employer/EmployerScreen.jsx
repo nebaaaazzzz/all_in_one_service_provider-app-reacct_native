@@ -20,15 +20,20 @@ import { useInfiniteQuery, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useIsFocused } from "@react-navigation/native";
 import ApplicantsScreen from "./ApplicantsScreen";
+import ApprovedScreen from "./ApprovedScreen";
+import RejectedScreen from "./RejectedScreen";
 import EditPostScreen from "./EditPostScreen";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
-const fetchJobs = async ({ pageParam = 1 }) => {
-  const response = await fetch(`${BASEURI}/employer/posts?page=${pageParam}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+const fetchJobs = async ({ pageParam = 1, nearBy }) => {
+  const response = await fetch(
+    `${BASEURI}/employer/posts?page=${pageParam}&nearby=${nearBy}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   return await response.json();
 };
 var aDay = 24 * 60 * 60 * 1000;
@@ -81,6 +86,7 @@ const Post = ({ pressHandler, item }) => {
 };
 
 const MyPosts = ({ navigation }) => {
+  const [nearBy, setNearBy] = useState();
   const {
     data,
     error,
@@ -88,14 +94,21 @@ const MyPosts = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("myjobs", fetchJobs, {
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage.length) {
-        return pages.length + 1;
-      }
-      return;
+  } = useInfiniteQuery(
+    "myjobs",
+    async (obj) => {
+      obj.nearby = nearBy;
+      return fetchJobs(obj);
     },
-  });
+    {
+      getNextPageParam: (lastPage, pages) => {
+        if (lastPage.length) {
+          return pages.length + 1;
+        }
+        return;
+      },
+    }
+  );
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {
@@ -216,6 +229,20 @@ const EmployerScreen = () => {
           }}
           name="employer/appicants"
           component={ApplicantsScreen}
+        />
+        <EmployerStackNavigator.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="employer/approved"
+          component={ApprovedScreen}
+        />
+        <EmployerStackNavigator.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="employer/rejected"
+          component={RejectedScreen}
         />
         <EmployerStackNavigator.Screen
           options={{

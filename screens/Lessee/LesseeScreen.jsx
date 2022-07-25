@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -166,12 +167,7 @@ const Lessee = ({ navigation }) => {
     );
   }
   if (status === "error") {
-    navigation.reset({
-      index: 1,
-      routes: [{ name: "error", params: { error } }],
-    });
-
-    return <View></View>;
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
 
   return (

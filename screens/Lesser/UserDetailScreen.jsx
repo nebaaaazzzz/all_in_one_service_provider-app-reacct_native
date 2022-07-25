@@ -12,16 +12,21 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useIsFocused } from "@react-navigation/native";
-
+import { Avatar, Title, Caption, Text, Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Requests permissions for external directory
 
 const fetchUser = async ({ queryKey }) => {
-  const response = await fetch(`${BASEURI}/user/${queryKey[1]}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+  console.log(`${BASEURI}/lesser/${queryKey[1]}/${queryKey[2]}`);
+
+  const response = await fetch(
+    `${BASEURI}/lesser/${queryKey[1]}/${queryKey[2]}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
@@ -64,11 +69,16 @@ const UserDetailScreen = ({ navigation, route }) => {
   const queryClient = useQueryClient();
 
   const { isLoading, isError, error, data, isFetching } = useQuery(
-    ["user", route.params.id],
+    ["user", route.params.houseId, route.params.id],
     fetchUser
   );
+  console.log(data);
   if (!isFocused) {
-    queryClient.invalidateQueries(["user", route.params.id]);
+    queryClient.invalidateQueries([
+      "user",
+      route.params.id,
+      route.params.houseId,
+    ]);
   }
   if (
     isLoading ||
@@ -278,7 +288,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* if user is approved */}
       {/* if user is approved */}
       {/* if user is approved */}
-      {data.approved || (
+      {data.approved && (
         <View
           style={{
             backgroundColor: "#fff",
@@ -309,7 +319,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* if user is rejected */}
       {/* if user is rejected */}
       {/* if user is rejected */}
-      {data.rejected || (
+      {data.rejected && (
         <View
           style={{
             backgroundColor: "#fff",
@@ -340,7 +350,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* if user is rejected */}
       {/* if user is rejected */}
       {/* if user is rejected */}
-      {data.applied || (
+      {data.applied && (
         <View
           style={{
             backgroundColor: "#fff",

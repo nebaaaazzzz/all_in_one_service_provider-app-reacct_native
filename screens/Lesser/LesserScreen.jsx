@@ -6,6 +6,7 @@ import {
   Image,
   Pressable,
   FlatList,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -68,12 +69,7 @@ const MyPosts = ({ navigation }) => {
     );
   }
   if (status === "error") {
-    navigation.reset({
-      index: 1,
-      routes: [{ name: "error", params: { error } }],
-    });
-
-    return <View></View>;
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
 
   return (

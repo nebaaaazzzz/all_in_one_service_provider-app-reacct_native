@@ -13,13 +13,14 @@ import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useIsFocused } from "@react-navigation/native";
-import { Divider } from "react-native-paper";
 import { useQueryClient } from "react-query";
 import UserDetailScreen from "./UserDetailScreen";
-const LesserStackNavigator = createStackNavigator();
-const fetchApplicant = async ({ pageParam = 1, queryKey }) => {
+import { Divider } from "react-native-paper";
+const EmployerStackNavigator = createStackNavigator();
+
+const fetchApplicants = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
-    `${BASEURI}/lesser/rejected/${queryKey[1]}?page=${pageParam}`,
+    `${BASEURI}/employer/approved/${queryKey[1]}?page=${pageParam}`,
     {
       headers: {
         Authorization: `Bearer ${BASETOKEN}`,
@@ -70,7 +71,7 @@ const Users = ({ item, pressHandler }) => {
   );
 };
 
-const Lessee = ({ navigation, route }) => {
+const Employer = ({ navigation, route }) => {
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
 
@@ -84,7 +85,7 @@ const Lessee = ({ navigation, route }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery(["houserejected", route.params.id], fetchApplicant, {
+  } = useInfiniteQuery(["jobapproved", route.params.id], fetchApplicants, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;
@@ -97,15 +98,15 @@ const Lessee = ({ navigation, route }) => {
     navigation.setOptions({
       headerShown: false,
     });
-    navigation.navigate("lesser/rejected/userdetail", {
+    navigation.navigate("employer/approved/userdetail", {
       id,
-      houseId: route.params.id,
+      jobId: route.params.id,
     });
   }
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {
-    queryClient.invalidateQueries("houserejected");
+    queryClient.invalidateQueries("jobapproved");
   }
   if (status === "loading") {
     return (
@@ -117,7 +118,7 @@ const Lessee = ({ navigation, route }) => {
   if (status === "error") {
     // navigation.reset({
     //   index: 1,
-    //   routes: [{ name: "error", params: { error } }],houseapplicants
+    //   routes: [{ name: "error", params: { error } }],
     // });
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
@@ -152,22 +153,22 @@ const Lessee = ({ navigation, route }) => {
 
 const ApprovedScreen = ({ route }) => {
   return (
-    <LesserStackNavigator.Navigator>
-      <LesserStackNavigator.Screen
+    <EmployerStackNavigator.Navigator>
+      <EmployerStackNavigator.Screen
         initialParams={{ id: route.params.id }}
         options={{
-          title: "Approved",
+          title: "Applicants",
           headerTitleContainerStyle: { textAlign: "center" },
         }}
-        name="lesser/approved/"
-        component={Lessee}
+        name="employer/approved/"
+        component={Employer}
       />
-      <LesserStackNavigator.Screen
+      <EmployerStackNavigator.Screen
         options={{ title: "detail" }}
-        name="lesser/rejected/userdetail"
+        name="employer/approved/userdetail"
         component={UserDetailScreen}
       />
-    </LesserStackNavigator.Navigator>
+    </EmployerStackNavigator.Navigator>
   );
 };
 export default ApprovedScreen;

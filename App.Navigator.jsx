@@ -32,6 +32,7 @@ check  react-native-debugger
 */
 export const UserContext = React.createContext();
 const AppNavigator = ({ navigation }) => {
+  (async () => await import("./urls"))();
   const [tokenG, setTokenG] = useState();
   const { data, isFetching, isError, error, isLoading, isSuccess } = useQuery(
     "user",

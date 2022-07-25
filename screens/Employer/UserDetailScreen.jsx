@@ -25,11 +25,14 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Requests permissions for external directory
 
 const fetchUser = async ({ queryKey }) => {
-  const response = await fetch(`${BASEURI}/user/${queryKey[1]}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+  const response = await fetch(
+    `${BASEURI}/employer/${queryKey[1]}/${queryKey[2]}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
@@ -38,6 +41,7 @@ const fetchUser = async ({ queryKey }) => {
 };
 
 const UserDetailScreen = ({ navigation, route }) => {
+  console.log(route.params);
   const approveMutation = useMutation(async () => {
     const response = await fetch(
       `${BASEURI}/employer/accept/${route.params.id}/${route.params.jobId}`,
@@ -55,7 +59,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   });
   const rejectMutation = useMutation(async () => {
     const response = await fetch(
-      `${BASEURI}/employer/reject/${route.params.id}/${route.params.houseId}`,
+      `${BASEURI}/employer/reject/${route.params.id}/${route.params.jobId}`,
       {
         headers: {
           Authorization: `Bearer ${BASETOKEN}`,
@@ -68,17 +72,26 @@ const UserDetailScreen = ({ navigation, route }) => {
 
     return await response.json();
   });
+
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {
-    queryClient.invalidateQueries(["user", route.params.id]);
+    queryClient.invalidateQueries([
+      "user",
+      route.params.jobId,
+      route.params.id,
+    ]);
   }
   const { isLoading, isError, error, data, isFetching } = useQuery(
-    ["user", route.params.id],
+    ["user", route.params.jobId, route.params.id],
     fetchUser
   );
   if (!isFocused) {
-    queryClient.invalidateQueries(["user", route.params.id]);
+    queryClient.invalidateQueries([
+      "user",
+      route.params.jobId,
+      route.params.id,
+    ]);
   }
   if (
     isLoading ||
@@ -287,7 +300,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* if user is approved */}
       {/* if user is approved */}
       {/* if user is approved */}
-      {data.approved || (
+      {data.approved && (
         <View
           style={{
             backgroundColor: "#fff",
@@ -318,7 +331,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* if user is rejected */}
       {/* if user is rejected */}
       {/* if user is rejected */}
-      {data.rejected || (
+      {data.rejected && (
         <View
           style={{
             backgroundColor: "#fff",
@@ -349,7 +362,7 @@ const UserDetailScreen = ({ navigation, route }) => {
       {/* if user is rejected */}
       {/* if user is rejected */}
       {/* if user is rejected */}
-      {data.applied || (
+      {data.applied && (
         <View
           style={{
             backgroundColor: "#fff",

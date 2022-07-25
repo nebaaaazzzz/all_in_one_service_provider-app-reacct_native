@@ -3,9 +3,9 @@ import {
   View,
   Text,
   Pressable,
-  StatusBar,
   Image,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import React from "react";
 import { useQuery } from "react-query";
@@ -37,11 +37,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
     );
   }
   if (isError) {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>{error.message}</Text>
-      </View>
-    );
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
   return (
     <View
@@ -50,12 +46,11 @@ const HomeDetailScreen = ({ navigation, route }) => {
         backgroundColor: "rgba(0,0,0,0.3)",
       }}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+      <View
         style={{
           backgroundColor: "#fff",
-          flex: 1,
-          paddingHorizontal: 10,
+          flexDirection: "row",
+          justifyContent: "center",
         }}
       >
         <Pressable
@@ -90,7 +85,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             alignSelf: "flex-end",
           }}
           onPress={() => {
-            navigation.navigate("lesser/applicants", {
+            navigation.navigate("lesser/approved", {
               id: data._id,
             });
           }}
@@ -110,7 +105,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             alignSelf: "flex-end",
           }}
           onPress={() => {
-            navigation.navigate("lesser/applicants", {
+            navigation.navigate("lesser/rejected", {
               id: data._id,
             });
           }}
@@ -118,6 +113,15 @@ const HomeDetailScreen = ({ navigation, route }) => {
           <Badge>{data?.rejected?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Rejected</Text>
         </Pressable>
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          backgroundColor: "#fff",
+          flex: 1,
+          paddingHorizontal: 10,
+        }}
+      >
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
