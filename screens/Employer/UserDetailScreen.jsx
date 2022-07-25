@@ -284,46 +284,113 @@ const UserDetailScreen = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{
-          backgroundColor: "#fff",
-          borderTopWidth: 2,
-          flexDirection: "row",
-          height: 60,
-          alignItems: "center",
-          justifyContent: "space-evenly",
-          borderColor: "rgba(0,0,0,0.3)",
-        }}
-      >
-        <Pressable
-          onPress={() => {
-            rejectMutation.mutate();
-          }}
+      {/* if user is approved */}
+      {/* if user is approved */}
+      {/* if user is approved */}
+      {data.approved || (
+        <View
           style={{
-            backgroundColor: "red",
-            width: 100,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
+            backgroundColor: "#fff",
+            borderTopWidth: 2,
+            flexDirection: "row",
+            height: 60,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            borderColor: "rgba(0,0,0,0.3)",
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            approveMutation.mutate();
-          }}
+          <Pressable
+            onPress={() => {
+              rejectMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "red",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+          </Pressable>
+        </View>
+      )}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {data.rejected || (
+        <View
           style={{
-            backgroundColor: "#0244d0",
-            width: 100,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
+            backgroundColor: "#fff",
+            borderTopWidth: 2,
+            flexDirection: "row",
+            height: 60,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            borderColor: "rgba(0,0,0,0.3)",
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
-        </Pressable>
-      </View>
+          <Pressable
+            onPress={() => {
+              approveMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
+          </Pressable>
+        </View>
+      )}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {data.applied || (
+        <View
+          style={{
+            backgroundColor: "#fff",
+            borderTopWidth: 2,
+            flexDirection: "row",
+            height: 60,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            borderColor: "rgba(0,0,0,0.3)",
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              rejectMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "red",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              approveMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
+          </Pressable>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

@@ -135,6 +135,7 @@ const SignupScreen = ({ navigation }) => {
             />
 
             <TextInput
+              selectionColor={"#000"}
               value={firstName}
               onChangeText={async (text) => {
                 const yupSchema = yup
@@ -177,6 +178,7 @@ const SignupScreen = ({ navigation }) => {
             />
 
             <TextInput
+              selectionColor={"#000"}
               value={lastName}
               onChangeText={async (text) => {
                 const yupSchema = yup

@@ -88,7 +88,7 @@ const ApprovedScreen = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("appliedjobs", fetchJobs, {
+  } = useInfiniteQuery("approvedjobs", fetchJobs, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;

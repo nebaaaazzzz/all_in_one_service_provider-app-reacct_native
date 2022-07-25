@@ -119,6 +119,7 @@ const LoginScreen = ({ navigation, route }) => {
                   style={{ marginRight: 5 }}
                 />
                 <TextInput
+                  selectionColor={"#000"}
                   value={phoneNumber}
                   onChangeText={(text) => {
                     yupPhoneSchema
@@ -161,6 +162,7 @@ const LoginScreen = ({ navigation, route }) => {
                   style={{ marginRight: 5 }}
                 />
                 <TextInput
+                  selectionColor={"#000"}
                   value={password}
                   onChangeText={(text) => {
                     yupPasswordSchema

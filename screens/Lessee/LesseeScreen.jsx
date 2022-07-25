@@ -14,6 +14,7 @@ import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
 import { createStackNavigator } from "@react-navigation/stack";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import HomeDetailScreen from "./HomeDetailScreen";
 import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
@@ -191,7 +192,12 @@ const Lessee = ({ navigation }) => {
           navigation.navigate("lessee/applied");
         }}
       >
-        <Text style={{ color: "#fff" }}>Applied</Text>
+        <MaterialIcons
+          name="notifications-active"
+          size={20}
+          color="#fff"
+          style={{ elevation: 10 }}
+        />
       </Pressable>
       <Searchbar
         style={{ marginTop: "2%", marginHorizontal: 10, borderRadius: 20 }}

@@ -14,6 +14,8 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import PostHouseScreen from "./PostHouse/PostHouseScreen";
 import HomeDetailScreen from "./HomeDetailScreen";
 import ApplicantsScreen from "./ApplicantsScreen";
+import ApprovedScreen from "./ApprovedScreen";
+import RejectedScreen from "./RejectedScreen";
 import PaymentScreen from "./PaymentScreen";
 const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
@@ -171,6 +173,16 @@ const LesserScreen = () => {
           options={{ headerShown: false }}
           name="lesser/applicants"
           component={ApplicantsScreen}
+        />
+        <LesserStackNavigator.Screen
+          options={{ headerShown: false }}
+          name="lesser/approved"
+          component={ApprovedScreen}
+        />
+        <LesserStackNavigator.Screen
+          options={{ headerShown: false }}
+          name="lesser/rejected"
+          component={RejectedScreen}
         />
         <LesserStackNavigator.Screen
           options={{ headerShown: false }}

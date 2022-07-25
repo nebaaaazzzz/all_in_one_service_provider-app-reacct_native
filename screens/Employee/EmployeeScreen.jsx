@@ -16,7 +16,7 @@ import JobDetailScreen from "./JobDetailScreen";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
-
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useIsFocused } from "@react-navigation/native";
 import AppliedScreen from "./AppliedScreen";
 const fetchJobs = async ({ pageParam = 1 }) => {
@@ -152,7 +152,12 @@ const Home = ({ navigation }) => {
           navigation.navigate("employee/applied");
         }}
       >
-        <Text style={{ color: "#fff" }}>Applied</Text>
+        <MaterialIcons
+          name="notifications-active"
+          size={20}
+          color="#fff"
+          style={{ elevation: 10 }}
+        />
       </Pressable>
       <Searchbar
         iconColor="#0244d0"

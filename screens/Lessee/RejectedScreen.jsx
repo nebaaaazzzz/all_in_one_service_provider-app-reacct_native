@@ -86,7 +86,7 @@ const RejectedScreen = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("appliedhouses", fetchHouses, {
+  } = useInfiniteQuery("rejectedhouses", fetchHouses, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length) {
         return pages.length + 1;

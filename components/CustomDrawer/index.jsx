@@ -92,7 +92,7 @@ const CustomDrawer = (props) => {
         <TouchableOpacity
           onPress={async () => {
             await SecureStore.deleteItemAsync("token");
-            await queryClient.invalidateQueries("user");
+            queryClient.resetQueries();
           }}
           style={{ paddingVertical: 15 }}
         >

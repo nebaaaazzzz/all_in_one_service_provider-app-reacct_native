@@ -78,6 +78,46 @@ const HomeDetailScreen = ({ navigation, route }) => {
           <Badge>{data?.applicants?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Applicants</Text>
         </Pressable>
+        <Pressable
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            elevation: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#0244d0",
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            navigation.navigate("lesser/applicants", {
+              id: data._id,
+            });
+          }}
+        >
+          <Badge>{data?.approved?.length || 0} </Badge>
+          <Text style={{ color: "#fff" }}>Approved</Text>
+        </Pressable>
+        <Pressable
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            elevation: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#0244d0",
+            alignSelf: "flex-end",
+          }}
+          onPress={() => {
+            navigation.navigate("lesser/applicants", {
+              id: data._id,
+            });
+          }}
+        >
+          <Badge>{data?.rejected?.length || 0} </Badge>
+          <Text style={{ color: "#fff" }}>Rejected</Text>
+        </Pressable>
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
