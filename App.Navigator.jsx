@@ -11,7 +11,7 @@ import LesserScreen from "./screens/Lesser/LesserScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SecureStore from "expo-secure-store";
 import { NavigationContainer } from "@react-navigation/native";
-
+import { useColorScheme } from "react-native";
 import { ActivityIndicator, Pressable } from "react-native";
 import { View, Text } from "react-native";
 import { useQuery } from "react-query";
@@ -21,6 +21,7 @@ import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ValidateScreen from "./screens/ValidateScreen";
 const StackNavigator = createStackNavigator();
 
+import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 /*
 
 check  react-native-debugger
@@ -32,6 +33,7 @@ check  react-native-debugger
 */
 export const UserContext = React.createContext();
 const AppNavigator = ({ navigation }) => {
+  const scheme = useColorScheme();
   (async () => await import("./urls"))();
   const [tokenG, setTokenG] = useState();
   const { data, isFetching, isError, error, isLoading, isSuccess } = useQuery(
@@ -75,7 +77,7 @@ const AppNavigator = ({ navigation }) => {
     );
   }
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
       <UserContext.Provider value={data}>
         <StackNavigator.Navigator screenOptions={{ headerShown: false }}>
           {data ? (

@@ -7,12 +7,12 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Divider } from "react-native-paper";
-import JobDetailEditScreen from "./JobDetailEditScreen";
+import JobDetailScreen from "./JobDetailScreen";
 import ReviewScreen from "./PostJob/ReviewScreen";
 import PostJobScreen from "./PostJob/PostJobScreen";
 import fromNow from "../../utils/time";
@@ -36,7 +36,6 @@ const fetchJobs = async ({ pageParam = 1, nearBy }) => {
   );
   return await response.json();
 };
-var aDay = 24 * 60 * 60 * 1000;
 const Post = ({ pressHandler, item }) => {
   const [bgColor, setBgColor] = useState(false);
   return (
@@ -86,7 +85,6 @@ const Post = ({ pressHandler, item }) => {
 };
 
 const MyPosts = ({ navigation }) => {
-  const [nearBy, setNearBy] = useState();
   const {
     data,
     error,
@@ -94,21 +92,14 @@ const MyPosts = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery(
-    "myjobs",
-    async (obj) => {
-      obj.nearby = nearBy;
-      return fetchJobs(obj);
+  } = useInfiniteQuery("myjobs", fetchJobs, {
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length) {
+        return pages.length + 1;
+      }
+      return;
     },
-    {
-      getNextPageParam: (lastPage, pages) => {
-        if (lastPage.length) {
-          return pages.length + 1;
-        }
-        return;
-      },
-    }
-  );
+  });
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {
@@ -123,6 +114,7 @@ const MyPosts = ({ navigation }) => {
       });
     });
   };
+
   if (status === "loading") {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -161,9 +153,7 @@ const MyPosts = ({ navigation }) => {
     </View>
   );
 };
-function SettingsScreen() {
-  return <Text>hello</Text>;
-}
+
 function Home({ navigation }) {
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
@@ -192,7 +182,6 @@ function Home({ navigation }) {
           options={{ title: "My Posts" }}
           component={MyPosts}
         />
-        <Tab.Screen name="employer/ettings" component={SettingsScreen} />
       </Tab.Navigator>
     </View>
   );
@@ -211,7 +200,7 @@ const EmployerScreen = () => {
           options={{
             title: "Job Detail",
           }}
-          component={JobDetailEditScreen}
+          component={JobDetailScreen}
         />
         <EmployerStackNavigator.Screen
           options={{ headerShown: false }}

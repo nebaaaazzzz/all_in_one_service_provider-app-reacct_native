@@ -1,3 +1,5 @@
+import * as Location from "expo-location";
+
 import {
   View,
   Text,
@@ -8,7 +10,7 @@ import {
   ToastAndroid,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { Divider } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -103,6 +105,21 @@ const Home = ({ navigation }) => {
       return;
     },
   });
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        ToastAndroid.show(
+          "Permission to access location was denied",
+          ToastAndroid.LONG
+        );
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      console.log(location.coords.longitude);
+      console.log(location.coords.latitude);
+    })();
+  }, []);
+
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {

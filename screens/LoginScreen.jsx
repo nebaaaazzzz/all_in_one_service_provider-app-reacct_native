@@ -42,6 +42,8 @@ const LoginScreen = ({ navigation, route }) => {
     async () => {
       try {
         if (!(passwordError && phoneError)) {
+          console.log("world");
+
           const response = await fetch(`${BASEURI}/auth/login`, {
             method: "POST",
             headers: {
@@ -49,10 +51,13 @@ const LoginScreen = ({ navigation, route }) => {
             },
             body: JSON.stringify({ phoneNumber, password }),
           });
+          console.log("hello1");
+
           if (!response.ok) {
             console.log("reponse text", response.statusText);
             throw new Error((await response.json()).err);
           }
+          console.log("hello");
           return await response.json();
         }
       } catch (err) {

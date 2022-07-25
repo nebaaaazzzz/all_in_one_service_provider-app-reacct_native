@@ -26,7 +26,9 @@ import { BASEURI, BASETOKEN } from "../../../urls";
 const ReviewScreen = ({ navigation }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [date, setDate] = useState();
+  const [datetime, setDatetime] = useState();
   const [cvRequired, setCvRequired] = useState(false);
   const { dispatch, jobPost } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
@@ -330,6 +332,36 @@ const ReviewScreen = ({ navigation }) => {
                 </Text>
               )}
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => setOpen(true)}>
+              {open1 ? (
+                <DatePicker
+                  value={datetime ? new Date(datetime) : new Date()} //initial date from state
+                  mode="time" //The enum of date, datetime and time
+                  display="clock"
+                  onChange={({ nativeEvent: { timestamp } }) => {
+                    if (timestamp) {
+                      const tempDate = new Date(timestamp);
+                      setDatetime(
+                        tempDate.getDay() +
+                          "/" +
+                          tempDate.getMonth() +
+                          "/" +
+                          tempDate.getFullYear()
+                      );
+                      setOpen1(false);
+                    }
+                  }}
+                />
+              ) : (
+                <Text style={{ color: "#666", marginLeft: 25, marginTop: 5 }}>
+                  {datetime
+                    ? new Date(datetime).getHours() +
+                      " " +
+                      new Date(datetime).getMinutes()
+                    : "Press to Set Date time"}
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -409,6 +441,7 @@ const ReviewScreen = ({ navigation }) => {
                 description,
                 file,
                 deadline: date,
+                datetime: datetime ? true : false,
                 gender,
                 permanent,
                 englishLevel,

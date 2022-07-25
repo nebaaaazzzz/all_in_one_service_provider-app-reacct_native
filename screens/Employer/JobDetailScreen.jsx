@@ -30,7 +30,7 @@ const fetchJob = async ({ queryKey }) => {
   return (await response.json()).data;
 };
 
-const JobDetailEditScreen = ({ navigation, route }) => {
+const JobDetailScreen = ({ navigation, route }) => {
   // navigation.setOptions({
   //   headerRight: () => (
 
@@ -204,13 +204,27 @@ const JobDetailEditScreen = ({ navigation, route }) => {
             ) : (
               <></>
             )}
-            {data.deadline ? (
-              <View>
-                <Text>deadline {new Date(data.deadline).toDateString()}</Text>
-              </View>
-            ) : (
-              <></>
-            )}
+            <View style={{ flexDirection: "row" }}>
+              {data.deadline ? (
+                <View>
+                  <Text>deadline {new Date(data.deadline).toDateString()}</Text>
+                </View>
+              ) : (
+                <></>
+              )}
+              {data.deadtime ? (
+                <View>
+                  <Text>
+                    deadtime
+                    {new Date(data.deadline).getHours() +
+                      " " +
+                      new Date(data.deadline).getMinutes()}
+                  </Text>
+                </View>
+              ) : (
+                <></>
+              )}
+            </View>
             {data.budget ? (
               <View>
                 <Text>
@@ -391,4 +405,4 @@ const JobDetailEditScreen = ({ navigation, route }) => {
   );
 };
 
-export default JobDetailEditScreen;
+export default JobDetailScreen;
