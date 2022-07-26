@@ -2,12 +2,18 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState, useContext } from "react";
 import IncrementDecrement from "../../../components/IncrementDecrement";
 import { PostHouseContext } from "./PostHouseScreen";
-const GuestSizeScreen = ({ navigation }) => {
+const GuestSizeScreen = ({ navigation, route }) => {
+  let k, be, ba;
+  if (route.params.data) {
+    k = route.params.data.guestSize.kitchens;
+    be = route.params.data.guestSize.bedrooms;
+    ba = route.params.data.guestSize.bathrooms;
+  }
   const { dispatch } = useContext(PostHouseContext);
   const size = ["kitchens", "Bedrooms", "Bathrooms"];
-  const [kitchens, setKitchens] = useState(0);
-  const [bedrooms, setBedrooms] = useState(0);
-  const [bathrooms, setBathrooms] = useState(0);
+  const [kitchens, setKitchens] = useState(k || 0);
+  const [bedrooms, setBedrooms] = useState(be || 0);
+  const [bathrooms, setBathrooms] = useState(ba || 0);
   const setters = [setKitchens, setBedrooms, setBathrooms];
   return (
     <View
@@ -88,6 +94,11 @@ const GuestSizeScreen = ({ navigation }) => {
                 },
               },
             });
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/location", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/placeoffer");
           }}
           style={{

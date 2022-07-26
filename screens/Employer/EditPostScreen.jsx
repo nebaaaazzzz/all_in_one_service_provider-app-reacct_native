@@ -30,7 +30,6 @@ import { BASEURI, BASETOKEN } from "../../urls";
 
 const EditPostScreen = ({ navigation, route }) => {
   const jobPost = route.params.data;
-  console.log(jobPost);
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date(jobPost.deadline));

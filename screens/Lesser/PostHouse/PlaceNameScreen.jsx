@@ -2,9 +2,13 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
-const PlaceNameScreen = ({ navigation }) => {
+const PlaceNameScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
-  const [text, setText] = useState("");
+  let title;
+  if (route.params.data) {
+    title = route.params.data.placeTitle;
+  }
+  const [text, setText] = useState(title || "");
   return (
     <View
       horizontal={false}
@@ -61,6 +65,14 @@ const PlaceNameScreen = ({ navigation }) => {
                 placeTitle: text,
               },
             });
+            if (route.params.data) {
+              return navigation.navigate(
+                "lesser/posthouse/detailplacedescription",
+                {
+                  data: route.params.data,
+                }
+              );
+            }
             navigation.navigate("lesser/posthouse/detailplacedescription");
           }}
           style={{

@@ -6,6 +6,7 @@ import {
   Image,
   ActivityIndicator,
   ToastAndroid,
+  useWindowDimensions,
 } from "react-native";
 import React from "react";
 import { useQuery } from "react-query";
@@ -25,6 +26,7 @@ const fetchHouse = async ({ queryKey }) => {
   return (await response.json()).data;
 };
 const HomeDetailScreen = ({ navigation, route }) => {
+  const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching } = useQuery(
     ["house", route.params.id],
     fetchHouse
@@ -427,6 +429,37 @@ const HomeDetailScreen = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          top: dimension.height - 130,
+          backgroundColor: "#fff",
+          borderTopWidth: 2,
+          width: "100%",
+          height: 60,
+          justifyContent: "center",
+          borderColor: "rgba(0,0,0,0.3)",
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            navigation.navigate("lesser/posthouse", {
+              data,
+            });
+          }}
+          style={{
+            backgroundColor: "#0244d0",
+            width: 100,
+            alignSelf: "flex-end",
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>Edit Post</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

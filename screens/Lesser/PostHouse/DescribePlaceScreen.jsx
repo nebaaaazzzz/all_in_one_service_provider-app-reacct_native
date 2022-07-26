@@ -2,10 +2,8 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostHouseContext } from "./PostHouseScreen";
-const DescribePlaceScreen = ({ navigation }) => {
+const DescribePlaceScreen = ({ navigation, route }) => {
   //limit active
-  const [active, setActive] = useState(Array(6).fill(false));
-  const { dispatch } = useContext(PostHouseContext);
 
   const highLight = [
     {
@@ -30,6 +28,14 @@ const DescribePlaceScreen = ({ navigation }) => {
       icon: "account-multiple-outline",
     },
   ];
+  let titleList;
+  if (route.params.data) {
+    titleList = highLight.map((item) => {
+      return route.params.data.bestDescribe.includes(item.name) ? true : false;
+    });
+  }
+  const [active, setActive] = useState(titleList || Array(6).fill(false));
+  const { dispatch } = useContext(PostHouseContext);
   return (
     <View
       horizontal={false}
@@ -128,6 +134,11 @@ const DescribePlaceScreen = ({ navigation }) => {
                 payload: {
                   bestDescribe: newArr,
                 },
+              });
+            }
+            if (route.params.data) {
+              navigation.navigate("lesser/posthouse/price", {
+                data: route.params.data,
               });
             }
             navigation.navigate("lesser/posthouse/price");

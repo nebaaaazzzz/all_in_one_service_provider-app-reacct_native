@@ -5,8 +5,12 @@ import { PostHouseContext } from "./PostHouseScreen";
 
 const SpacekindScreen = ({ navigation }) => {
   const { dispatch } = useContext(PostHouseContext);
-  const [active, setActive] = useState("");
   const placeKinds = ["An entire place", "A private room", "A shared room"];
+  let index;
+  if (route.params.data) {
+    index = placeKinds.findIndex((item) => item == route.params.data.placeKind);
+  }
+  const [active, setActive] = useState(index);
   const pressHandler = (id) => {
     setActive(id);
   };
@@ -69,6 +73,11 @@ const SpacekindScreen = ({ navigation }) => {
                 placeKind: placeKinds[+active - 1],
               },
             });
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/pinspot", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/location");
           }}
           style={{

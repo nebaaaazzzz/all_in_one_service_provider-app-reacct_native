@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ConfirmationScreen from "./screens/ConfirmationScreen";
 import HomeScreen from "./screens/HomeScreen";
 import EmployeeScreen from "./screens/Employee/EmployeeScreen";
@@ -11,7 +11,7 @@ import LesserScreen from "./screens/Lesser/LesserScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SecureStore from "expo-secure-store";
 import { NavigationContainer } from "@react-navigation/native";
-import { useColorScheme } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import { ActivityIndicator, Pressable } from "react-native";
 import { View, Text } from "react-native";
 import { useQuery } from "react-query";
@@ -20,7 +20,9 @@ import ErrorScreen from "./screens/Common/ErrorScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ValidateScreen from "./screens/ValidateScreen";
 const StackNavigator = createStackNavigator();
+import * as Linking from "expo-linking";
 
+const prefix = Linking.createURL("/");
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 /*
 
@@ -33,6 +35,11 @@ check  react-native-debugger
 */
 export const UserContext = React.createContext();
 const AppNavigator = ({ navigation }) => {
+  const linking = {
+    prefixes: [prefix],
+  };
+  // handle gateway callbacks
+
   const scheme = useColorScheme();
   (async () => await import("./urls"))();
   const [tokenG, setTokenG] = useState();
@@ -77,7 +84,10 @@ const AppNavigator = ({ navigation }) => {
     );
   }
   return (
-    <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
+    <NavigationContainer
+      linking={linking}
+      theme={scheme === "dark" ? DarkTheme : DefaultTheme}
+    >
       <UserContext.Provider value={data}>
         <StackNavigator.Navigator screenOptions={{ headerShown: false }}>
           {data ? (

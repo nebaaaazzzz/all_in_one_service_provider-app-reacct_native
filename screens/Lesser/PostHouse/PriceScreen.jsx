@@ -3,9 +3,14 @@ import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostHouseContext } from "./PostHouseScreen";
-const PriceScreen = ({ navigation }) => {
+const PriceScreen = ({ navigation, route }) => {
+  let p;
+  if (route.params.data) {
+    p = route.params.data.price;
+  }
+
   const { dispatch } = useContext(PostHouseContext);
-  const [price, setPrice] = useState("1000");
+  const [price, setPrice] = useState(p || "1000");
   return (
     <View
       horizontal={false}
@@ -98,6 +103,11 @@ const PriceScreen = ({ navigation }) => {
                 price,
               },
             });
+            if (route.params.data) {
+              navigation.navigate("lesser/posthouse/lastcheckout", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/lastcheckout");
           }}
           style={{

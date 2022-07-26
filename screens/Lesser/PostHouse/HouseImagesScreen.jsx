@@ -12,10 +12,14 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { PostHouseContext } from "./PostHouseScreen";
+import { BASETOKEN, BASEURI } from "../../../urls";
 
-const HouseImagesScreen = ({ navigation }) => {
+const HouseImagesScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
-
+  let imgList;
+  if (route.params.data) {
+    imgList = route.params.data.houseImages;
+  }
   const [imgUri, setImgUri] = useState([]);
   const [visible, setVisible] = useState([]);
   const [coverPhotoIndex, setCoverPhotoIndex] = useState(0);
@@ -193,9 +197,18 @@ const HouseImagesScreen = ({ navigation }) => {
                 </View>
 
                 <Image
-                  source={{
-                    uri: item.uri,
-                  }}
+                  source={
+                    item?.length == 24
+                      ? {
+                          uri: `${BASEURI}/house/image/${item}`,
+                          headers: {
+                            Authorization: `Bearer ${BASETOKEN}`,
+                          },
+                        }
+                      : {
+                          uri: item.uri,
+                        }
+                  }
                   style={{
                     width: "100%",
                     height: 200,
@@ -254,6 +267,11 @@ const HouseImagesScreen = ({ navigation }) => {
                 houseImages: imgUri,
               },
             });
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/placename", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/placename");
           }}
           style={{

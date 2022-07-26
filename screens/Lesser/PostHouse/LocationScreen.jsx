@@ -18,7 +18,7 @@ import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { MAPBOXTOKEN, MAPBOXURI } from "./../../../urls.js";
 
-const LocationScreen = ({ navigation }) => {
+const LocationScreen = ({ navigation, route }) => {
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
@@ -44,6 +44,12 @@ const LocationScreen = ({ navigation }) => {
           const r = await response.json();
           if (r.features[0].place_name && r.features[0].center) {
             setIsGettingLocation(false);
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/pinspot", {
+                center: r.features[0].center,
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/pinspot", {
               center: r.features[0].center,
             });
@@ -84,6 +90,12 @@ const LocationScreen = ({ navigation }) => {
     }
   };
   const searchListPressHandler = (index) => {
+    if (route.params.data) {
+      return navigation.navigate("lesser/posthouse/pinspot", {
+        center: searchResult[index].center,
+        data: route.params.data,
+      });
+    }
     navigation.navigate("lesser/posthouse/pinspot", {
       center: searchResult[index].center,
     });

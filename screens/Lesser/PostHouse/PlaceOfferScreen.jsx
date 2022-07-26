@@ -45,7 +45,7 @@ const List = ({ question, arr, state, setState }) => {
   );
 };
 
-const PlaceOfferScreen = ({ navigation }) => {
+const PlaceOfferScreen = ({ navigation, route }) => {
   const amenities = [
     {
       name: "pool",
@@ -137,12 +137,32 @@ const PlaceOfferScreen = ({ navigation }) => {
     },
     { name: "Fire extinguisher", icon: "fire-extinguisher" },
   ];
+  let amenIndex, guefavIndex, saftyIndex;
+  if (route.params.data) {
+    amenIndex = route.params.data.amenities.map((item) => {
+      return amenities.some((i) => {
+        return i.name == item;
+      });
+    });
+    guefavIndex = route.params.data.guestFavourite.map((item) => {
+      return guestFav.some((i) => {
+        return i.name == item;
+      });
+    });
+    saftyIndex = route.params.data.saftyItems.map((item) => {
+      return saftyItems.some((i) => {
+        return i.name == item;
+      });
+    });
+  }
   const [amenitiesL, setAmenitiesL] = useState(
-    Array(amenities.length).fill(false)
+    amenIndex || Array(amenities.length).fill(false)
   );
-  const [favL, setFavL] = useState(Array(guestFav.length).fill(false));
+  const [favL, setFavL] = useState(
+    guefavIndex || Array(guestFav.length).fill(false)
+  );
   const [saftyItemsL, setSaftyItemL] = useState(
-    Array(saftyItems.length).fill(false)
+    saftyIndex || Array(saftyItems.length).fill(false)
   );
   const list = [
     [amenitiesL, favL, saftyItemsL],
@@ -224,7 +244,11 @@ const PlaceOfferScreen = ({ navigation }) => {
                 saftyItems: newSafty,
               },
             });
-
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/propertytype", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/propertytype");
           }}
           style={{

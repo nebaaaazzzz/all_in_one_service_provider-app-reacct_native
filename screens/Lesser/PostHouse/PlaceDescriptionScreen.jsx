@@ -2,10 +2,7 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import PlaceDescription from "../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
-const PlaceDescriptionScreen = ({ navigation }) => {
-  const { dispatch } = useContext(PostHouseContext);
-  const [active, setActive] = useState("");
-
+const PlaceDescriptionScreen = ({ navigation, route }) => {
   const placeDescriptions = [
     {
       title: "Home",
@@ -110,6 +107,14 @@ const PlaceDescriptionScreen = ({ navigation }) => {
         "A furnished rental propery that includes a kitchen and bathroom and may offer some guest services,like a reception desk.",
     },
   ];
+  let index;
+  if (route.params.data) {
+    index = placeDescriptions.findIndex(
+      (item) => item.title === route.params.data.placeDescription.title
+    );
+  }
+  const { dispatch } = useContext(PostHouseContext);
+  const [active, setActive] = useState(index);
   const pressHandler = (id) => {
     if (id == active) {
       return setActive("");
@@ -179,6 +184,11 @@ const PlaceDescriptionScreen = ({ navigation }) => {
                 placeDescription: placeDescriptions[+active - 1],
               },
             });
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/spacekind", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/spacekind");
           }}
           style={{

@@ -2,10 +2,16 @@ import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import { Checkbox } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
-const LastCheckoutScreen = ({ navigation }) => {
+const LastCheckoutScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
-  const [checked, setChecked] = React.useState([false, false, false]);
   const list = ["Security camera(s)", "Weapons", "Dangerous animals"];
+  let s;
+  if (route.params.data) {
+    s = list.map((item) => {
+      return route.params.data?.contain?.includes((i) => item == i);
+    });
+  }
+  const [checked, setChecked] = React.useState(s || [false, false, false]);
   return (
     <View
       horizontal={false}

@@ -8,8 +8,7 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { PostHouseContext } from "./PostHouseScreen";
-const PropertyTypeScreen = ({ navigation }) => {
-  const [active, setActive] = useState("");
+const PropertyTypeScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
   const pressHandler = (id) => {
     if (Number(id) === Number(active)) {
@@ -49,6 +48,14 @@ const PropertyTypeScreen = ({ navigation }) => {
         "https://a0.muscache.com/im/pictures/a2c9ad21-b159-4fd2-b417-d810fb23c6a9.jpg?im_w=240",
     },
   ];
+  let index;
+  if (route.params.data) {
+    index = list.findIndex((item) => {
+      route.params.data.propertyType == item.title;
+    });
+  }
+  const [active, setActive] = useState(index || "");
+
   return (
     <View
       horizontal={false}
@@ -135,6 +142,11 @@ const PropertyTypeScreen = ({ navigation }) => {
                 propertyType: list[active - 1]?.title,
               },
             });
+            if (route.params.data) {
+              return navigation.navigate("lesser/posthouse/houseimages", {
+                data: route.params.data,
+              });
+            }
             navigation.navigate("lesser/posthouse/houseimages");
           }}
           style={{

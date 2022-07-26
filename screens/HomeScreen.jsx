@@ -5,8 +5,9 @@ import {
   Pressable,
   Image,
   useWindowDimensions,
+  Linking,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Svg, { Path } from "react-native-svg";
 import styled from "styled-components/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -147,6 +148,19 @@ const Home = ({ navigation }) => {
 };
 
 const HomeScreen = () => {
+  const handleOpenURL = (url) => {
+    console.log(url);
+    // if (isSucceedPayment(url)) {
+    //   console.log("hello");
+    //   // your condition
+    //   // handle success payment
+    // } else {
+    //   console.log("handle failure");
+    //   // handle failure
+    // }
+    return;
+  };
+
   return (
     <DrawerNavigator.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}

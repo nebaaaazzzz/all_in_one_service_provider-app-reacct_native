@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import FilterModal from "../../components/FilterModal";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -23,6 +23,7 @@ import ApplicantsScreen from "./ApplicantsScreen";
 import ApprovedScreen from "./ApprovedScreen";
 import RejectedScreen from "./RejectedScreen";
 import EditPostScreen from "./EditPostScreen";
+import { UserContext } from "../../App.Navigator";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
 const fetchJobs = async ({ pageParam = 1, nearBy }) => {
@@ -155,25 +156,49 @@ const MyPosts = ({ navigation }) => {
 };
 
 function Home({ navigation }) {
+  const user = useContext(UserContext);
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <View style={{ alignItems: "flex-end", backgroundColor: "#fff" }}>
-        <Pressable
-          onPress={() => {
-            requestAnimationFrame(() => {
-              navigation.navigate("employer/postjob");
-            });
-          }}
-          style={{
-            borderRadius: 10,
-            backgroundColor: "#0244d0",
-            marginHorizontal: 10,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-          }}
-        >
-          <Text style={{ color: "#fff" }}> Post Job</Text>
-        </Pressable>
+        {user?.left > 0 ? (
+          <Pressable
+            onPress={() => {
+              requestAnimationFrame(() => {
+                navigation.navigate("employer/postjob");
+                // navigation.navigate("lesser/payment");
+              });
+            }}
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 10,
+              backgroundColor: "#0244d0",
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text style={{ color: "#fff" }}> Post House</Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              requestAnimationFrame(() => {
+                navigation.navigate("lesser/payment");
+                // navigation.navigate("lesser/payment");
+              });
+            }}
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 10,
+              backgroundColor: "#0244d0",
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text style={{ color: "#fff" }}> pay</Text>
+          </Pressable>
+        )}
       </View>
 
       <Tab.Navigator>

@@ -26,13 +26,14 @@ const reducer = (state = {}, action) => {
     // throw new Error();
   }
 };
-const PostHouseScreen = () => {
+const PostHouseScreen = ({ route }) => {
   const [housePost, dispatch] = useReducer(reducer);
-
+  const data = route.params?.data ? data : {};
   return (
     <PostHouseContext.Provider value={{ housePost, dispatch }}>
       <PostHouseStackNavigator.Navigator screenOptions={{ headerShown: false }}>
         <PostHouseStackNavigator.Screen
+          initialParams={data}
           name="lesser/posthouse/placedescription"
           component={PlaceDescriptionScreen}
         />

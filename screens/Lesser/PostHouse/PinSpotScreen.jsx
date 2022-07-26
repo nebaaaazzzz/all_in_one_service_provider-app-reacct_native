@@ -7,7 +7,13 @@ import { PostHouseContext } from "./PostHouseScreen";
 import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
 
 const PinSpotScreen = ({ navigation, route }) => {
-  const [center, setCenter] = useState(route.params.center || [11, 21]);
+  let cntr;
+  if (route.params?.data?.center) {
+    cntr = route.params.data.center;
+  } else {
+    cntr = route.params.center;
+  }
+  const [center, setCenter] = useState(cntr || [11, 21]);
   const { dispatch } = useContext(PostHouseContext);
   return (
     <View
@@ -64,6 +70,18 @@ const PinSpotScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
+        {route.params?.data?.center || (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("lesser/posthouse/location", {
+                data: route.params.data,
+              });
+            }}
+          >
+            <Text>Go to Map</Text>
+          </Pressable>
+        )}
+
         <Pressable
           onPress={async () => {
             const response = await fetch(
@@ -90,6 +108,11 @@ const PinSpotScreen = ({ navigation, route }) => {
                     center: r.features[0].center,
                     placeName: r?.features[0]?.place_name,
                   },
+                });
+              }
+              if (route.params.data) {
+                navigation.navigate("lesser/posthouse/guestsize", {
+                  data: route.params.data,
                 });
               }
               navigation.navigate("lesser/posthouse/guestsize");

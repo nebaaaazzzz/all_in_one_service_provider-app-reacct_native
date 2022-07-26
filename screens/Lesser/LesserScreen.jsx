@@ -8,10 +8,9 @@ import {
   FlatList,
   ToastAndroid,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import PostHouseScreen from "./PostHouse/PostHouseScreen";
 import HomeDetailScreen from "./HomeDetailScreen";
 import ApplicantsScreen from "./ApplicantsScreen";
@@ -24,6 +23,7 @@ import { useInfiniteQuery, useQueryClient } from "react-query";
 import { BASETOKEN, BASEURI } from "./../../urls";
 import ViewImagesScreen from "./ViewImagesScreen";
 import { useIsFocused } from "@react-navigation/native";
+import { UserContext } from "../../App.Navigator";
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/lesser/posts?page=${pageParam}`, {
     headers: {
@@ -104,27 +104,49 @@ const Setting = () => {
 };
 
 const Home = ({ navigation }) => {
+  const user = useContext(UserContext);
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <View style={{ alignItems: "flex-end", backgroundColor: "#fff" }}>
-        <Pressable
-          onPress={() => {
-            requestAnimationFrame(() => {
-              navigation.navigate("lesser/posthouse");
-              // navigation.navigate("lesser/payment");
-            });
-          }}
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: 10,
-            backgroundColor: "#0244d0",
-            marginHorizontal: 10,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-          }}
-        >
-          <Text style={{ color: "#fff" }}> Post House</Text>
-        </Pressable>
+        {user?.left > 0 ? (
+          <Pressable
+            onPress={() => {
+              requestAnimationFrame(() => {
+                navigation.navigate("lesser/posthouse");
+                // navigation.navigate("lesser/payment");
+              });
+            }}
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 10,
+              backgroundColor: "#0244d0",
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text style={{ color: "#fff" }}> Post House</Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              requestAnimationFrame(() => {
+                navigation.navigate("lesser/payment");
+                // navigation.navigate("lesser/payment");
+              });
+            }}
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 10,
+              backgroundColor: "#0244d0",
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text style={{ color: "#fff" }}> pay</Text>
+          </Pressable>
+        )}
       </View>
       <LesserTopTabNavigator.Navigator>
         <LesserTopTabNavigator.Screen
@@ -155,6 +177,7 @@ const LesserScreen = () => {
           name="lesser/posthouse"
           component={PostHouseScreen}
         />
+
         <LesserStackNavigator.Screen
           options={{ title: "House Detail" }}
           name="lesser/housedetail"
