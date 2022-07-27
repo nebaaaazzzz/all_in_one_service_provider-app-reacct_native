@@ -225,4 +225,19 @@ const languageList = [
   { language: "Chinese", code: "zh" },
   { language: "Zulu", code: "zu" },
 ];
-export { categoryList, languageList };
+const regionsList = [
+  "Addis Ababa",
+  "Afar",
+  "Amhara",
+  "Benishangul-gumuz",
+  "Dire Dawa",
+  "Gambela",
+  "Harari",
+  "Oromia",
+  "Sidama",
+  "Somali",
+  "South West Ethiopia Peoples' Region",
+  "Tigray",
+  "Southern",
+];
+export { categoryList, languageList, regionsList };

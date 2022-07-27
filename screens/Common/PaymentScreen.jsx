@@ -15,7 +15,7 @@ const PaymentScreen = () => {
           // Linking.openURL(`${BASEURI}/payment/CheckoutExpress/${user._id}`);
         }}
       >
-        <Text>Pay with yenePay</Text>
+        <Text style={{ color: "#fff" }}>Pay with yenePay</Text>
       </Pressable>
     </View>
   );

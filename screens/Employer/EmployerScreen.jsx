@@ -24,6 +24,7 @@ import ApprovedScreen from "./ApprovedScreen";
 import RejectedScreen from "./RejectedScreen";
 import EditPostScreen from "./EditPostScreen";
 import { UserContext } from "../../App.Navigator";
+import PaymentScreen from "../Common/PaymentScreen";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
 const fetchJobs = async ({ pageParam = 1, nearBy }) => {
@@ -146,7 +147,11 @@ const MyPosts = ({ navigation }) => {
             return <ActivityIndicator></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            <Text>Nothing more to load</Text>;
+            return (
+              <Text style={{ textAlign: "center" }}>
+                Nothing more to load ....
+              </Text>
+            );
           }
           return null;
         }}
@@ -250,6 +255,13 @@ const EmployerScreen = () => {
           }}
           name="employer/approved"
           component={ApprovedScreen}
+        />
+        <EmployerStackNavigator.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="employer/payment"
+          component={PaymentScreen}
         />
         <EmployerStackNavigator.Screen
           options={{

@@ -139,7 +139,11 @@ const RejectedScreen = ({ navigation }) => {
             return <ActivityIndicator></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            <Text>Nothing more to load</Text>;
+            return (
+              <Text style={{ textAlign: "center" }}>
+                Nothing more to load ....
+              </Text>
+            );
           }
           return null;
         }}

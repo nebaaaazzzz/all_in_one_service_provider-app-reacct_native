@@ -8,25 +8,35 @@ import {
   FlatList,
   ActivityIndicator,
   ToastAndroid,
+  Modal,
+  Keyboard,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 import React, { useState, useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
-import { Divider } from "react-native-paper";
+import { Divider, Checkbox } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
 import JobDetailScreen from "./JobDetailScreen";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { categoryList, regionsList } from "../../constants/data";
+import SelectDropdown from "react-native-select-dropdown";
+import { RadioButton } from "react-native-paper";
 import { BASEURI, BASETOKEN } from "../../urls";
+import PaymentScreen from "../Common/PaymentScreen";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useIsFocused } from "@react-navigation/native";
 import AppliedScreen from "./AppliedScreen";
-const fetchJobs = async ({ pageParam = 1 }) => {
-  const response = await fetch(`${BASEURI}/employee/?page=${pageParam}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+const fetchJobs = async ({ pageParam = 1, queryKey }) => {
+  const response = await fetch(
+    `${BASEURI}/employee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&category=${queryKey[4]}&gender=${queryKey[5]}&permanent=${queryKey[6]}&cvRequired=${queryKey[7]}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   return await response.json();
 };
 const EmployeeStackNavigator = createStackNavigator();
@@ -78,8 +88,17 @@ const Jobs = ({ pressHandler, item }) => {
 };
 
 const Home = ({ navigation }) => {
+  /*Modal states */
+  const [openModal, setOpenModal] = useState(false);
+  const [region, setRegion] = useState("");
+  const [category, setCategory] = useState("");
+  const [gender, setGender] = useState("");
+  const [permanent, setPermanet] = useState("");
+  const [cvRequired, setCvRequired] = useState("");
+  /* */
   const [searchQuery, setSearchQuery] = React.useState("");
-  const onChangeSearch = () => {};
+  const [nearBy, setNearBy] = useState(false);
+  const [location, setLocation] = useState("");
   const [visible, setVisible] = React.useState(false);
   const [indexS, setIndex] = useState(0);
   const onPressHandler = (id) => {
@@ -89,6 +108,7 @@ const Home = ({ navigation }) => {
       });
     });
   };
+
   // require('./assets/images/girl.jpg'),          // Local image
   const {
     data,
@@ -97,29 +117,50 @@ const Home = ({ navigation }) => {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery("jobs", fetchJobs, {
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage.length) {
-        return pages.length + 1;
-      }
-      return;
-    },
-  });
+  } = useInfiniteQuery(
+    [
+      "jobs",
+      location,
+      searchQuery,
+      region,
+      category,
+      gender,
+      permanent,
+      cvRequired,
+    ],
+    fetchJobs,
+    {
+      // enabled: Boolean(searchQuery),
+      getNextPageParam: (lastPage, pages) => {
+        if (lastPage.length) {
+          return pages.length + 1;
+        }
+        return;
+      },
+    }
+  );
+  // console.log("location :" + location + " op");
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        ToastAndroid.show(
-          "Permission to access location was denied",
-          ToastAndroid.LONG
-        );
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      console.log(location.coords.longitude);
-      console.log(location.coords.latitude);
-    })();
-  }, []);
-
+    if (nearBy) {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          ToastAndroid.show(
+            "Permission to access location was denied",
+            ToastAndroid.LONG
+          );
+        }
+        let {
+          coords: { latitude, longitude },
+        } = await Location.getCurrentPositionAsync({});
+        if (latitude && longitude) {
+          setLocation(`${longitude},${latitude}`);
+        }
+      })();
+    } else {
+      setLocation("");
+    }
+  }, [nearBy]);
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
   if (!isFocused) {
@@ -141,94 +182,331 @@ const Home = ({ navigation }) => {
     "LifeStyle",
     "Legal",
   ];
-  if (status === "loading") {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
-      </View>
-    );
-  }
+
   if (status === "error") {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
+
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
-      <FilterModal visible={visible} setVisible={setVisible} />
-      <Pressable
-        style={{
-          marginTop: "2%",
-          alignSelf: "flex-end",
-          backgroundColor: "#0244d0",
-          paddingHorizontal: 10,
-          paddingVertical: 3,
-          borderRadius: 5,
-          marginHorizontal: "4%",
-          elevation: 10,
-        }}
-        onPress={() => {
-          navigation.navigate("employee/applied");
-        }}
-      >
-        <MaterialIcons
-          name="notifications-active"
-          size={20}
-          color="#fff"
-          style={{ elevation: 10 }}
-        />
-      </Pressable>
-      <Searchbar
-        iconColor="#0244d0"
-        style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-      />
-      <View>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={list}
-          style={{ paddingTop: 10 }}
-          renderItem={({ item, index }) => {
-            return (
+      <Pressable onPress={Keyboard.dismiss()} style={{ marginBottom: "35%" }}>
+        <Modal visible={openModal}>
+          <View style={{ alignItems: "center", flex: 1 }}>
+            <SelectDropdown
+              rowStyle={{
+                color: "rgba(0,0,0,0.2)",
+              }}
+              dropdownOverlayColor="transparent"
+              buttonStyle={{
+                borderWidth: 1,
+                marginTop: "5%",
+                borderColor: "#0244d0",
+                width: "70%",
+                height: 30,
+                borderRadius: 15,
+              }}
+              buttonTextStyle={{
+                fontSize: 15,
+                color: "rgba(0,0,0,0.8)",
+              }}
+              data={["Any", ...regionsList]}
+              onSelect={(selectedItem, index) => {
+                if (index == 0) {
+                  setRegion("");
+                } else {
+                  setRegion(selectedItem);
+                }
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
+              }}
+              defaultButtonText="Select Region"
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
+            />
+            <SelectDropdown
+              rowStyle={{
+                color: "rgba(0,0,0,0.2)",
+              }}
+              buttonTextStyle={{
+                fontSize: 15,
+                color: "rgba(0,0,0,0.8)",
+              }}
+              dropdownOverlayColor="transparent"
+              buttonStyle={{
+                borderWidth: 1,
+                marginTop: "5%",
+                borderColor: "#0244d0",
+                width: "70%",
+                width: "70%",
+                height: 30,
+                borderRadius: 15,
+              }}
+              data={["Any", ...categoryList]}
+              onSelect={(selectedItem, index) => {
+                if (index == 0) {
+                  setCategory("");
+                }
+                setCategory(selectedItem);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
+              }}
+              defaultButtonText="Select Category"
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: "5%",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontWeight: "bold", marginRight: 10 }}>
+                Gender
+              </Text>
+              {["male", "female", "both", "Any"].map((item, index) => {
+                return (
+                  <Pressable
+                    key={index + 1}
+                    onPress={() => {
+                      if (index == 3) {
+                        setGender("");
+                      }
+                      setGender(item);
+                    }}
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                  >
+                    <RadioButton
+                      color="#0244d0"
+                      onPress={() => setGender(item)}
+                      value={item}
+                      status={gender === item ? "checked" : "unchecked"}
+                    />
+                    <Text>{item}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: "5%",
+              }}
+            >
+              <Text style={{ fontWeight: "bold" }}>permanent</Text>
+              {["yes", "no", "Any"].map((item, index) => {
+                return (
+                  <Pressable
+                    key={index + 1}
+                    onPress={() => {
+                      if (index == 0) {
+                        setPermanet(true);
+                      } else if (index == 1) {
+                        setPermanet(false);
+                      } else {
+                        setPermanent("");
+                      }
+                    }}
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                  >
+                    <RadioButton
+                      color="#0244d0"
+                      onPress={() => setGender(item)}
+                      value={item}
+                      status={gender === item ? "checked" : "unchecked"}
+                    />
+                    <Text>{item}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: "5%",
+              }}
+            >
+              <Text style={{ fontWeight: "bold" }}>cv required</Text>
+              {["yes", "no", "Any"].map((item, index) => {
+                return (
+                  <Pressable
+                    key={index + 1}
+                    onPress={() => {
+                      if (index == 0) {
+                        setCvRequired(true);
+                      } else if (index == 1) {
+                        setCvRequired(false);
+                      } else {
+                        setCvRequired("");
+                      }
+                    }}
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                  >
+                    <RadioButton
+                      color="#0244d0"
+                      onPress={() => setGender(item)}
+                      value={item}
+                      status={gender === item ? "checked" : "unchecked"}
+                    />
+                    <Text>{item}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            <View style={{ flexDirection: "row" }}>
               <Pressable
-                onPress={() => {
-                  setIndex(index);
-                }}
                 style={{
-                  marginHorizontal: 10,
-                  borderBottomColor: "#3498db",
-                  borderBottomWidth: indexS == index ? 2 : 0,
+                  elevation: 10,
+                  backgroundColor: "#0244d0",
+                  marginRight: "5%",
+                  paddingHorizontal: "10%",
+                  paddingVertical: "2%",
+                  marginTop: "10%",
+                  borderRadius: 5,
                 }}
+                onPress={() => setOpenModal(false)}
               >
-                <Text style={{ color: "#0244d0" }}>{item}</Text>
+                <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
               </Pressable>
-            );
+              <Pressable
+                style={{
+                  elevation: 10,
+                  backgroundColor: "#0244d0",
+                  paddingHorizontal: "10%",
+                  paddingVertical: "2%",
+                  marginTop: "10%",
+                  borderRadius: 5,
+                }}
+                onPress={() => setOpenModal(false)}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>Save</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+        <FilterModal visible={visible} setVisible={setVisible} />
+        <Pressable
+          style={{
+            marginTop: "2%",
+            alignSelf: "flex-end",
+            backgroundColor: "#0244d0",
+            paddingHorizontal: 10,
+            paddingVertical: 3,
+            borderRadius: 5,
+            marginHorizontal: "4%",
+            elevation: 10,
           }}
-        ></FlatList>
-      </View>
-      <FlatList
-        style={{ marginTop: 20 }}
-        showsVerticalScrollIndicator={false}
-        data={data.pages}
-        onEndReached={() => {
-          if (hasNextPage) {
-            fetchNextPage();
-          }
-        }}
-        ListFooterComponent={() => {
-          if (isFetchingNextPage) {
-            return <ActivityIndicator></ActivityIndicator>;
-          }
-          if (!hasNextPage) {
-            <Text>Nothing more to load</Text>;
-          }
-          return null;
-        }}
-        renderItem={({ item }) => {
-          return <Jobs pressHandler={onPressHandler} item={item} />;
-        }}
-      ></FlatList>
+          onPress={() => {
+            navigation.navigate("employee/applied");
+          }}
+        >
+          <MaterialIcons
+            name="notifications-active"
+            size={20}
+            color="#fff"
+            style={{ elevation: 10 }}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setOpenModal(true);
+          }}
+          style={{
+            elevation: 10,
+            position: "absolute",
+            top: 60,
+            right: 50,
+            zIndex: 10,
+          }}
+        >
+          <MaterialCommunityIcons name="filter" size={26} color="#0244d0" />
+        </Pressable>
+        <Searchbar
+          iconColor="#0244d0"
+          style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
+          placeholder="Search"
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+        />
+
+        <View>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={list}
+            style={{ paddingTop: 10 }}
+            renderItem={({ item, index }) => {
+              return (
+                <Pressable
+                  onPress={() => {
+                    if (index === 1) {
+                      setNearBy(true);
+                    } else {
+                      setNearBy(false);
+                    }
+                    setIndex(index);
+                  }}
+                  style={{
+                    marginHorizontal: 10,
+                    borderBottomColor: "#3498db",
+                    borderBottomWidth: indexS == index ? 2 : 0,
+                  }}
+                >
+                  <Text style={{ color: "#0244d0" }}>{item}</Text>
+                </Pressable>
+              );
+            }}
+          />
+        </View>
+        {status === "loading" ? (
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
+          </View>
+        ) : (
+          <FlatList
+            style={{ marginTop: 20 }}
+            showsVerticalScrollIndicator={false}
+            data={data.pages}
+            onEndReached={() => {
+              if (hasNextPage) {
+                fetchNextPage();
+              }
+            }}
+            ListFooterComponent={() => {
+              if (isFetchingNextPage) {
+                return <ActivityIndicator></ActivityIndicator>;
+              }
+              if (!hasNextPage) {
+                return (
+                  <Text style={{ textAlign: "center" }}>
+                    Nothing more to load ....
+                  </Text>
+                );
+              }
+              return null;
+            }}
+            renderItem={({ item }) => {
+              return <Jobs pressHandler={onPressHandler} item={item} />;
+            }}
+          />
+        )}
+      </Pressable>
     </View>
   );
 };
@@ -245,6 +523,12 @@ function EmployeeScreen() {
         options={{ title: "Job Detail" }}
         component={JobDetailScreen}
       />
+      <EmployeeStackNavigator.Screen
+        name="employee/payment"
+        options={{ title: "Payment" }}
+        component={PaymentScreen}
+      />
+
       <EmployeeStackNavigator.Screen
         name="employee/applied"
         options={{ headerShown: false }}

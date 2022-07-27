@@ -46,7 +46,9 @@ const EditProfileScreen = ({ navigation }) => {
 
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [date, setDate] = useState(new Date(user.dateOfBirth));
+  const [date, setDate] = useState(
+    user.dateOfBirth ? new Date(user.dateOfBirth) : undefined
+  );
   const [skills, setSkills] = useState(user.skills || []);
   const [skill, setSkill] = useState("");
 
@@ -254,7 +256,7 @@ const EditProfileScreen = ({ navigation }) => {
                           uri: image.uri,
                         }
                       : {
-                          uri: `${BASEURI}/profile-pic/62dd308d856d7ab6e95214ae`,
+                          uri: `${BASEURI}/profile-pic/${user.profilePic}`,
                           // uri: `${BASEURI}/profile-pic/${user.profilePic}`,
                           headers: {
                             Authorization: `Bearer ${BASETOKEN}`,

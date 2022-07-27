@@ -15,8 +15,8 @@ import PostHouseScreen from "./PostHouse/PostHouseScreen";
 import HomeDetailScreen from "./HomeDetailScreen";
 import ApplicantsScreen from "./ApplicantsScreen";
 import ApprovedScreen from "./ApprovedScreen";
+import PaymentScreen from "../Common/PaymentScreen";
 import RejectedScreen from "./RejectedScreen";
-import PaymentScreen from "./PaymentScreen";
 const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
 import { useInfiniteQuery, useQueryClient } from "react-query";
@@ -91,7 +91,11 @@ const MyPosts = ({ navigation }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            <Text>Nothing more to load</Text>;
+            return (
+              <Text style={{ textAlign: "center" }}>
+                Nothing more to load ....
+              </Text>
+            );
           }
           return null;
         }}

@@ -7,7 +7,7 @@ import {
   Pressable,
   useWindowDimensions,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
@@ -15,6 +15,7 @@ import { BASEURI, BASETOKEN } from "../../urls";
 import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
 import { useIsFocused } from "@react-navigation/native";
+import { UserContext } from "../../App.Navigator";
 
 const fetchJob = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/employee/job/${queryKey[1]}`, {
@@ -29,6 +30,7 @@ const fetchJob = async ({ queryKey }) => {
 };
 
 const JobDetailScreen = ({ navigation, route }) => {
+  const user = useContext(UserContext);
   const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching, isSuccess } = useQuery(
     ["job", route.params.id],
@@ -345,25 +347,55 @@ const JobDetailScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
-          onPress={() => {
-            applyMutuation.mutate();
-          }}
-          style={{
-            backgroundColor: data.applied ? "red" : "#0244d0",
-            width: 100,
-            right: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          {data.applied ? (
+        {data.applied ? (
+          <Pressable
+            onPress={() => {
+              applyMutuation.mutate();
+            }}
+            style={{
+              backgroundColor: data.applied ? "red" : "#0244d0",
+              width: 100,
+              right: 30,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
             <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
-          ) : (
+          </Pressable>
+        ) : user?.left > 0 ? (
+          <Pressable
+            onPress={() => {
+              applyMutuation.mutate();
+            }}
+            style={{
+              backgroundColor: data.applied ? "red" : "#0244d0",
+              width: 100,
+              right: 30,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
             <Text style={{ textAlign: "center", color: "#fff" }}>apply</Text>
-          )}
-        </Pressable>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("employee/payment");
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              right: 30,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Pay</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

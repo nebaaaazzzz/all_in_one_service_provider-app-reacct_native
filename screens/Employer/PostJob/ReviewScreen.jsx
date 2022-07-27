@@ -724,10 +724,12 @@ function AdvancedPred({
         {["male", "female", "both"].map((item, index) => {
           return (
             <Pressable
+              key={index + 1}
               onPress={() => setGender(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
             >
               <RadioButton
+                onPress={() => setGender(item)}
                 color="#0244d0"
                 value={item}
                 status={gender === item ? "checked" : "unchecked"}

@@ -215,33 +215,6 @@ const Profile = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <Divider style={{ borderWidth: 0.2 }} />
-        <View style={styles.menuWrapper}>
-          <TouchableRipple onPress={() => {}}>
-            <View style={styles.menuItem}>
-              <Icon name="heart-outline" color="#0244d0" size={25} />
-              <Text style={styles.menuItemText}>Your Favorites</Text>
-            </View>
-          </TouchableRipple>
-          <TouchableRipple onPress={() => {}}>
-            <View style={styles.menuItem}>
-              <Icon name="credit-card" color="#0244d0" size={25} />
-              <Text style={styles.menuItemText}>Payment</Text>
-            </View>
-          </TouchableRipple>
-          <TouchableRipple>
-            <View style={styles.menuItem}>
-              <Icon name="share-outline" color="#0244d0" size={25} />
-              <Text style={styles.menuItemText}>Tell Your Friends</Text>
-            </View>
-          </TouchableRipple>
-          <TouchableRipple onPress={() => {}}>
-            <View style={styles.menuItem}>
-              <Icon name="account-check-outline" color="#0244d0" size={25} />
-              <Text style={styles.menuItemText}>Support</Text>
-            </View>
-          </TouchableRipple>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );

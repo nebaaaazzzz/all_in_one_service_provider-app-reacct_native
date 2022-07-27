@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
-import React from "react";
+import UserContext from "./../../App.Navigator";
+import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
 const fetchHouse = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/lessee/house/${queryKey[1]}`, {
@@ -26,6 +27,7 @@ const fetchHouse = async ({ queryKey }) => {
 };
 
 const HomeDetailScreen = ({ navigation, route }) => {
+  const user = useContext(UserContext);
   const clientQuery = useQueryClient();
   const { isLoading, isError, error, data, isFetching, isSuccess } = useQuery(
     ["house", route.params.id],
@@ -414,30 +416,60 @@ const HomeDetailScreen = ({ navigation, route }) => {
           backgroundColor: "#fff",
           borderTopWidth: 2,
           alignItems: "flex-end",
-          height: 60,
+          height: 50,
           justifyContent: "center",
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
-          onPress={() => {
-            applyMutuation.mutate();
-          }}
-          style={{
-            backgroundColor: data.applied ? "red" : "#0244d0",
-            width: 100,
-            right: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          {data.applied ? (
+        {data.applied ? (
+          <Pressable
+            onPress={() => {
+              applyMutuation.mutate();
+            }}
+            style={{
+              backgroundColor: data.applied ? "red" : "#0244d0",
+              width: 100,
+              right: 30,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
             <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
-          ) : (
+          </Pressable>
+        ) : user?.left > 0 ? (
+          <Pressable
+            onPress={() => {
+              applyMutuation.mutate();
+            }}
+            style={{
+              backgroundColor: data.applied ? "red" : "#0244d0",
+              width: 100,
+              right: 30,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
             <Text style={{ textAlign: "center", color: "#fff" }}>apply</Text>
-          )}
-        </Pressable>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("employee/payment");
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              right: 30,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Pay</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
