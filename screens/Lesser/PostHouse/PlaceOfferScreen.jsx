@@ -51,18 +51,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       name: "pool",
       icon: "pool",
     },
-    {
-      name: "Hot tub",
-      icon: "hot-tub",
-    },
-    {
-      name: "patio",
-      icon: "patio-heater",
-    },
-    {
-      name: "BBQ grill",
-      icon: "grill-outline",
-    },
+
     {
       name: "Fire pit",
       icon: "campfire",
@@ -117,10 +106,6 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       name: "Dedicated workspace",
       icon: "facebook-workplace",
     },
-    {
-      name: "Outdoor shower",
-      icon: "shower-head",
-    },
   ];
   const saftyItems = [
     {
@@ -131,14 +116,11 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       name: "First aid kit",
       icon: "first-aid", //fontawsome
     },
-    {
-      name: "Carbon monoxide alarm",
-      icon: "smoke-detector",
-    },
+
     { name: "Fire extinguisher", icon: "fire-extinguisher" },
   ];
   let amenIndex, guefavIndex, saftyIndex;
-  if (route.params.data) {
+  if (route.params?.data) {
     amenIndex = route.params.data.amenities.map((item) => {
       return amenities.some((i) => {
         return i.name == item;
@@ -244,12 +226,12 @@ const PlaceOfferScreen = ({ navigation, route }) => {
                 saftyItems: newSafty,
               },
             });
-            if (route.params.data) {
-              return navigation.navigate("lesser/posthouse/propertytype", {
+            if (route.params?.data) {
+              return navigation.navigate("lesser/posthouse/houseimages", {
                 data: route.params.data,
               });
             }
-            navigation.navigate("lesser/posthouse/propertytype");
+            navigation.navigate("lesser/posthouse/houseimages");
           }}
           style={{
             backgroundColor: "#0244d0",

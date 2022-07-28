@@ -13,6 +13,7 @@ import {
 import { BASEURI, BASETOKEN } from "../../urls";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { UserContext } from "../../App.Navigator";
+import { QueryCache } from "react-query";
 import * as SecureStore from "expo-secure-store";
 
 import { useQuery, useQueryClient } from "react-query";
@@ -85,7 +86,7 @@ const CustomDrawer = (props) => {
                 marginLeft: 5,
               }}
             >
-              Tell a Friend
+              Share
             </Text>
           </View>
         </TouchableOpacity>
@@ -93,6 +94,7 @@ const CustomDrawer = (props) => {
           onPress={async () => {
             await SecureStore.deleteItemAsync("token");
             queryClient.resetQueries();
+            queryCache.clear();
           }}
           style={{ paddingVertical: 15 }}
         >

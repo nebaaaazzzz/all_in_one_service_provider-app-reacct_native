@@ -23,8 +23,8 @@ const PinSpotScreen = ({ navigation, route }) => {
           margin: "5%",
         }}
       >
-        Is this the correct location, in the read marker? you can drag and
-        change locations!
+        Is this the correct location, in the red marker? you can press and drag
+        and change locations!
       </Text>
       <MapView
         style={{

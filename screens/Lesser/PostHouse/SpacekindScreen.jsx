@@ -3,12 +3,14 @@ import React, { useContext, useState } from "react";
 import PlaceDescription from "./../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
 
-const SpacekindScreen = ({ navigation }) => {
+const SpacekindScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
-  const placeKinds = ["An entire place", "A private room", "A shared room"];
+  const placeKinds = ["An entire place", "A private room"];
   let index;
-  if (route.params.data) {
-    index = placeKinds.findIndex((item) => item == route.params.data.placeKind);
+  if (route.params?.data) {
+    index = placeKinds.findIndex(
+      (item) => item == route.params.data?.placeKind
+    );
   }
   const [active, setActive] = useState(index);
   const pressHandler = (id) => {
@@ -73,12 +75,14 @@ const SpacekindScreen = ({ navigation }) => {
                 placeKind: placeKinds[+active - 1],
               },
             });
-            if (route.params.data) {
+            if (route.params?.data) {
+              console.log("hello");
               return navigation.navigate("lesser/posthouse/pinspot", {
                 data: route.params.data,
               });
+            } else {
+              navigation.navigate("lesser/posthouse/location");
             }
-            navigation.navigate("lesser/posthouse/location");
           }}
           style={{
             backgroundColor: active ? "#0244d0" : "rgba(0,0,0,0.2)",

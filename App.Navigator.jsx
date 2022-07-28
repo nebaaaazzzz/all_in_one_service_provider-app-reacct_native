@@ -11,9 +11,9 @@ import LesserScreen from "./screens/Lesser/LesserScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SecureStore from "expo-secure-store";
 import { NavigationContainer } from "@react-navigation/native";
-import { Platform, useColorScheme } from "react-native";
+import { Platform, StatusBar, useColorScheme } from "react-native";
 import { ActivityIndicator, Pressable } from "react-native";
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import { useQuery } from "react-query";
 import { BASEURI } from "./urls";
 import ErrorScreen from "./screens/Common/ErrorScreen";
@@ -84,53 +84,55 @@ const AppNavigator = ({ navigation }) => {
     );
   }
   return (
-    <NavigationContainer
-      linking={linking}
-      theme={scheme === "dark" ? DarkTheme : DefaultTheme}
-    >
-      <UserContext.Provider value={data}>
-        <StackNavigator.Navigator screenOptions={{ headerShown: false }}>
-          {data ? (
-            <StackNavigator.Group>
-              <StackNavigator.Screen name="home" component={HomeScreen} />
-              <StackNavigator.Screen
-                name="employee"
-                component={EmployeeScreen}
-              />
-              <StackNavigator.Screen
-                name="employer"
-                component={EmployerScreen}
-              />
-              <StackNavigator.Screen name="lessee" component={LesseeScreen} />
-              <StackNavigator.Screen name="lesser" component={LesserScreen} />
-              <StackNavigator.Screen
-                name="jobdetail"
-                component={JobDetailScreen}
-              />
+    <SafeAreaView style={{ martinTop: StatusBar.currentHeight, flex: 1 }}>
+      <NavigationContainer
+        linking={linking}
+        theme={scheme === "dark" ? DarkTheme : DefaultTheme}
+      >
+        <UserContext.Provider value={data}>
+          <StackNavigator.Navigator screenOptions={{ headerShown: false }}>
+            {data ? (
+              <StackNavigator.Group>
+                <StackNavigator.Screen name="home" component={HomeScreen} />
+                <StackNavigator.Screen
+                  name="employee"
+                  component={EmployeeScreen}
+                />
+                <StackNavigator.Screen
+                  name="employer"
+                  component={EmployerScreen}
+                />
+                <StackNavigator.Screen name="lessee" component={LesseeScreen} />
+                <StackNavigator.Screen name="lesser" component={LesserScreen} />
+                <StackNavigator.Screen
+                  name="jobdetail"
+                  component={JobDetailScreen}
+                />
 
-              <StackNavigator.Screen
-                name="confirmation"
-                component={ConfirmationScreen}
-              />
-            </StackNavigator.Group>
-          ) : (
-            <StackNavigator.Group>
-              <StackNavigator.Screen name="login" component={LoginScreen} />
-              <StackNavigator.Screen
-                name="forgotpassword"
-                component={ForgotPasswordScreen}
-              />
-              <StackNavigator.Screen name="signup" component={SignupScreen} />
-              <StackNavigator.Screen
-                name="validate"
-                component={ValidateScreen}
-              />
-            </StackNavigator.Group>
-          )}
-          <StackNavigator.Screen name="error" component={ErrorScreen} />
-        </StackNavigator.Navigator>
-      </UserContext.Provider>
-    </NavigationContainer>
+                <StackNavigator.Screen
+                  name="confirmation"
+                  component={ConfirmationScreen}
+                />
+              </StackNavigator.Group>
+            ) : (
+              <StackNavigator.Group>
+                <StackNavigator.Screen name="login" component={LoginScreen} />
+                <StackNavigator.Screen
+                  name="forgotpassword"
+                  component={ForgotPasswordScreen}
+                />
+                <StackNavigator.Screen name="signup" component={SignupScreen} />
+                <StackNavigator.Screen
+                  name="validate"
+                  component={ValidateScreen}
+                />
+              </StackNavigator.Group>
+            )}
+            <StackNavigator.Screen name="error" component={ErrorScreen} />
+          </StackNavigator.Navigator>
+        </UserContext.Provider>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 };
 

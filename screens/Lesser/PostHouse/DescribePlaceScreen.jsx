@@ -29,7 +29,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
     },
   ];
   let titleList;
-  if (route.params.data) {
+  if (route.params?.data) {
     titleList = highLight.map((item) => {
       return route.params.data.bestDescribe.includes(item.name) ? true : false;
     });
@@ -61,7 +61,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Now, Let's describe your place
+          Is your place?
         </Text>
         <Text style={{ marginLeft: 10, fontSize: 16 }}>
           Choose up to 2 highLights
@@ -136,8 +136,8 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                 },
               });
             }
-            if (route.params.data) {
-              navigation.navigate("lesser/posthouse/price", {
+            if (route.params?.data) {
+              return navigation.navigate("lesser/posthouse/price", {
                 data: route.params.data,
               });
             }

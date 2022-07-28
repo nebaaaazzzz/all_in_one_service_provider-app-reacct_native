@@ -41,6 +41,7 @@ const JobDetailScreen = ({ navigation, route }) => {
     ["job", route.params.id],
     fetchJob
   );
+  console.log(data);
   const [downloadProgress, setDownloadProgress] = React.useState();
   const downloadPath =
     FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
@@ -185,7 +186,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             }}
           >
             <View>
-              <Text>Category : {data.Category}</Text>
+              <Text>Category : {data.category}</Text>
             </View>
             <View>
               <Text>Experience : {data.experience.title}</Text>
@@ -233,16 +234,22 @@ const JobDetailScreen = ({ navigation, route }) => {
               </View>
             ) : (
               <View>
-                <Text>Salary : Negotiable</Text>
+                <Text>Salary : {data.paymentStyle}</Text>
               </View>
             )}
             {data.englishLevel ? (
               <View>
-                <Text>English Level : data.englishLevel</Text>
+                <Text>English Level : {data.englishLevel}</Text>
               </View>
             ) : (
               <></>
             )}
+            <View>
+              <Text>CV : {data?.cvRequired ? "Required" : "Not Required"}</Text>
+            </View>
+            <View>
+              <Text>permanent : {data?.permanent ? "Yes" : "No"}</Text>
+            </View>
             {data.hourPerWeek ? (
               <View>
                 <Text>Hours Per Week : data.hourPerWeek</Text>
@@ -252,7 +259,30 @@ const JobDetailScreen = ({ navigation, route }) => {
             )}
             {data.gender ? (
               <View>
-                <Text>Gender: data.gender</Text>
+                <Text>Gender: {data.gender}</Text>
+              </View>
+            ) : (
+              <></>
+            )}
+            {data.deadline ? (
+              <View>
+                <Text>
+                  Deadline:{" "}
+                  {new Date(data.deadline).getDate() +
+                    "/" +
+                    (new Date(data.deadline).getMonth() +
+                      "/" +
+                      new Date(data.deadline).getFullYear())}
+                </Text>
+                {data.deadtime ? (
+                  <Text>
+                    {new Date(data.deadline).getHours() +
+                      ":" +
+                      new Date(data.deadline).getMinutes()}
+                  </Text>
+                ) : (
+                  <></>
+                )}
               </View>
             ) : (
               <></>

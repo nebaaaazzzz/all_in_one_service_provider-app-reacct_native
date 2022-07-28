@@ -96,6 +96,8 @@ const LoginScreen = ({ navigation, route }) => {
                 fontSize: 28,
                 fontWeight: "500",
                 color: "#333",
+                textAlign: "center",
+                color: "#0244d0",
                 marginBottom: 10,
               }}
             >
@@ -238,7 +240,7 @@ const LoginScreen = ({ navigation, route }) => {
               <TouchableOpacity onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: "#0244d0", fontWeight: "700" }}>
                   {" "}
-                  Register
+                  Signup
                 </Text>
               </TouchableOpacity>
             </View>

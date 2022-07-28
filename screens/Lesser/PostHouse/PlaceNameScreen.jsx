@@ -5,7 +5,7 @@ import { PostHouseContext } from "./PostHouseScreen";
 const PlaceNameScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
   let title;
-  if (route.params.data) {
+  if (route.params?.data) {
     title = route.params.data.placeTitle;
   }
   const [text, setText] = useState(title || "");
@@ -42,9 +42,12 @@ const PlaceNameScreen = ({ navigation, route }) => {
           maxLength={50}
           multiline
           numberOfLines={10}
-          placeholder="Cheerful 1-bedrrom villa in Yedi"
+          placeholder="Cheerful 1-bedrrom villa in Addis Ababa"
         />
-        <Text>{text.length}/50</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text>min 6 characters</Text>
+          <Text style={{ textAlign: "right" }}>{text.length}/50</Text>
+        </View>
       </ScrollView>
       <View
         style={{
@@ -65,7 +68,7 @@ const PlaceNameScreen = ({ navigation, route }) => {
                 placeTitle: text,
               },
             });
-            if (route.params.data) {
+            if (route.params?.data) {
               return navigation.navigate(
                 "lesser/posthouse/detailplacedescription",
                 {

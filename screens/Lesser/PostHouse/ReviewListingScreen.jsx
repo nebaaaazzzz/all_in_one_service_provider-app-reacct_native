@@ -14,10 +14,10 @@ import { PostHouseContext } from "./PostHouseScreen";
 import { useMutation } from "react-query";
 import { useQueryClient } from "react-query";
 import { BASETOKEN, BASEURI } from "../../../urls";
-const ReviewListingScreen = ({ navigation }) => {
+const ReviewListingScreen = ({ navigation, route }) => {
   const clientQuery = useQueryClient();
   const { housePost } = useContext(PostHouseContext);
-
+  console.log(housePost);
   const { isSuccess, isLoading, isError, error, data, mutate } = useMutation(
     async () => {
       const formData = new FormData();
@@ -32,6 +32,8 @@ const ReviewListingScreen = ({ navigation }) => {
         });
       }
       const newObj = { ...housePost };
+      newObj.guestFavourite = newObj.guestFav;
+      delete newObj.guestFav;
       delete newObj.houseImages;
       formData.append("body", JSON.stringify(newObj));
       try {
@@ -94,7 +96,7 @@ const ReviewListingScreen = ({ navigation }) => {
             fontSize: 18,
           }}
         >
-          Check out your listing!
+          Check out your post!
         </Text>
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {housePost.placeTitle}
@@ -148,7 +150,7 @@ const ReviewListingScreen = ({ navigation }) => {
           {housePost?.guestFav?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                guest favourite
+                Guest favourite
               </Text>
               {housePost?.guestFav?.map((item, index) => {
                 return (
@@ -176,7 +178,7 @@ const ReviewListingScreen = ({ navigation }) => {
           {housePost?.saftyItems?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                amenities
+                Safty Items
               </Text>
               {housePost?.saftyItems?.map((item, index) => {
                 return (
@@ -204,7 +206,7 @@ const ReviewListingScreen = ({ navigation }) => {
           {housePost?.amenities?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                amenities
+                Amenities
               </Text>
               {housePost?.amenities?.map((item, index) => {
                 return (
@@ -234,6 +236,34 @@ const ReviewListingScreen = ({ navigation }) => {
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
                 Best Describe
               </Text>
+              {housePost?.bestDescribe?.map((item, index) => {
+                return (
+                  <View key={index + 1} style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        color: "#fff",
+                        borderRadius: 15,
+                        backgroundColor: "#0244d0",
+                      }}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <></>
+          )}
+          <Divider />
+          {/* {housePost?.bestDescribe?.length ? (
+            <View style={{ marginVertical: "2%" }}>
+              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
+                Best Describe
+              </Text>
               {housePost?.bestdescribe?.map((item, index) => {
                 return (
                   <View style={{ flexDirection: "row" }}>
@@ -256,10 +286,10 @@ const ReviewListingScreen = ({ navigation }) => {
             </View>
           ) : (
             <></>
-          )}
+          )} */}
 
           <Divider />
-          {housePost?.contain?.length ? (
+          {/* {housePost?.contain?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
                 Contain
@@ -286,43 +316,10 @@ const ReviewListingScreen = ({ navigation }) => {
             </View>
           ) : (
             <></>
-          )}
+          )} */}
 
           <Divider />
-          <View
-            style={{
-              marginVertical: 20,
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              Kitchens : {housePost.guestSize.kitchens}
-            </Text>
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              bedrooms : {housePost.guestSize.bedrooms}
-            </Text>
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              bathrooms : {housePost.guestSize.bathrooms}
-            </Text>
-          </View>
-          <Divider />
-          <View
-            style={{
-              marginVertical: 15,
-              width: "100%",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 17 }}>
-              Property Type :{" "}
-              <Text style={{ color: "rgba(0,0,0,0.7)" }}>
-                {housePost.propertyType}
-              </Text>
-            </Text>
-          </View>
+
           <Divider />
           <View
             style={{
@@ -367,7 +364,7 @@ const ReviewListingScreen = ({ navigation }) => {
             <Text
               style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}
             >
-              Place Description
+              Type of place
             </Text>
             <View>
               <Text style={{ fontSize: 16 }}>
@@ -424,9 +421,11 @@ const ReviewListingScreen = ({ navigation }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>
-            Save your listing
-          </Text>
+          {route.params?.data ? (
+            <Text style={{ textAlign: "center", color: "#fff" }}>Save</Text>
+          ) : (
+            <Text style={{ textAlign: "center", color: "#fff" }}>Post</Text>
+          )}
         </Pressable>
       </View>
     </View>

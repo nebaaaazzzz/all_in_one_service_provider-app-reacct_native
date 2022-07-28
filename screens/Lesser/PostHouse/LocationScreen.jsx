@@ -44,12 +44,13 @@ const LocationScreen = ({ navigation, route }) => {
           const r = await response.json();
           if (r.features[0].place_name && r.features[0].center) {
             setIsGettingLocation(false);
-            if (route.params.data) {
+            if (route.params?.data) {
               return navigation.navigate("lesser/posthouse/pinspot", {
                 center: r.features[0].center,
                 data: route.params.data,
               });
             }
+
             navigation.navigate("lesser/posthouse/pinspot", {
               center: r.features[0].center,
             });
@@ -90,12 +91,15 @@ const LocationScreen = ({ navigation, route }) => {
     }
   };
   const searchListPressHandler = (index) => {
-    if (route.params.data) {
+    if (route.params?.data) {
+      console.log(r.features[0].center);
+
       return navigation.navigate("lesser/posthouse/pinspot", {
         center: searchResult[index].center,
         data: route.params.data,
       });
     }
+
     navigation.navigate("lesser/posthouse/pinspot", {
       center: searchResult[index].center,
     });
@@ -201,6 +205,7 @@ const LocationScreen = ({ navigation, route }) => {
             onChangeText={setLocationQuery}
             icon={"location-enter"}
             ref={inputRef}
+            iconColor={"#0244d0"}
             onFocus={() => {
               if (isFull) {
                 setSearch(true);
@@ -257,7 +262,7 @@ const LocationScreen = ({ navigation, route }) => {
                 }}
                 onPress={pressHandler}
               >
-                <FIcon name="location-arrow" size={20} />
+                <FIcon name="location-arrow" color={"#0244d0"} size={20} />
                 <Text style={{ marginLeft: "5%", fontSize: 18 }}>
                   Use my current location
                 </Text>

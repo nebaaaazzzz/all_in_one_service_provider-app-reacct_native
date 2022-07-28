@@ -116,7 +116,7 @@ const SignupScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          Register
+          Signup
         </Text>
         <View style={{ marginBottom: 25 }}>
           <View
@@ -452,7 +452,7 @@ const SignupScreen = ({ navigation }) => {
               color: "#fff",
             }}
           >
-            Register
+            Signup
           </Text>
         </TouchableOpacity>
 
@@ -465,7 +465,7 @@ const SignupScreen = ({ navigation }) => {
         >
           <Text>Already registered?</Text>
           <TouchableOpacity onPress={() => navigation.push("login")}>
-            <Text style={{ color: "#0244d0", fontWeight: "700" }}> Login</Text>
+            <Text style={{ color: "#0244d0", fontWeight: "700" }}> </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

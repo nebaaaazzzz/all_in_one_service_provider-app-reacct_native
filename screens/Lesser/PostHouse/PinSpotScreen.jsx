@@ -8,10 +8,11 @@ import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
 
 const PinSpotScreen = ({ navigation, route }) => {
   let cntr;
-  if (route.params?.data?.center) {
-    cntr = route.params.data.center;
-  } else {
+
+  if (route.params?.center) {
     cntr = route.params.center;
+  } else {
+    cntr = route.params?.data?.location?.coordinates;
   }
   const [center, setCenter] = useState(cntr || [11, 21]);
   const { dispatch } = useContext(PostHouseContext);
@@ -64,8 +65,10 @@ const PinSpotScreen = ({ navigation, route }) => {
         style={{
           backgroundColor: "#fff",
           borderTopWidth: 2,
-          alignItems: "flex-end",
+          alignItems: "center",
+          justifyContent: "space-between",
           height: 60,
+          flexDirection: "row",
           justifyContent: "center",
           borderColor: "rgba(0,0,0,0.3)",
         }}
@@ -74,7 +77,7 @@ const PinSpotScreen = ({ navigation, route }) => {
           <Pressable
             onPress={() => {
               navigation.navigate("lesser/posthouse/location", {
-                data: route.params.data,
+                data: route.params?.data,
               });
             }}
           >
@@ -110,18 +113,18 @@ const PinSpotScreen = ({ navigation, route }) => {
                   },
                 });
               }
-              if (route.params.data) {
-                navigation.navigate("lesser/posthouse/guestsize", {
+              if (route.params?.data) {
+                return navigation.navigate("lesser/posthouse/placeoffer", {
                   data: route.params.data,
                 });
               }
-              navigation.navigate("lesser/posthouse/guestsize");
+              navigation.navigate("lesser/posthouse/placeoffer");
             }
           }}
           style={{
             backgroundColor: "#0244d0",
             width: 100,
-            right: 20,
+            marginLeft: "10%",
             paddingHorizontal: 10,
             paddingVertical: 5,
             borderRadius: 5,

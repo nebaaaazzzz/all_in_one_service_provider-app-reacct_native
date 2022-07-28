@@ -38,6 +38,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
       </View>
     );
   }
+  console.log(data);
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
@@ -120,6 +121,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: "#fff",
+          marginBottom: 40,
           flex: 1,
           paddingHorizontal: 10,
         }}
@@ -165,7 +167,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             <Text style={{ color: "#fff" }}>View All Images</Text>
           </Pressable>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
-            Fun place {data.placeName}
+            {data.placeName}
           </Text>
           {data.region ? (
             <Text>
@@ -175,14 +177,13 @@ const HomeDetailScreen = ({ navigation, route }) => {
           ) : (
             <></>
           )}
-          <Text></Text>
           <Divider />
-          {data?.guestFav?.length ? (
+          {data?.guestFavourite?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                guest favourite
+                Guest Favourite
               </Text>
-              {data?.guestFav?.map((item, index) => {
+              {data?.guestFavourite?.map((item, index) => {
                 return (
                   <View key={index + 1} style={{ flexDirection: "row" }}>
                     <Text
@@ -208,7 +209,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.saftyItems?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                amenities
+                Safty Items
               </Text>
               {data?.saftyItems?.map((item, index) => {
                 return (
@@ -236,7 +237,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.amenities?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                amenities
+                Amenities
               </Text>
               {data?.amenities?.map((item, index) => {
                 return (
@@ -266,7 +267,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
                 Best Describe
               </Text>
-              {data?.bestdescribe?.map((item, index) => {
+              {data?.bestDescribe?.map((item, index) => {
                 return (
                   <View style={{ flexDirection: "row" }}>
                     <Text
@@ -321,41 +322,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           )}
 
           <Divider />
-          <View
-            style={{
-              marginVertical: 20,
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              Kitchens : {data.guestSize.kitchens}
-            </Text>
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              bedrooms : {data.guestSize.bedrooms}
-            </Text>
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              bathrooms : {data.guestSize.bathrooms}
-            </Text>
-          </View>
-          <Divider />
-          <View
-            style={{
-              marginVertical: 15,
-              width: "100%",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 17 }}>
-              Property Type :{" "}
-              <Text style={{ color: "rgba(0,0,0,0.7)" }}>
-                {data.propertyType}
-              </Text>
-            </Text>
-          </View>
-          <Divider />
+
           <View
             style={{
               marginVertical: 15,
@@ -432,7 +399,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 130,
+          top: dimension.height - 110,
           backgroundColor: "#fff",
           borderTopWidth: 2,
           width: "100%",

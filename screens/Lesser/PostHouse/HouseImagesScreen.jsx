@@ -17,8 +17,8 @@ import { BASETOKEN, BASEURI } from "../../../urls";
 const HouseImagesScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
   let imgList;
-  if (route.params.data) {
-    imgList = route.params.data.houseImages;
+  if (route.params?.data) {
+    imgList = route.params.data?.houseImages;
   }
   const [imgUri, setImgUri] = useState([]);
   const [visible, setVisible] = useState([]);
@@ -67,7 +67,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Let us know what place like
+          Let us know what the place looks like
         </Text>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -148,7 +148,11 @@ const HouseImagesScreen = ({ navigation, route }) => {
                           elevation: 10,
                         }}
                       >
-                        <MaterialIcon name="more-horiz" size={30} />
+                        <MaterialIcon
+                          name="more-horiz"
+                          size={20}
+                          color="#0244d0"
+                        />
                       </Pressable>
                     }
                   >
@@ -241,8 +245,13 @@ const HouseImagesScreen = ({ navigation, route }) => {
               alignItems: "center",
             }}
           >
-            <Icon name={"file-image-plus"} size={30} />
-            <Text>Add at lest 5 potos</Text>
+            <Icon name={"file-image-plus"} size={30} color="#0244d0" />
+            {5 - imgUri.length > 0 ? (
+              <Text>Add atleast {5 - imgUri.length} photos</Text>
+            ) : (
+              <Text>Add photos</Text>
+            )}
+
             <Text>Upload from your device</Text>
           </Pressable>
         </ScrollView>
@@ -267,7 +276,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
                 houseImages: imgUri,
               },
             });
-            if (route.params.data) {
+            if (route.params?.data) {
               return navigation.navigate("lesser/posthouse/placename", {
                 data: route.params.data,
               });

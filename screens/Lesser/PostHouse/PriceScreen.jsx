@@ -5,7 +5,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostHouseContext } from "./PostHouseScreen";
 const PriceScreen = ({ navigation, route }) => {
   let p;
-  if (route.params.data) {
+  if (route.params?.data) {
     p = route.params.data.price;
   }
 
@@ -82,7 +82,7 @@ const PriceScreen = ({ navigation, route }) => {
               <Icon name="plus" size={20} />
             </Pressable>
           </View>
-          <Text style={{ textAlign: "center" }}> per month</Text>
+          <Text style={{ textAlign: "center" }}>ETB per month</Text>
         </View>
       </View>
       <View
@@ -103,12 +103,12 @@ const PriceScreen = ({ navigation, route }) => {
                 price,
               },
             });
-            if (route.params.data) {
-              navigation.navigate("lesser/posthouse/lastcheckout", {
+            if (route.params?.data) {
+              return navigation.navigate("lesser/posthouse/reviewlisting", {
                 data: route.params.data,
               });
             }
-            navigation.navigate("lesser/posthouse/lastcheckout");
+            navigation.navigate("lesser/posthouse/reviewlisting");
           }}
           style={{
             backgroundColor: "#0244d0",

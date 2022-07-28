@@ -40,6 +40,7 @@ const Home = ({ navigation }) => {
       style={{
         justifyContent: "center",
         flex: 1,
+        martinTop: StatusBar.currentHeight,
         backgroundColor: "#0244d0",
       }}
     >
@@ -216,7 +217,7 @@ const HomeScreen = () => {
       />
 
       <DrawerNavigator.Screen
-        name="Messages"
+        name="FeedBack"
         component={MessagesScreen}
         options={{
           drawerIcon: ({ color }) => (

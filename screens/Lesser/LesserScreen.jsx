@@ -103,9 +103,6 @@ const MyPosts = ({ navigation }) => {
     </View>
   );
 };
-const Setting = () => {
-  return <Text>hello</Text>;
-};
 
 const Home = ({ navigation }) => {
   const user = useContext(UserContext);
@@ -157,11 +154,6 @@ const Home = ({ navigation }) => {
           options={{ title: "My Posts" }}
           name="lesser/myposts"
           component={MyPosts}
-        />
-        <LesserTopTabNavigator.Screen
-          option={{ title: "setting" }}
-          name="lesser/setting"
-          component={Setting}
         />
       </LesserTopTabNavigator.Navigator>
     </View>

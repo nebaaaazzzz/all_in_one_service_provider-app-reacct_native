@@ -182,7 +182,7 @@ function Home({ navigation }) {
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}> Post House</Text>
+            <Text style={{ color: "#fff" }}> Post Job </Text>
           </Pressable>
         ) : (
           <Pressable

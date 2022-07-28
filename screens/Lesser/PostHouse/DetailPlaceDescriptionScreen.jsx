@@ -5,7 +5,7 @@ import { PostHouseContext } from "./PostHouseScreen";
 const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
   let desc;
-  if (route.params.data) {
+  if (route.params?.data) {
     desc = route.params.data.detailDescription;
   }
   const [text, setText] = useState(desc || "");
@@ -44,7 +44,10 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
           numberOfLines={10}
           placeholder="You'll have a great time at this comfortable place to stay"
         />
-        <Text>{text.length}/500</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text>min 50 characters</Text>
+          <Text>{text.length}/500</Text>
+        </View>
       </ScrollView>
       <View
         style={{
@@ -65,7 +68,7 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
                 detailDescription: text,
               },
             });
-            if (route.params.data) {
+            if (route.params?.data) {
               return navigation.navigate("lesser/posthouse/describeplace", {
                 data: route.params.data,
               });
@@ -73,7 +76,7 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
             navigation.navigate("lesser/posthouse/describeplace");
           }}
           style={{
-            backgroundColor: text.length > 50 ? "#0244d0" : "rgba(0,0,0,0.7)",
+            backgroundColor: text.length > 49 ? "#0244d0" : "rgba(0,0,0,0.7)",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

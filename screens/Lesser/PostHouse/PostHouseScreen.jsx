@@ -5,15 +5,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PlaceDescriptionScreen from "./PlaceDescriptionScreen";
 import LocationScreen from "./LocationScreen";
 import PinSpotScreen from "./PinSpotScreen";
-import GuestSizeScreen from "./GuestSizeScreen";
 import PlaceOfferScreen from "./PlaceOfferScreen";
 import HouseImagesScreen from "./HouseImagesScreen";
 import PlaceNameScreen from "./PlaceNameScreen";
 import DescribePlaceScreen from "./DescribePlaceScreen";
 import PriceScreen from "./PriceScreen";
 import DetailPlaceDescriptionScreen from "./DetailPlaceDescriptionScreen";
-import PropertyTypeScreen from "./PropertyTypeScreen";
-import LastCheckoutScreen from "./LastCheckoutScreen";
 import ReviewListingScreen from "./ReviewListingScreen";
 import ViewImagesScreen from "./ViewImagesScreen";
 const PostHouseStackNavigator = createStackNavigator();
@@ -28,12 +25,16 @@ const reducer = (state = {}, action) => {
 };
 const PostHouseScreen = ({ route }) => {
   const [housePost, dispatch] = useReducer(reducer);
-  const data = route.params?.data ? data : {};
+  const data = route.params?.data ? route.params?.data : undefined;
   return (
     <PostHouseContext.Provider value={{ housePost, dispatch }}>
       <PostHouseStackNavigator.Navigator screenOptions={{ headerShown: false }}>
         <PostHouseStackNavigator.Screen
-          initialParams={data}
+          options={({ route }) => {
+            if (data) {
+              route.params = { data };
+            }
+          }}
           name="lesser/posthouse/placedescription"
           component={PlaceDescriptionScreen}
         />
@@ -49,18 +50,15 @@ const PostHouseScreen = ({ route }) => {
           name="lesser/posthouse/pinspot"
           component={PinSpotScreen}
         />
-        <PostHouseStackNavigator.Screen
+        {/* <PostHouseStackNavigator.Screen
           name="lesser/posthouse/guestsize"
           component={GuestSizeScreen}
-        />
+        /> */}
         <PostHouseStackNavigator.Screen
           name="lesser/posthouse/placeoffer"
           component={PlaceOfferScreen}
         />
-        <PostHouseStackNavigator.Screen
-          name="lesser/posthouse/propertytype"
-          component={PropertyTypeScreen}
-        />
+
         <PostHouseStackNavigator.Screen
           name="lesser/posthouse/houseimages"
           component={HouseImagesScreen}
@@ -82,10 +80,7 @@ const PostHouseScreen = ({ route }) => {
           name="lesser/posthouse/price"
           component={PriceScreen}
         />
-        <PostHouseStackNavigator.Screen
-          name="lesser/posthouse/lastcheckout"
-          component={LastCheckoutScreen}
-        />
+
         <PostHouseStackNavigator.Screen
           name="lesser/posthouse/reviewlisting"
           component={ReviewListingScreen}

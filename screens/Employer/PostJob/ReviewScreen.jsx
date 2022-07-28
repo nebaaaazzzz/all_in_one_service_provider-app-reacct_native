@@ -8,6 +8,8 @@ import {
   Pressable,
   TouchableOpacity,
   Keyboard,
+  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import {
   RadioButton,
@@ -23,6 +25,7 @@ import DatePicker from "@react-native-community/datetimepicker";
 import { useQueryClient } from "react-query";
 import { useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../../urls";
+import { UserContext } from "./../../../App.Navigator";
 const ReviewScreen = ({ navigation }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -35,9 +38,8 @@ const ReviewScreen = ({ navigation }) => {
   const [expanded, setExpanded] = useState(false);
   const handlePress = () => setExpanded(!expanded);
   const [file, setFile] = useState("");
-  const [description, setDescription] = useState(false);
+  const [description, setDescription] = useState("");
   const [englishLevel, setEnglishLevel] = useState();
-  const [questions, setQuestions] = useState([]);
   const [checkHour, setHour] = useState();
   const [gender, setGender] = useState();
   const [permanent, setPermanet] = useState(false);
@@ -87,16 +89,14 @@ const ReviewScreen = ({ navigation }) => {
   }
 
   if (isError) {
-    return (
-      <View>
-        <Text>{error.message}</Text>
-      </View>
-    );
+    ToastAndroid.show(error.message, ToastAndroid.SHORT);
   }
   if (isLoading) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View
+        style={{ flex1: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <ActivityIndicator size={"large"} color="#0244d0" />
       </View>
     );
   }
@@ -111,7 +111,7 @@ const ReviewScreen = ({ navigation }) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
-            marginBottom: 60,
+            marginBottom: 80,
             marginTop: StatusBar.currentHeight,
             flex: 1,
           }}
@@ -142,12 +142,12 @@ const ReviewScreen = ({ navigation }) => {
             </Text>
             <View style={{ marginTop: 10 }}>
               <Text style={{ fontSize: 16 }}>
-                This is how talent figures out what you need and why you’re
+                This is how employees figures out what you need and why you’re
                 great to work with!
               </Text>
               <Text style={{ fontSize: 16, marginVertical: 10 }}>
                 Include your expectations about the task or deliverable, what
-                you’re looking for in a work relationship, and anything unique
+                you’re looking for in a work environment, and anything unique
                 about your project, team, or company.Minumun 50 characters.
               </Text>
             </View>
@@ -158,6 +158,7 @@ const ReviewScreen = ({ navigation }) => {
               placeholder="Already have a job description?Paste it here!"
               onChangeText={(text) => setDescription(text)}
             />
+            <Text style={{ textAlign: "right" }}>{description.length}</Text>
             <Pressable
               onPress={fileSelector}
               style={{
@@ -234,7 +235,7 @@ const ReviewScreen = ({ navigation }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Budget
+                    Salary
                   </Text>
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16, marginLeft: "5%" }}>
@@ -243,7 +244,22 @@ const ReviewScreen = ({ navigation }) => {
                   </View>
                 </View>
               ) : (
-                <></>
+                <View>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 17,
+                      marginVertical: 10,
+                    }}
+                  >
+                    Salary
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
+                      {jobPost.paymentStyle}
+                    </Text>
+                  </View>
+                </View>
               )}
             </View>
             <View>
@@ -304,61 +320,63 @@ const ReviewScreen = ({ navigation }) => {
             }}
           >
             <Text>DeadLine</Text>
-            <TouchableOpacity onPress={() => setOpen(true)}>
+            <TouchableOpacity
+              // style={{ alignItems: "center" }}
+              onPress={() => setOpen(true)}
+            >
               {open ? (
                 <DatePicker
                   value={date ? new Date(date) : new Date()} //initial date from state
                   mode="date" //The enum of date, datetime and time
                   display="calendar"
-                  maxDate="01-01-2002"
-                  minimumDate={new Date()}
+                  maxDate="01-01-2019"
+                  textColor="red"
+                  minimumDate={new Date(1950, 0, 1)}
+                  maximumDate={new Date(2000, 10, 20)}
                   onChange={({ nativeEvent: { timestamp } }) => {
                     if (timestamp) {
-                      const tempDate = new Date(timestamp);
-                      setDate(
-                        tempDate.getDay() +
-                          "/" +
-                          tempDate.getMonth() +
-                          "/" +
-                          tempDate.getFullYear()
-                      );
-                      setOpen(false);
+                      setDate(new Date(timestamp));
                     }
+                    setOpen(false);
                   }}
                 />
               ) : (
-                <Text style={{ color: "#666", marginLeft: 25, marginTop: 5 }}>
-                  {date ? date : "Press to Set Dateline"}
+                <Text style={{ color: "#666", marginLeft: 5 }}>
+                  {date
+                    ? date.getDate() +
+                      "/" +
+                      (date.getMonth() + 1) +
+                      "/" +
+                      date.getFullYear()
+                    : "set deadline date"}
                 </Text>
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setOpen(true)}>
+            <TouchableOpacity
+              style={{ marginLeft: "10%" }}
+              onPress={() => setOpen1(true)}
+            >
               {open1 ? (
                 <DatePicker
                   value={datetime ? new Date(datetime) : new Date()} //initial date from state
                   mode="time" //The enum of date, datetime and time
                   display="clock"
+                  maxDate="01-01-2019"
+                  textColor="red"
+                  minimumDate={new Date(1950, 0, 1)}
+                  maximumDate={new Date(2000, 10, 20)}
                   onChange={({ nativeEvent: { timestamp } }) => {
                     if (timestamp) {
-                      const tempDate = new Date(timestamp);
-                      setDatetime(
-                        tempDate.getDay() +
-                          "/" +
-                          tempDate.getMonth() +
-                          "/" +
-                          tempDate.getFullYear()
-                      );
-                      setOpen1(false);
+                      setDatetime(new Date(timestamp));
                     }
+                    setOpen1(false);
                   }}
                 />
               ) : (
-                <Text style={{ color: "#666", marginLeft: 25, marginTop: 5 }}>
+                <Text style={{ color: "#666", marginLeft: 5 }}>
                   {datetime
-                    ? new Date(datetime).getHours() +
-                      " " +
-                      new Date(datetime).getMinutes()
-                    : "Press to Set Date time"}
+                    ? datetime.getHours() + " : " + datetime.getMinutes()
+                    : "set date linetime"}
                 </Text>
               )}
             </TouchableOpacity>
@@ -399,12 +417,12 @@ const ReviewScreen = ({ navigation }) => {
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
           />
           <List.Section>
-            <ScreeningQuestion
+            {/* <ScreeningQuestion
               expanded={expanded}
               questions={questions}
               setQuestions={setQuestions}
               handlePress={handlePress}
-            />
+            /> */}
             <AdvancedPred
               expanded={expanded}
               handlePress={handlePress}
@@ -435,6 +453,10 @@ const ReviewScreen = ({ navigation }) => {
         <Pressable
           disabled={description.length < 50}
           onPress={() => {
+            if (date && datetime) {
+              date.setHours(datetime.getHours() + 3);
+              date.setMinutes(datetime.getMinutes());
+            }
             dispatch({
               type: "add",
               payload: {
@@ -447,7 +469,6 @@ const ReviewScreen = ({ navigation }) => {
                 englishLevel,
                 cvRequired,
                 hourPerWeek: checkHour,
-                questions,
               },
             });
             submitHandler();
@@ -468,181 +489,181 @@ const ReviewScreen = ({ navigation }) => {
     </View>
   );
 };
-function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
-  const [isTextInput, setIsTextInput] = useState(false);
-  const [question, setQuestion] = useState("");
-  const [deleteIndex, setDeleteIndex] = useState("");
-  return (
-    <List.Accordion
-      left={(props) => (
-        <View {...props}>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            Screening questions(optional)
-          </Text>
-          <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-            Narrow down your candidated
-          </Text>
-        </View>
-      )}
-    >
-      {/* question must be more than 3 char */}
-      {!isTextInput ? (
-        <>
-          <Pressable
-            onPress={() => setIsTextInput(true)}
-            style={{
-              flexDirection: "row",
-              borderRadius: 20,
-              width: "90%",
-              alignSelf: "center",
-              alignItems: "center",
-              borderColor: "rgba(0,0,0,0.7))",
-              paddingVertical: 10,
-              elevation: 5,
-              marginVertical: 10,
-              justifyContent: "center",
-              backgroundColor: "#0244d0",
-            }}
-          >
-            <Icon size={18} color="#fff" name="plus" />
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#fff",
-                marginLeft: 10,
-                textAlign: "center",
-              }}
-            >
-              Write your own question
-            </Text>
-          </Pressable>
-        </>
-      ) : (
-        <></>
-      )}
+// function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
+//   const [isTextInput, setIsTextInput] = useState(false);
+//   const [question, setQuestion] = useState("");
+//   const [deleteIndex, setDeleteIndex] = useState("");
+//   return (
+//     <List.Accordion
+//       left={(props) => (
+//         <View {...props}>
+//           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+//             Screening questions(optional)
+//           </Text>
+//           <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+//             Narrow down your candidated
+//           </Text>
+//         </View>
+//       )}
+//     >
+//       {/* question must be more than 3 char */}
+//       {!isTextInput ? (
+//         <>
+//           <Pressable
+//             onPress={() => setIsTextInput(true)}
+//             style={{
+//               flexDirection: "row",
+//               borderRadius: 20,
+//               width: "90%",
+//               alignSelf: "center",
+//               alignItems: "center",
+//               borderColor: "rgba(0,0,0,0.7))",
+//               paddingVertical: 10,
+//               elevation: 5,
+//               marginVertical: 10,
+//               justifyContent: "center",
+//               backgroundColor: "#0244d0",
+//             }}
+//           >
+//             <Icon size={18} color="#fff" name="plus" />
+//             <Text
+//               style={{
+//                 fontSize: 16,
+//                 color: "#fff",
+//                 marginLeft: 10,
+//                 textAlign: "center",
+//               }}
+//             >
+//               Write your own question
+//             </Text>
+//           </Pressable>
+//         </>
+//       ) : (
+//         <></>
+//       )}
 
-      {isTextInput ? (
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row", flex: 1 }}>
-            <TextInput
-              style={{ width: "80%" }}
-              numberOfLines={10}
-              multiline={true}
-              defaultValue={question}
-              maxLength={255}
-              onChangeText={setQuestion}
-            />
-            <Pressable
-              style={{ alignSelf: "center" }}
-              onPress={() => {
-                if (deleteIndex) {
-                  const newArr = questions.filter((i, j) => {
-                    return j + 1 != deleteIndex;
-                  });
-                  setQuestions(newArr);
-                  setQuestion("");
-                  setDeleteIndex("");
-                }
-                setIsTextInput(false);
-              }}
-            >
-              <Icon color="red" name="delete" size={24} />
-            </Pressable>
-          </View>
-          <Text style={{ marginLeft: "70%", marginVertical: 10 }}>
-            {question.length}/255
-          </Text>
-          <Pressable
-            disabled={!(question.length > 5)}
-            onPress={() => {
-              if (deleteIndex) {
-                setQuestions(
-                  questions.map((item, index) => {
-                    return index === deleteIndex ? item : question;
-                  })
-                );
-                setDeleteIndex("");
-              } else {
-                setQuestions([...questions, question]);
-              }
-              setIsTextInput(false);
-              setQuestion("");
-            }}
-            style={{
-              borderRadius: 20,
-              width: "80%",
-              paddingVertical: 10,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor:
-                question.length > 5 ? "#0244d0" : "rgba(0,0,0,0.6)",
-            }}
-          >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Save question</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <></>
-      )}
-      {questions.length > 0 && !isTextInput ? (
-        <View>
-          <Text
-            style={{ fontWeight: "bold", fontSize: 20, marginVertical: 10 }}
-          >
-            Your questions
-          </Text>
-          <View>
-            {questions.map((item, index) => {
-              return (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginVertical: "2%",
-                  }}
-                >
-                  <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
-                    {item}
-                  </Text>
-                  <Pressable
-                    onPress={() => {
-                      setIsTextInput(true);
-                      setQuestion(item);
-                      setDeleteIndex(index + 1);
-                    }}
-                  >
-                    <Icon size={20} name="circle-edit-outline" />
-                  </Pressable>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-      ) : (
-        <></>
-      )}
+//       {isTextInput ? (
+//         <View style={{ flex: 1 }}>
+//           <View style={{ flexDirection: "row", flex: 1 }}>
+//             <TextInput
+//               style={{ width: "80%" }}
+//               numberOfLines={10}
+//               multiline={true}
+//               defaultValue={question}
+//               maxLength={255}
+//               onChangeText={setQuestion}
+//             />
+//             <Pressable
+//               style={{ alignSelf: "center" }}
+//               onPress={() => {
+//                 if (deleteIndex) {
+//                   const newArr = questions.filter((i, j) => {
+//                     return j + 1 != deleteIndex;
+//                   });
+//                   setQuestions(newArr);
+//                   setQuestion("");
+//                   setDeleteIndex("");
+//                 }
+//                 setIsTextInput(false);
+//               }}
+//             >
+//               <Icon color="red" name="delete" size={24} />
+//             </Pressable>
+//           </View>
+//           <Text style={{ marginLeft: "70%", marginVertical: 10 }}>
+//             {question.length}/255
+//           </Text>
+//           <Pressable
+//             disabled={!(question.length > 5)}
+//             onPress={() => {
+//               if (deleteIndex) {
+//                 setQuestions(
+//                   questions.map((item, index) => {
+//                     return index === deleteIndex ? item : question;
+//                   })
+//                 );
+//                 setDeleteIndex("");
+//               } else {
+//                 setQuestions([...questions, question]);
+//               }
+//               setIsTextInput(false);
+//               setQuestion("");
+//             }}
+//             style={{
+//               borderRadius: 20,
+//               width: "80%",
+//               paddingVertical: 10,
+//               alignItems: "center",
+//               justifyContent: "center",
+//               backgroundColor:
+//                 question.length > 5 ? "#0244d0" : "rgba(0,0,0,0.6)",
+//             }}
+//           >
+//             <Text style={{ color: "#fff", fontSize: 16 }}>Save question</Text>
+//           </Pressable>
+//         </View>
+//       ) : (
+//         <></>
+//       )}
+//       {questions.length > 0 && !isTextInput ? (
+//         <View>
+//           <Text
+//             style={{ fontWeight: "bold", fontSize: 20, marginVertical: 10 }}
+//           >
+//             Your questions
+//           </Text>
+//           <View>
+//             {questions.map((item, index) => {
+//               return (
+//                 <View
+//                   style={{
+//                     flexDirection: "row",
+//                     alignItems: "center",
+//                     marginVertical: "2%",
+//                   }}
+//                 >
+//                   <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
+//                     {item}
+//                   </Text>
+//                   <Pressable
+//                     onPress={() => {
+//                       setIsTextInput(true);
+//                       setQuestion(item);
+//                       setDeleteIndex(index + 1);
+//                     }}
+//                   >
+//                     <Icon size={20} name="circle-edit-outline" />
+//                   </Pressable>
+//                 </View>
+//               );
+//             })}
+//           </View>
+//         </View>
+//       ) : (
+//         <></>
+//       )}
 
-      {/* uncomment this and show suggested question for the user */}
-      {/* <Text style={{ fontWeight: "bold", marginVertical: 15 }}>Suggested</Text>
-      {suggested.map((item, index) => {
-        return (
-          <Pressable
-            style={{ flexDirection: "row", width: "90%" }}
-            onPress={() => {
-              const newArr = checked.map((item, i) => {
-                return i == index ? !checked[index] : item;
-              });
-              setChecked(newArr);
-            }}
-          >
-            <Checkbox status={checked[index] ? "checked" : "unchecked"} />
-            <Text>{item}</Text>
-          </Pressable>
-        );
-      })} */}
-    </List.Accordion>
-  );
-}
+//       {/* uncomment this and show suggested question for the user */}
+//       {/* <Text style={{ fontWeight: "bold", marginVertical: 15 }}>Suggested</Text>
+//       {suggested.map((item, index) => {
+//         return (
+//           <Pressable
+//             style={{ flexDirection: "row", width: "90%" }}
+//             onPress={() => {
+//               const newArr = checked.map((item, i) => {
+//                 return i == index ? !checked[index] : item;
+//               });
+//               setChecked(newArr);
+//             }}
+//           >
+//             <Checkbox status={checked[index] ? "checked" : "unchecked"} />
+//             <Text>{item}</Text>
+//           </Pressable>
+//         );
+//       })} */}
+//     </List.Accordion>
+//   );
+// }
 function AdvancedPred({
   expanded,
   handlePress,
@@ -685,12 +706,14 @@ function AdvancedPred({
           {englishLevels.map((item, index) => {
             return (
               <Pressable
+                key={index + 1}
                 onPress={() => setEnglishLevel(item)}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
                 <RadioButton
                   color="#0244d0"
                   value={item}
+                  onPress={() => setEnglishLevel(item)}
                   status={englishLevel === item ? "checked" : "unchecked"}
                 />
                 <Text>{englishLevels[index]}</Text>
@@ -704,11 +727,13 @@ function AdvancedPred({
         {hourPerWeeks.map((item, index) => {
           return (
             <Pressable
+              key={index + 1}
               onPress={() => setHour(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
             >
               <RadioButton
                 color="#0244d0"
+                onPress={() => setHour(item)}
                 value={item}
                 status={checkHour === item ? "checked" : "unchecked"}
               />
@@ -732,6 +757,7 @@ function AdvancedPred({
                 onPress={() => setGender(item)}
                 color="#0244d0"
                 value={item}
+                onPress={() => setGender(item)}
                 status={gender === item ? "checked" : "unchecked"}
               />
               <Text>{item}</Text>

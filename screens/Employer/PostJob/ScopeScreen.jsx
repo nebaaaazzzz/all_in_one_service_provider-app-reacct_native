@@ -52,6 +52,7 @@ const ScopeScreen = ({ navigation }) => {
           {exp.map((item, index) => {
             return (
               <Pressable
+                key={index + 1}
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
@@ -61,6 +62,8 @@ const ScopeScreen = ({ navigation }) => {
               >
                 <RadioButton
                   value={index}
+                  color="#0244d0"
+                  onPress={() => setExperience(index)}
                   status={experience === index ? "checked" : "unchecked"}
                 />
                 <View>

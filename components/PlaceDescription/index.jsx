@@ -11,7 +11,6 @@ const PlaceDescription = ({ title, description, pressHandler, id, active }) => {
         width: "100%",
         marginVertical: 10,
         borderColor: Number(active) === id + 1 ? "#0244d0" : "rgba(0,0,0,0.2)",
-        elevation: Number(active) == id + 1 ? 2 : 1,
         borderRadius: 10,
         paddingVertical: description ? 5 : 15,
         paddingHorizontal: 20,

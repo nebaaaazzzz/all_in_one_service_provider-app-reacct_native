@@ -187,6 +187,7 @@ const LocationScreen = ({ navigation }) => {
           <Searchbar
             onChangeText={setLocationQuery}
             icon={"location-enter"}
+            iconColor={"#0244d0"}
             ref={inputRef}
             onFocus={() => {
               if (isFull) {
@@ -244,7 +245,7 @@ const LocationScreen = ({ navigation }) => {
                 }}
                 onPress={pressHandler}
               >
-                <FIcon name="location-arrow" size={20} />
+                <FIcon name="location-arrow" color="#0244d0" size={20} />
                 <Text style={{ marginLeft: "5%", fontSize: 18 }}>
                   Use my current location
                 </Text>
