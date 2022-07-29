@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, Pressable, Linking } from "react-native";
+import { View, Text, StatusBar, TouchableOpacity, Linking } from "react-native";
 import React, { useContext } from "react";
 import { BASEURI } from "../../urls";
 import { UserContext } from "../../App.Navigator";
@@ -8,7 +8,7 @@ const PaymentScreen = () => {
   return (
     <View style={{ marginTop: StatusBar.currentHeight }}>
       <Text>Payment required</Text>
-      <Pressable
+      <TouchableOpacity
         style={{ backgroundColor: "blue", padding: 10 }}
         onPress={() => {
           Linking.openURL(`${BASEURI}/payment/CheckoutExpress/${user._id}`);
@@ -16,7 +16,7 @@ const PaymentScreen = () => {
         }}
       >
         <Text style={{ color: "#fff" }}>Pay with yenePay</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

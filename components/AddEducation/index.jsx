@@ -1,9 +1,8 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   TextInput,
-  Pressable,
+  TouchableOpacity,
   StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
@@ -153,7 +152,7 @@ const AddEducation = ({ education, addEducation, setOpenModal }) => {
         </View>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-        <Pressable
+        <TouchableOpacity
           style={{
             alignSelf: "center",
             elevation: 5,
@@ -167,8 +166,8 @@ const AddEducation = ({ education, addEducation, setOpenModal }) => {
           }}
         >
           <Text style={{ color: "#fff" }}>Close</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           disabled={!(degree && institution && major && date1 && date2)}
           style={{
             alignSelf: "center",
@@ -190,7 +189,7 @@ const AddEducation = ({ education, addEducation, setOpenModal }) => {
           }}
         >
           <Text style={{ color: "#fff" }}>Add</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

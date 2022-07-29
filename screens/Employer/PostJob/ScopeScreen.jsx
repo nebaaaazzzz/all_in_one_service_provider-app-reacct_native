@@ -1,7 +1,7 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   useWindowDimensions,
   StatusBar,
 } from "react-native";
@@ -51,7 +51,7 @@ const ScopeScreen = ({ navigation }) => {
         <View style={{ marginVertical: 14 }}>
           {exp.map((item, index) => {
             return (
-              <Pressable
+              <TouchableOpacity
                 key={index + 1}
                 style={{
                   flexDirection: "row",
@@ -72,7 +72,7 @@ const ScopeScreen = ({ navigation }) => {
                   </Text>
                   <Text style={{ marginRight: "10%" }}>{item.description}</Text>
                 </View>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -89,7 +89,7 @@ const ScopeScreen = ({ navigation }) => {
           borderColor: "rgba(0,0,0,0.7)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={experience === undefined}
           onPress={() => {
             dispatch({
@@ -117,7 +117,7 @@ const ScopeScreen = ({ navigation }) => {
           >
             Next: Location
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

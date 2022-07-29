@@ -12,7 +12,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as SecureStore from "expo-secure-store";
 import { NavigationContainer } from "@react-navigation/native";
 import { Platform, StatusBar, useColorScheme } from "react-native";
-import { ActivityIndicator, Pressable } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { View, Text, SafeAreaView } from "react-native";
 import { useQuery } from "react-query";
 import { BASEURI } from "./urls";
@@ -77,9 +77,9 @@ const AppNavigator = ({ navigation }) => {
   if (tokenG && error) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Pressable>
+        <TouchableOpacity>
           <Text>{error.message}</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     );
   }

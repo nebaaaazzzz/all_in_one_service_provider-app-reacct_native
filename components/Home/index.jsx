@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
@@ -12,7 +12,7 @@ const images = [
 const Home = () => {
   const [bgColor, setBgColor] = useState(false);
   return (
-    <Pressable
+    <TouchableOpacity
       onPressIn={() => setBgColor(true)}
       onPressOut={() => setBgColor(false)}
       style={{
@@ -48,7 +48,7 @@ const Home = () => {
         <Text style={{ color: "rgba(0,0,0,0.6)" }}>3,869 kilometers away</Text>
         <Text style={{ color: "rgba(0,0,0,0.6)" }}>$616 month</Text>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

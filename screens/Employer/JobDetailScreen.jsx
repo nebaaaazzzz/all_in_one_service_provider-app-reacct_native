@@ -4,12 +4,12 @@ import {
   ActivityIndicator,
   ScrollView,
   useWindowDimensions,
-  Pressable,
+  TouchableOpacity,
   ToastAndroid,
 } from "react-native";
 import React from "react";
 import { Divider, Badge } from "react-native-paper";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
@@ -41,11 +41,22 @@ const JobDetailScreen = ({ navigation, route }) => {
     ["job", route.params.id],
     fetchJob
   );
-  console.log(data);
   const [downloadProgress, setDownloadProgress] = React.useState();
   const downloadPath =
     FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
-  if (isLoading || isFetching) {
+  const delteMutuation = useMutation(async () => {
+    const response = await fetch(`${BASEURI}/employer/house/${data._id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("error occured");
+    }
+    return response.json();
+  });
+  if (isLoading || isFetching || delteMutuation.isLoading) {
     return (
       <View style={{ marginTop: "50%" }}>
         <ActivityIndicator></ActivityIndicator>
@@ -54,6 +65,13 @@ const JobDetailScreen = ({ navigation, route }) => {
   }
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
+  }
+  if (delteMutuation.isSuccess) {
+    ToastAndroid.show("successfully Deleted", ToastAndroid.LONG);
+    navigation.navigate("employer");
+  }
+  if (delteMutuation.isError) {
+    ToastAndroid.show(delteMutuation.error.message, ToastAndroid.LONG);
   }
   return (
     <View>
@@ -64,7 +82,7 @@ const JobDetailScreen = ({ navigation, route }) => {
           justifyContent: "center",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           style={{
             marginVertical: 10,
             paddingHorizontal: 10,
@@ -83,8 +101,8 @@ const JobDetailScreen = ({ navigation, route }) => {
         >
           <Badge>{data?.applicants?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Applicants</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={{
             marginVertical: 10,
             paddingHorizontal: 10,
@@ -103,8 +121,8 @@ const JobDetailScreen = ({ navigation, route }) => {
         >
           <Badge>{data?.approved?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Approved</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={{
             marginVertical: 10,
             paddingHorizontal: 10,
@@ -123,7 +141,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         >
           <Badge>{data?.rejected?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Rejected</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <ScrollView
         style={{ marginBottom: 100, backgroundColor: "#fff" }}
@@ -161,8 +179,7 @@ const JobDetailScreen = ({ navigation, route }) => {
                   key={index + 1}
                   style={{
                     marginHorizontal: "2%",
-                    backgroundColor: "#0244d0",
-                    color: "#fff",
+                    // backgroundColor: "#0244d0",
                     paddingHorizontal: "3%",
                     paddingVertical: "2%",
                     borderRadius: 5,
@@ -292,7 +309,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             </View>
 
             {data.document ? (
-              <Pressable
+              <TouchableOpacity
                 style={{
                   backgroundColor: "#0244d0",
                   borderRadius: 5,
@@ -392,7 +409,7 @@ const JobDetailScreen = ({ navigation, route }) => {
                 >
                   Download Full Description
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             ) : (
               <></>
             )}
@@ -412,7 +429,25 @@ const JobDetailScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
+          onPress={() => {
+            delteMutuation.mutate();
+          }}
+          style={{
+            backgroundColor: "#0244d0",
+            width: 100,
+            alignSelf: "flex-end",
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            Delete Post
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("employer/editpost", {
               data,
@@ -429,7 +464,7 @@ const JobDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Edit Post</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

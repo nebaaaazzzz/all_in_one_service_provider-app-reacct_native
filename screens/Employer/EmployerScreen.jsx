@@ -2,7 +2,7 @@ import {
   View,
   Text,
   StatusBar,
-  Pressable,
+  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   ToastAndroid,
@@ -39,17 +39,17 @@ const fetchJobs = async ({ pageParam = 1, nearBy }) => {
   return await response.json();
 };
 const Post = ({ pressHandler, item }) => {
-  const [bgColor, setBgColor] = useState(false);
   return (
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             key={index + 1}
             onPress={() => pressHandler(i._id)}
             style={{
               padding: 15,
-              backgroundColor: bgColor ? "rgba(0,0,0,0.05)" : "transparent",
+              backgroundColor: "rgba(0,0,0,0.1)",
+              marginVertical: 5,
             }}
           >
             <Divider
@@ -79,7 +79,7 @@ const Post = ({ pressHandler, item }) => {
               {i.description}
             </Text>
             <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.placeName}</Text>
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>
@@ -166,7 +166,7 @@ function Home({ navigation }) {
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <View style={{ alignItems: "flex-end", backgroundColor: "#fff" }}>
         {user?.left > 0 ? (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               requestAnimationFrame(() => {
                 navigation.navigate("employer/postjob");
@@ -183,9 +183,9 @@ function Home({ navigation }) {
             }}
           >
             <Text style={{ color: "#fff" }}> Post Job </Text>
-          </Pressable>
+          </TouchableOpacity>
         ) : (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               requestAnimationFrame(() => {
                 navigation.navigate("lesser/payment");
@@ -202,7 +202,7 @@ function Home({ navigation }) {
             }}
           >
             <Text style={{ color: "#fff" }}> pay</Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       </View>
 

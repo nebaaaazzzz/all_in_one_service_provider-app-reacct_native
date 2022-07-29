@@ -1,4 +1,10 @@
-import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostHouseContext } from "./PostHouseScreen";
@@ -17,7 +23,7 @@ const List = ({ question, arr, state, setState }) => {
       >
         {arr.map((item, index) => {
           return (
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 const a = state.map((item, i) => {
                   return i == index ? !item : item;
@@ -37,7 +43,7 @@ const List = ({ question, arr, state, setState }) => {
             >
               <Text>{item.name}</Text>
               <Icon name={item.icon} />
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -204,7 +210,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
             function squash(arr, list) {
               return arr
@@ -243,7 +249,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

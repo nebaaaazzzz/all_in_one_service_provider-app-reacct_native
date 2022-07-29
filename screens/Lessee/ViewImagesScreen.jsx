@@ -9,6 +9,7 @@ const ViewImagesScreen = ({ route }) => {
       style={{ flex: 1, marginTop: StatusBar.currentHeight }}
     >
       {route.params.images.map((item, index) => {
+        console.log(item);
         return (
           <Image
             key={index + 1}

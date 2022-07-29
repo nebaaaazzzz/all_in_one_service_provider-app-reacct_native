@@ -1,10 +1,10 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   StatusBar,
-  TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
   ActivityIndicator,
   Modal,
   ToastAndroid,
@@ -123,7 +123,7 @@ const LocationScreen = ({ navigation, route }) => {
     return () => clearTimeout(delayDebounceFn);
   }, [locationQuery]);
   return (
-    <TouchableWithoutFeedback
+    <Pressable
       style={{ flex: 1 }}
       onPress={() => {
         Keyboard.dismiss();
@@ -164,7 +164,7 @@ const LocationScreen = ({ navigation, route }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Pressable
+              <TouchableOpacity
                 onPress={() => {
                   setIsFull(false);
                   setLocationQuery("");
@@ -172,7 +172,7 @@ const LocationScreen = ({ navigation, route }) => {
                 }}
               >
                 <Icon size={20} name="arrow-left" />
-              </Pressable>
+              </TouchableOpacity>
               <Text style={{ fontWeight: "600", fontSize: 20 }}>
                 Enter your address
               </Text>
@@ -233,7 +233,7 @@ const LocationScreen = ({ navigation, route }) => {
             >
               {searchResult.map((place, index) => {
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={index + 1}
                     onPress={() => {
                       searchListPressHandler(index);
@@ -243,7 +243,7 @@ const LocationScreen = ({ navigation, route }) => {
                     <Text style={{ marginVertical: "2%" }}>
                       {place.place_name}
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 );
               })}
             </ScrollView>
@@ -252,7 +252,7 @@ const LocationScreen = ({ navigation, route }) => {
           )}
           {isFull && !search && !locationQuery ? (
             <>
-              <Pressable
+              <TouchableOpacity
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
@@ -266,9 +266,9 @@ const LocationScreen = ({ navigation, route }) => {
                 <Text style={{ marginLeft: "5%", fontSize: 18 }}>
                   Use my current location
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
               {/* add this feature to add address manually */}
-              {/* <Pressable
+              {/* <TouchableOpacity
                 style={{
                   marginVertical: 10,
 
@@ -284,14 +284,14 @@ const LocationScreen = ({ navigation, route }) => {
                 >
                   Enter address manually
                 </Text>
-              </Pressable> */}
+              </TouchableOpacity> */}
             </>
           ) : (
             <></>
           )}
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 

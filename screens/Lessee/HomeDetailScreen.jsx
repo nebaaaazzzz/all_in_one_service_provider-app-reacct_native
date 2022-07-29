@@ -2,7 +2,7 @@ import {
   ScrollView,
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   StatusBar,
   Image,
   ToastAndroid,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
-import UserContext from "./../../App.Navigator";
+import { UserContext } from "./../../App.Navigator";
 import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
 const fetchHouse = async ({ queryKey }) => {
@@ -59,12 +59,12 @@ const HomeDetailScreen = ({ navigation, route }) => {
     );
   }
   if (applyMutuation.isSuccess) {
+    navigation.navigate("lessee/applied/");
     if (data.applied) {
       ToastAndroid.show("successfully removed", ToastAndroid.LONG);
     } else {
       ToastAndroid.show("successfully applied", ToastAndroid.LONG);
     }
-    navigation.navigate("lessee");
   }
   if (isLoading) {
     return (
@@ -99,11 +99,16 @@ const HomeDetailScreen = ({ navigation, route }) => {
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
-
+        {data?.deleted ? <Text>Job deleted</Text> : <></>}
         <View>
           <Divider />
           <Image
-            source={{ uri: data.houseImages[1].uri }}
+            source={{
+              uri: `${BASEURI}/house/image/${data.houseImages[1]}`,
+              headers: {
+                Authorization: `Bearer ${BASETOKEN}`,
+              },
+            }}
             style={{
               backgroundColor: "rgba(0,0,0,0.3)",
               width: "90%",
@@ -112,7 +117,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
               borderRadius: 10,
             }}
           />
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("lessee/viewimages", {
                 images: data.houseImages,
@@ -129,7 +134,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ color: "#fff" }}>View All Images</Text>
-          </Pressable>
+          </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             Fun place {data.placeName}
           </Text>
@@ -156,9 +161,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -184,9 +188,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -212,9 +215,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -241,9 +243,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -257,53 +258,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
           )}
 
           <Divider />
-          {data?.contain?.length ? (
-            <View style={{ marginVertical: "2%" }}>
-              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Contain
-              </Text>
-              {data?.contain?.map((item, index) => {
-                return (
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      key={index + 1}
-                      style={{
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        color: "#fff",
-                        borderRadius: 15,
-                        backgroundColor: "#0244d0",
-                      }}
-                    >
-                      {item}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
-          ) : (
-            <></>
-          )}
 
           <Divider />
-          <View
-            style={{
-              marginVertical: 20,
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              Kitchens : {data.guestSize.kitchens}
-            </Text>
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              bedrooms : {data.guestSize.bedrooms}
-            </Text>
-            <Text style={{ fontSize: 16, color: "rgba(0,0,0,0.7)" }}>
-              bathrooms : {data.guestSize.bathrooms}
-            </Text>
-          </View>
+
           <Divider />
           <View
             style={{
@@ -422,7 +379,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
         }}
       >
         {data.applied ? (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               applyMutuation.mutate();
             }}
@@ -436,9 +393,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
-          </Pressable>
+          </TouchableOpacity>
         ) : user?.left > 0 ? (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               applyMutuation.mutate();
             }}
@@ -451,12 +408,12 @@ const HomeDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>apply</Text>
-          </Pressable>
+            <Text style={{ textAlign: "center", color: "#fff" }}>Apply</Text>
+          </TouchableOpacity>
         ) : (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
-              navigation.navigate("employee/payment");
+              navigation.navigate("lesse/payment");
             }}
             style={{
               backgroundColor: "#0244d0",
@@ -468,7 +425,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>Pay</Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       </View>
     </View>

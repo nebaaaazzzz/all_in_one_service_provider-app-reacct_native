@@ -5,6 +5,7 @@ import {
   ScrollView,
   StatusBar,
   useWindowDimensions,
+  TouchableOpacity,
   Pressable,
   Keyboard,
 } from "react-native";
@@ -84,7 +85,7 @@ const CategoryScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.7)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={!categorySelect}
           onPress={() => {
             dispatch({
@@ -108,7 +109,7 @@ const CategoryScreen = ({ navigation, route }) => {
           <Text style={{ color: categorySelect ? "#fff" : "rgba(0,0,0,0.5)" }}>
             Next: Skills
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -2,7 +2,7 @@ import {
   View,
   ActivityIndicator,
   ScrollView,
-  Pressable,
+  TouchableOpacity,
   ToastAndroid,
   SafeAreaView,
   StyleSheet,
@@ -182,7 +182,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                   key={index + 1}
                   style={{
                     flexDirection: "row",
-                    backgroundColor: "#0244d0",
+                    // backgroundColor: "#0244d0",
                     margin: 5,
                     padding: "3%",
                     paddingVertical: 5,
@@ -191,14 +191,13 @@ const UserDetailScreen = ({ navigation, route }) => {
                 >
                   <Text
                     style={{
-                      color: "#fff",
                       fontSize: 16,
                       marginHorizontal: "3%",
                     }}
                   >
                     {item}
                   </Text>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={() => {
                       setSkills(
                         skills.filter((i) => {
@@ -208,7 +207,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                     }}
                   >
                     <Icon name="close" color="red" size={20} />
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               ))}
             </View>
@@ -312,7 +311,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             borderColor: "rgba(0,0,0,0.3)",
           }}
         >
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               rejectMutation.mutate();
             }}
@@ -325,7 +324,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       )}
       {/* if user is rejected */}
@@ -343,7 +342,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             borderColor: "rgba(0,0,0,0.3)",
           }}
         >
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               approveMutation.mutate();
             }}
@@ -356,7 +355,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       )}
       {/* if user is rejected */}
@@ -374,7 +373,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             borderColor: "rgba(0,0,0,0.3)",
           }}
         >
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               rejectMutation.mutate();
             }}
@@ -387,8 +386,8 @@ const UserDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => {
               approveMutation.mutate();
             }}
@@ -401,7 +400,7 @@ const UserDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       )}
     </SafeAreaView>

@@ -1,6 +1,6 @@
 import {
   View,
-  Pressable,
+  TouchableOpacity,
   Text,
   ActivityIndicator,
   StatusBar,

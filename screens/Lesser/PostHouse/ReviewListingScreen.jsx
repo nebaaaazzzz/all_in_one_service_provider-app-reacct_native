@@ -2,7 +2,7 @@ import {
   ScrollView,
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   StatusBar,
   Image,
   ToastAndroid,
@@ -114,7 +114,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
               borderRadius: 10,
             }}
           />
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("lesser/posthouse/viewimages", {
                 images: housePost.houseImages,
@@ -131,7 +131,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ color: "#fff" }}>View All Images</Text>
-          </Pressable>
+          </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             Fun place {housePost.placeName}
           </Text>
@@ -160,9 +160,8 @@ const ReviewListingScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -188,9 +187,8 @@ const ReviewListingScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -216,9 +214,8 @@ const ReviewListingScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -246,7 +243,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -408,7 +405,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
             mutate();
           }}
@@ -426,7 +423,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
           ) : (
             <Text style={{ textAlign: "center", color: "#fff" }}>Post</Text>
           )}
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

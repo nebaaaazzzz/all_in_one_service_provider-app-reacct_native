@@ -1,9 +1,10 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   useWindowDimensions,
   StatusBar,
+  Pressable,
   Keyboard,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
@@ -77,7 +78,7 @@ const HeadlineScreen = ({ navigation }) => {
             borderColor: "rgba(0,0,0,0.7)",
           }}
         >
-          <Pressable
+          <TouchableOpacity
             disabled={!active}
             onPress={() => {
               dispatch({ type: "add", payload: { title: headline } });
@@ -95,7 +96,7 @@ const HeadlineScreen = ({ navigation }) => {
             <Text style={{ color: active ? "#fff" : "rgba(0,0,0,0.5)" }}>
               Next: Category
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </Pressable>
     </View>

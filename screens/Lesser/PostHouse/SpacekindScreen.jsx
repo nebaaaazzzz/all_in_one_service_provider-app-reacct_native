@@ -1,4 +1,10 @@
-import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import React, { useContext, useState } from "react";
 import PlaceDescription from "./../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
@@ -66,7 +72,7 @@ const SpacekindScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={!active}
           onPress={() => {
             dispatch({
@@ -94,7 +100,7 @@ const SpacekindScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

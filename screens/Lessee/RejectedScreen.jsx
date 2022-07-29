@@ -1,7 +1,7 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   FlatList,
   Image,
   ActivityIndicator,
@@ -32,7 +32,7 @@ const Home = ({ item, pressHandler }) => {
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             onPress={() => pressHandler(i._id)}
             key={index + 1}
             onPressIn={() => setBgColor(true)}
@@ -66,7 +66,7 @@ const Home = ({ item, pressHandler }) => {
               </View>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.price}</Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>

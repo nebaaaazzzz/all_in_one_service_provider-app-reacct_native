@@ -2,7 +2,7 @@ import {
   View,
   Text,
   StatusBar,
-  Pressable,
+  TouchableOpacity,
   Image,
   useWindowDimensions,
   Linking,
@@ -21,7 +21,7 @@ import MessagesScreen from "./Common/MessagesScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
-const SPressable = styled(Pressable)`
+const STouchableOpacity = styled(TouchableOpacity)`
   overflow: hidden;
   border-radius: 10px;
   border: 1px solid #3498db;
@@ -73,7 +73,7 @@ const Home = ({ navigation }) => {
             justifyContent: "center",
           }}
         >
-          <SPressable
+          <STouchableOpacity
             style={{ alignItems: "center" }}
             onPress={() => {
               requestAnimationFrame(() => navigation.navigate("employee"));
@@ -90,8 +90,8 @@ const Home = ({ navigation }) => {
             />
 
             <SText>Employee</SText>
-          </SPressable>
-          <SPressable
+          </STouchableOpacity>
+          <STouchableOpacity
             style={{ alignItems: "center" }}
             onPress={() => {
               requestAnimationFrame(() => navigation.navigate("employer"));
@@ -107,8 +107,8 @@ const Home = ({ navigation }) => {
             />
 
             <SText>Employer</SText>
-          </SPressable>
-          <SPressable
+          </STouchableOpacity>
+          <STouchableOpacity
             style={{ alignItems: "center" }}
             onPress={() =>
               requestAnimationFrame(() => navigation.navigate("lessee"))
@@ -124,8 +124,8 @@ const Home = ({ navigation }) => {
             />
 
             <SText>Lessee</SText>
-          </SPressable>
-          <SPressable
+          </STouchableOpacity>
+          <STouchableOpacity
             style={{ alignItems: "center" }}
             onPress={() => {
               requestAnimationFrame(() => navigation.navigate("lesser"));
@@ -141,7 +141,7 @@ const Home = ({ navigation }) => {
             />
 
             <SText>Lesser</SText>
-          </SPressable>
+          </STouchableOpacity>
         </View>
       </View>
     </View>
@@ -225,7 +225,7 @@ const HomeScreen = () => {
           ),
         }}
       />
-      <DrawerNavigator.Screen
+      {/* <DrawerNavigator.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
@@ -233,7 +233,7 @@ const HomeScreen = () => {
             <Ionicons name="settings-outline" size={22} color={color} />
           ),
         }}
-      />
+      /> */}
     </DrawerNavigator.Navigator>
   );
 };

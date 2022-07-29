@@ -5,7 +5,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
-  Pressable,
   Modal,
   TextInput,
   StyleSheet,
@@ -538,7 +537,7 @@ const EditProfileScreen = ({ navigation }) => {
                 onChangeText={setSkill}
                 style={styles.textInput}
               />
-              <Pressable
+              <TouchableOpacity
                 disabled={skill?.length < 3}
                 onPress={() => {
                   setSkills([...skills, skill]);
@@ -559,7 +558,7 @@ const EditProfileScreen = ({ navigation }) => {
                 >
                   Add
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{ alignItems: "flex-start", marginTop: "2%" }}>
@@ -568,7 +567,7 @@ const EditProfileScreen = ({ navigation }) => {
                 key={index + 1}
                 style={{
                   flexDirection: "row",
-                  backgroundColor: "#0244d0",
+                  // backgroundColor: "#0244d0",
                   margin: 5,
                   padding: "3%",
                   paddingVertical: 5,
@@ -577,14 +576,13 @@ const EditProfileScreen = ({ navigation }) => {
               >
                 <Text
                   style={{
-                    color: "#fff",
                     fontSize: 16,
                     marginHorizontal: "3%",
                   }}
                 >
                   {item}
                 </Text>
-                <Pressable
+                <TouchableOpacity
                   onPress={() => {
                     setSkills(
                       skills.filter((i) => {
@@ -594,14 +592,14 @@ const EditProfileScreen = ({ navigation }) => {
                   }}
                 >
                   <Icon name="close" color="red" size={20} />
-                </Pressable>
+                </TouchableOpacity>
               </View>
             ))}
           </View>
 
           <View style={{ marginTop: "5%" }}>
             <Text style={{ marginBottom: "5%", fontSize: 16 }}>Languages</Text>
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 setIsEducation(false);
                 setOpenModal(true);
@@ -629,7 +627,7 @@ const EditProfileScreen = ({ navigation }) => {
                 </Text>
                 <Icon size={16} color="#fff" name="plus" />
               </View>
-            </Pressable>
+            </TouchableOpacity>
             <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
               {languages.map((item, index) => {
                 return (
@@ -653,14 +651,14 @@ const EditProfileScreen = ({ navigation }) => {
                       <Text>{item.language}</Text>
                       <Text>{item.level}</Text>
                     </View>
-                    <Pressable
+                    <TouchableOpacity
                       style={{
                         alignItems: "flex-end",
                       }}
                     >
                       <Icon size={20} color="#0244d0" name="pencil" />
-                    </Pressable>
-                    <Pressable
+                    </TouchableOpacity>
+                    <TouchableOpacity
                       style={{
                         marginHorizontal: "2%",
                         alignItems: "flex-end",
@@ -673,7 +671,7 @@ const EditProfileScreen = ({ navigation }) => {
                       }}
                     >
                       <Icon color="red" size={20} name="delete" />
-                    </Pressable>
+                    </TouchableOpacity>
                   </View>
                 );
               })}
@@ -681,7 +679,7 @@ const EditProfileScreen = ({ navigation }) => {
           </View>
           <View style={{ marginTop: "5%" }}>
             <Text style={{ marginBottom: "5%", fontSize: 16 }}>Education</Text>
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 setIsEducation(true);
                 setOpenModal(true);
@@ -709,7 +707,7 @@ const EditProfileScreen = ({ navigation }) => {
                 </Text>
                 <Icon size={16} color="#fff" name="plus" />
               </View>
-            </Pressable>
+            </TouchableOpacity>
             <View style={{ marginTop: 10, paddingHorizontal: 10 }}>
               {education.map((item, index) => {
                 return (
@@ -734,7 +732,7 @@ const EditProfileScreen = ({ navigation }) => {
                         </Text>
                       </View>
 
-                      <Pressable
+                      <TouchableOpacity
                         onPress={() => {
                           const edu = education.filter((i, j) => {
                             return i != index;
@@ -743,7 +741,7 @@ const EditProfileScreen = ({ navigation }) => {
                         }}
                       >
                         <Icon name="delete" size={20} color="red" />
-                      </Pressable>
+                      </TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: "row" }}>
                       <Text>
@@ -773,7 +771,7 @@ const EditProfileScreen = ({ navigation }) => {
               />
             </View>
           </View>
-          <Pressable
+          <TouchableOpacity
             onPress={fileSelector}
             style={{
               flexDirection: "row",
@@ -789,7 +787,7 @@ const EditProfileScreen = ({ navigation }) => {
           >
             <Icon size={16} name="attachment" />
             <Text style={{ marginHorizontal: 5 }}>upload Cv</Text>
-          </Pressable>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.commandButton}
             onPress={() => {

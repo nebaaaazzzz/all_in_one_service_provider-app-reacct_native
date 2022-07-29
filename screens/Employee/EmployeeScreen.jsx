@@ -4,10 +4,11 @@ import {
   View,
   Text,
   StatusBar,
-  Pressable,
+  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   ToastAndroid,
+  Pressable,
   Modal,
   Keyboard,
 } from "react-native";
@@ -45,12 +46,13 @@ const Jobs = ({ pressHandler, item }) => {
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             key={index + 1}
             onPress={() => pressHandler(i._id)}
             style={{
               padding: 15,
-              backgroundColor: "transparent",
+              backgroundColor: "rgba(0,0,0,0.1)",
+              marginVertical: 5,
             }}
           >
             <Divider
@@ -80,7 +82,7 @@ const Jobs = ({ pressHandler, item }) => {
               {i.description}
             </Text>
             <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.placeName}</Text>
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>
@@ -169,18 +171,13 @@ const Home = ({ navigation }) => {
   const list = [
     "All",
     "NearBy",
-    "Grapics & Design",
-    "Sells & Markating",
-    "Writing & Translation",
-    "Video & Animation",
-    "Finance & Accounting",
-    "Engineering & Architecture",
-    "Admin & Customer support",
-    "Music & Audio",
-    "Programming & Tech",
-    "Business",
-    "LifeStyle",
-    "Legal",
+    "Economics and Finance",
+    "Education",
+    "Engineering",
+    "Manufacturing",
+    "Media and Journalism",
+    "Science and Technology",
+    "Security and Protection",
   ];
 
   if (status === "error") {
@@ -278,7 +275,7 @@ const Home = ({ navigation }) => {
               </Text>
               {["male", "female", "both", "Any"].map((item, index) => {
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={index + 1}
                     onPress={() => {
                       if (index == 3) {
@@ -295,7 +292,7 @@ const Home = ({ navigation }) => {
                       status={gender === item ? "checked" : "unchecked"}
                     />
                     <Text>{item}</Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 );
               })}
             </View>
@@ -309,7 +306,7 @@ const Home = ({ navigation }) => {
               <Text style={{ fontWeight: "bold" }}>permanent</Text>
               {["yes", "no", "Any"].map((item, index) => {
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={index + 1}
                     onPress={() => {
                       if (index == 0) {
@@ -329,7 +326,7 @@ const Home = ({ navigation }) => {
                       status={gender === item ? "checked" : "unchecked"}
                     />
                     <Text>{item}</Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 );
               })}
             </View>
@@ -343,7 +340,7 @@ const Home = ({ navigation }) => {
               <Text style={{ fontWeight: "bold" }}>cv required</Text>
               {["yes", "no", "Any"].map((item, index) => {
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     key={index + 1}
                     onPress={() => {
                       if (index == 0) {
@@ -363,12 +360,12 @@ const Home = ({ navigation }) => {
                       status={gender === item ? "checked" : "unchecked"}
                     />
                     <Text>{item}</Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 );
               })}
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Pressable
+              <TouchableOpacity
                 style={{
                   elevation: 10,
                   backgroundColor: "#0244d0",
@@ -381,8 +378,8 @@ const Home = ({ navigation }) => {
                 onPress={() => setOpenModal(false)}
               >
                 <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
-              </Pressable>
-              <Pressable
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={{
                   elevation: 10,
                   backgroundColor: "#0244d0",
@@ -394,12 +391,12 @@ const Home = ({ navigation }) => {
                 onPress={() => setOpenModal(false)}
               >
                 <Text style={{ fontSize: 18, color: "#fff" }}>Save</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
         <FilterModal visible={visible} setVisible={setVisible} />
-        <Pressable
+        <TouchableOpacity
           style={{
             marginTop: "2%",
             alignSelf: "flex-end",
@@ -420,8 +417,8 @@ const Home = ({ navigation }) => {
             color="#fff"
             style={{ elevation: 10 }}
           />
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {
             setOpenModal(true);
           }}
@@ -434,7 +431,7 @@ const Home = ({ navigation }) => {
           }}
         >
           <MaterialCommunityIcons name="filter" size={26} color="#0244d0" />
-        </Pressable>
+        </TouchableOpacity>
         <Searchbar
           iconColor="#0244d0"
           style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
@@ -451,7 +448,7 @@ const Home = ({ navigation }) => {
             style={{ paddingTop: 10 }}
             renderItem={({ item, index }) => {
               return (
-                <Pressable
+                <TouchableOpacity
                   onPress={() => {
                     if (index === 1) {
                       setNearBy(true);
@@ -467,7 +464,7 @@ const Home = ({ navigation }) => {
                   }}
                 >
                   <Text style={{ color: "#0244d0" }}>{item}</Text>
-                </Pressable>
+                </TouchableOpacity>
               );
             }}
           />

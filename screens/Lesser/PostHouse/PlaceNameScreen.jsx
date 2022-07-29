@@ -1,4 +1,10 @@
-import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
@@ -59,7 +65,7 @@ const PlaceNameScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={text.length < 5}
           onPress={() => {
             dispatch({
@@ -88,7 +94,7 @@ const PlaceNameScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

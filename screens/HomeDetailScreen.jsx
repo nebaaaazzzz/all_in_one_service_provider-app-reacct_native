@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, Image, Pressable } from "react-native";
+import { View, Text, StatusBar, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Icon from "@expo/vector-icons/Entypo";
 const HomeDetailScreen = () => {
@@ -12,7 +12,7 @@ const HomeDetailScreen = () => {
       }}
     >
       <Text>Adaaran Club Rannalhi, Maldives, Water Bungalows</Text>
-      <Pressable
+      <TouchableOpacity
         style={{
           position: "absolute",
           right: "15%",
@@ -26,7 +26,7 @@ const HomeDetailScreen = () => {
           size={30}
           color="red"
         />
-      </Pressable>
+      </TouchableOpacity>
       <Image
         style={{
           width: 300,
@@ -44,7 +44,7 @@ const HomeDetailScreen = () => {
         // }}
         // onError={() => console.log("error")}
       />
-      <Pressable
+      <TouchableOpacity
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -62,7 +62,7 @@ const HomeDetailScreen = () => {
       >
         <Icon name="grid" size={20} />
         <Text>Show all photos</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

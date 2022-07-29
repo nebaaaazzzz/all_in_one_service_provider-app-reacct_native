@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import React, { useContext, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 
@@ -74,7 +74,7 @@ const PinSpotScreen = ({ navigation, route }) => {
         }}
       >
         {route.params?.data?.center || (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("lesser/posthouse/location", {
                 data: route.params?.data,
@@ -82,10 +82,10 @@ const PinSpotScreen = ({ navigation, route }) => {
             }}
           >
             <Text>Go to Map</Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
 
-        <Pressable
+        <TouchableOpacity
           onPress={async () => {
             const response = await fetch(
               `${MAPBOXURI}/mapbox.places/${center[0]},${center[1]}.json?access_token=${MAPBOXTOKEN}`
@@ -131,7 +131,7 @@ const PinSpotScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -1,10 +1,11 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   useWindowDimensions,
   StatusBar,
   Keyboard,
+  Pressable,
   ScrollView,
 } from "react-native";
 import React, { useState, useContext } from "react";
@@ -26,7 +27,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
       }}
     >
       <ProgressBar progress={0.5} />
-      <Pressable style={{ marginHorizontal: "5%" }}>
+      <TouchableOpacity style={{ marginHorizontal: "5%" }}>
         <ScrollView>
           <Text
             style={{
@@ -50,7 +51,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
               onChangeText={setSkill}
               style={{ flex: 1 }}
             />
-            <Pressable
+            <TouchableOpacity
               disabled={skill.length < 3}
               onPress={() => {
                 setSkills([...skills, skill]);
@@ -71,7 +72,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
               >
                 Add
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
           {skills.length > 0 ? (
             <View style={{ marginTop: "5%" }}>
@@ -93,7 +94,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
                       }}
                     >
                       <Text style={{ fontSize: 16 }}>{item}</Text>
-                      <Pressable
+                      <TouchableOpacity
                         onPress={() => {
                           setSkills(
                             skills.filter((i) => {
@@ -103,7 +104,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
                         }}
                       >
                         <Icon name="close" color="red" size={20} />
-                      </Pressable>
+                      </TouchableOpacity>
                     </View>
                   );
                 })}
@@ -113,7 +114,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
             <></>
           )}
         </ScrollView>
-      </Pressable>
+      </TouchableOpacity>
 
       <View
         style={{
@@ -128,7 +129,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
           borderColor: "#000",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={skills.length <= 0}
           onPress={() => {
             dispatch({ type: "add", payload: { skills } });
@@ -146,7 +147,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
           <Text style={{ color: skills.length ? "#fff" : "rgba(0,0,0,0.5)" }}>
             Next: Experience
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </Pressable>
   );

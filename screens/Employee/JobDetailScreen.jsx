@@ -4,7 +4,7 @@ import {
   ActivityIndicator,
   ScrollView,
   ToastAndroid,
-  Pressable,
+  TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
 import React, { useContext } from "react";
@@ -100,6 +100,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         >
           {data.title}
         </Text>
+        {data?.deleted ? <Text>Job deleted</Text> : <></>}
         <Divider />
         <Text style={{ color: "rgba(0,0,0,0.6)", marginLeft: 20 }}>
           Posted {fromNow(new Date(data.createdAt))}
@@ -127,8 +128,7 @@ const JobDetailScreen = ({ navigation, route }) => {
                   key={index + 1}
                   style={{
                     marginHorizontal: "2%",
-                    backgroundColor: "#0244d0",
-                    color: "#fff",
+                    // backgroundColor: "#0244d0",
                     paddingHorizontal: "3%",
                     paddingVertical: "2%",
                     borderRadius: 5,
@@ -215,7 +215,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             </View>
 
             {data.document ? (
-              <Pressable
+              <TouchableOpacity
                 style={{
                   backgroundColor: "#0244d0",
                   borderRadius: 5,
@@ -315,7 +315,7 @@ const JobDetailScreen = ({ navigation, route }) => {
                 >
                   Download Full Description
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             ) : (
               <></>
             )}
@@ -348,7 +348,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         }}
       >
         {data.applied ? (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               applyMutuation.mutate();
             }}
@@ -362,9 +362,9 @@ const JobDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
-          </Pressable>
+          </TouchableOpacity>
         ) : user?.left > 0 ? (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               applyMutuation.mutate();
             }}
@@ -377,10 +377,10 @@ const JobDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>apply</Text>
-          </Pressable>
+            <Text style={{ textAlign: "center", color: "#fff" }}>Apply</Text>
+          </TouchableOpacity>
         ) : (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("employee/payment");
             }}
@@ -394,7 +394,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>Pay</Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       </View>
     </View>

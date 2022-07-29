@@ -5,10 +5,10 @@ import {
   ScrollView,
   StatusBar,
   useWindowDimensions,
-  Pressable,
   TouchableOpacity,
   Keyboard,
   ToastAndroid,
+  Pressable,
   ActivityIndicator,
 } from "react-native";
 import {
@@ -159,7 +159,7 @@ const ReviewScreen = ({ navigation }) => {
               onChangeText={(text) => setDescription(text)}
             />
             <Text style={{ textAlign: "right" }}>{description.length}</Text>
-            <Pressable
+            <TouchableOpacity
               onPress={fileSelector}
               style={{
                 flexDirection: "row",
@@ -175,7 +175,7 @@ const ReviewScreen = ({ navigation }) => {
             >
               <Icon size={16} name="attachment" />
               <Text style={{ marginHorizontal: 5 }}>Attach file</Text>
-            </Pressable>
+            </TouchableOpacity>
             <Text
               style={{
                 marginHorizontal: 20,
@@ -214,9 +214,8 @@ const ReviewScreen = ({ navigation }) => {
                         paddingHorizontal: 13,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -450,7 +449,7 @@ const ReviewScreen = ({ navigation }) => {
           borderColor: "rgba(0,0,0,0.7)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={description.length < 50}
           onPress={() => {
             if (date && datetime) {
@@ -477,14 +476,14 @@ const ReviewScreen = ({ navigation }) => {
             width: "80%",
             borderRadius: 20,
             backgroundColor:
-              description.length > 50 ? "blue" : "rgba(0,0,0,0.6)",
+              description.length > 49 ? "blue" : "rgba(0,0,0,0.6)",
             height: "70%",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Post Job</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -509,7 +508,7 @@ const ReviewScreen = ({ navigation }) => {
 //       {/* question must be more than 3 char */}
 //       {!isTextInput ? (
 //         <>
-//           <Pressable
+//           <TouchableOpacity
 //             onPress={() => setIsTextInput(true)}
 //             style={{
 //               flexDirection: "row",
@@ -536,7 +535,7 @@ const ReviewScreen = ({ navigation }) => {
 //             >
 //               Write your own question
 //             </Text>
-//           </Pressable>
+//           </TouchableOpacity>
 //         </>
 //       ) : (
 //         <></>
@@ -553,7 +552,7 @@ const ReviewScreen = ({ navigation }) => {
 //               maxLength={255}
 //               onChangeText={setQuestion}
 //             />
-//             <Pressable
+//             <TouchableOpacity
 //               style={{ alignSelf: "center" }}
 //               onPress={() => {
 //                 if (deleteIndex) {
@@ -568,12 +567,12 @@ const ReviewScreen = ({ navigation }) => {
 //               }}
 //             >
 //               <Icon color="red" name="delete" size={24} />
-//             </Pressable>
+//             </TouchableOpacity>
 //           </View>
 //           <Text style={{ marginLeft: "70%", marginVertical: 10 }}>
 //             {question.length}/255
 //           </Text>
-//           <Pressable
+//           <TouchableOpacity
 //             disabled={!(question.length > 5)}
 //             onPress={() => {
 //               if (deleteIndex) {
@@ -600,7 +599,7 @@ const ReviewScreen = ({ navigation }) => {
 //             }}
 //           >
 //             <Text style={{ color: "#fff", fontSize: 16 }}>Save question</Text>
-//           </Pressable>
+//           </TouchableOpacity>
 //         </View>
 //       ) : (
 //         <></>
@@ -625,7 +624,7 @@ const ReviewScreen = ({ navigation }) => {
 //                   <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
 //                     {item}
 //                   </Text>
-//                   <Pressable
+//                   <TouchableOpacity
 //                     onPress={() => {
 //                       setIsTextInput(true);
 //                       setQuestion(item);
@@ -633,7 +632,7 @@ const ReviewScreen = ({ navigation }) => {
 //                     }}
 //                   >
 //                     <Icon size={20} name="circle-edit-outline" />
-//                   </Pressable>
+//                   </TouchableOpacity>
 //                 </View>
 //               );
 //             })}
@@ -647,7 +646,7 @@ const ReviewScreen = ({ navigation }) => {
 //       {/* <Text style={{ fontWeight: "bold", marginVertical: 15 }}>Suggested</Text>
 //       {suggested.map((item, index) => {
 //         return (
-//           <Pressable
+//           <TouchableOpacity
 //             style={{ flexDirection: "row", width: "90%" }}
 //             onPress={() => {
 //               const newArr = checked.map((item, i) => {
@@ -658,7 +657,7 @@ const ReviewScreen = ({ navigation }) => {
 //           >
 //             <Checkbox status={checked[index] ? "checked" : "unchecked"} />
 //             <Text>{item}</Text>
-//           </Pressable>
+//           </TouchableOpacity>
 //         );
 //       })} */}
 //     </List.Accordion>
@@ -705,7 +704,7 @@ function AdvancedPred({
         <View>
           {englishLevels.map((item, index) => {
             return (
-              <Pressable
+              <TouchableOpacity
                 key={index + 1}
                 onPress={() => setEnglishLevel(item)}
                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -717,7 +716,7 @@ function AdvancedPred({
                   status={englishLevel === item ? "checked" : "unchecked"}
                 />
                 <Text>{englishLevels[index]}</Text>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -726,7 +725,7 @@ function AdvancedPred({
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
         {hourPerWeeks.map((item, index) => {
           return (
-            <Pressable
+            <TouchableOpacity
               key={index + 1}
               onPress={() => setHour(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
@@ -738,7 +737,7 @@ function AdvancedPred({
                 status={checkHour === item ? "checked" : "unchecked"}
               />
               <Text>{hourPerWeeks[index]}</Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -748,7 +747,7 @@ function AdvancedPred({
         </Text>
         {["male", "female", "both"].map((item, index) => {
           return (
-            <Pressable
+            <TouchableOpacity
               key={index + 1}
               onPress={() => setGender(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
@@ -761,7 +760,7 @@ function AdvancedPred({
                 status={gender === item ? "checked" : "unchecked"}
               />
               <Text>{item}</Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>

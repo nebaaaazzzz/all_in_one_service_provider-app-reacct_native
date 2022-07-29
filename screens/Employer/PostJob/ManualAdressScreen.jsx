@@ -5,7 +5,7 @@ import {
   StatusBar,
   useWindowDimensions,
   TextInput,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
@@ -94,11 +94,14 @@ const ManualAdressScreen = ({ route }) => {
           onChangeText={(text) => setZipCode(text)}
         />
         <View>
-          <Pressable style={{ padding: 10 }} onPress={() => onOpen("country")}>
+          <TouchableOpacity
+            style={{ padding: 10 }}
+            onPress={() => onOpen("country")}
+          >
             <Text style={{ fontSize: 18 }}>
               {selected?.name || "select country"}
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <Picker
           id="country"

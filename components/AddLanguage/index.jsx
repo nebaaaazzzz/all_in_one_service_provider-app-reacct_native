@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import { languageList } from "../../constants/data";
@@ -51,7 +51,7 @@ const AddLanguage = ({ setOpenModal, addLanguage, languages }) => {
             {["Beginner", "Conversational", "Fluent", "Native"].map(
               (item, index) => {
                 return (
-                  <Pressable
+                  <TouchableOpacity
                     style={{ flexDirection: "row", alignItems: "center" }}
                     key={index + 1}
                     onPress={() => setChecked(item)}
@@ -63,7 +63,7 @@ const AddLanguage = ({ setOpenModal, addLanguage, languages }) => {
                       status={checked === item ? "checked" : "unchecked"}
                     />
                     <Text>{item}</Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 );
               }
             )}
@@ -79,7 +79,7 @@ const AddLanguage = ({ setOpenModal, addLanguage, languages }) => {
           justifyContent: "space-around",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           style={{
             alignSelf: "center",
             elevation: 5,
@@ -93,8 +93,8 @@ const AddLanguage = ({ setOpenModal, addLanguage, languages }) => {
           }}
         >
           <Text style={{ color: "#fff" }}>Close</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           disabled={!(language && checked)}
           style={{
             alignSelf: "center",
@@ -110,7 +110,7 @@ const AddLanguage = ({ setOpenModal, addLanguage, languages }) => {
           }}
         >
           <Text style={{ color: "#fff" }}>Add</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

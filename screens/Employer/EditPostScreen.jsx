@@ -5,7 +5,6 @@ import {
   ScrollView,
   StatusBar,
   useWindowDimensions,
-  Pressable,
   TouchableOpacity,
   Keyboard,
   ToastAndroid,
@@ -107,7 +106,7 @@ const EditPostScreen = ({ navigation, route }) => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           Keyboard.dismiss();
         }}
@@ -168,7 +167,7 @@ const EditPostScreen = ({ navigation, route }) => {
               placeholder="Already have a job description?Paste it here!"
               onChangeText={(text) => setDescription(text)}
             />
-            <Pressable
+            <TouchableOpacity
               onPress={fileSelector}
               style={{
                 flexDirection: "row",
@@ -184,7 +183,7 @@ const EditPostScreen = ({ navigation, route }) => {
             >
               <Icon size={16} name="attachment" />
               <Text style={{ marginHorizontal: 5 }}>Attach file</Text>
-            </Pressable>
+            </TouchableOpacity>
             <Text
               style={{
                 marginHorizontal: 20,
@@ -251,9 +250,8 @@ const EditPostScreen = ({ navigation, route }) => {
                         paddingHorizontal: 13,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -441,7 +439,7 @@ const EditPostScreen = ({ navigation, route }) => {
             />
           </List.Section>
         </ScrollView>
-      </Pressable>
+      </TouchableOpacity>
 
       <View
         style={{
@@ -456,7 +454,7 @@ const EditPostScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.7)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={description.length < 50}
           onPress={() => {
             dispatch({
@@ -487,7 +485,7 @@ const EditPostScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ color: "#fff", fontSize: 16 }}>Post Job</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -512,7 +510,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
       {/* question must be more than 3 char */}
       {!isTextInput ? (
         <>
-          <Pressable
+          <TouchableOpacity
             onPress={() => setIsTextInput(true)}
             style={{
               flexDirection: "row",
@@ -539,7 +537,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
             >
               Write your own question
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </>
       ) : (
         <></>
@@ -556,7 +554,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
               maxLength={255}
               onChangeText={setQuestion}
             />
-            <Pressable
+            <TouchableOpacity
               style={{ alignSelf: "center" }}
               onPress={() => {
                 if (deleteIndex) {
@@ -571,12 +569,12 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
               }}
             >
               <Icon color="red" name="delete" size={24} />
-            </Pressable>
+            </TouchableOpacity>
           </View>
           <Text style={{ marginLeft: "70%", marginVertical: 10 }}>
             {question.length}/255
           </Text>
-          <Pressable
+          <TouchableOpacity
             disabled={!(question.length > 5)}
             onPress={() => {
               if (deleteIndex) {
@@ -603,12 +601,12 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
             }}
           >
             <Text style={{ color: "#fff", fontSize: 16 }}>Save question</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       ) : (
         <></>
       )}
-      {questions.length > 0 && !isTextInput ? (
+      {/* {questions.length > 0 && !isTextInput ? (
         <View>
           <Text
             style={{ fontWeight: "bold", fontSize: 20, marginVertical: 10 }}
@@ -629,7 +627,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
                   <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
                     {item}
                   </Text>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={() => {
                       setIsTextInput(true);
                       setQuestion(item);
@@ -637,7 +635,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
                     }}
                   >
                     <Icon size={20} name="circle-edit-outline" />
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               );
             })}
@@ -645,13 +643,13 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
         </View>
       ) : (
         <></>
-      )}
+      )} */}
 
       {/* uncomment this and show suggested question for the user */}
       {/* <Text style={{ fontWeight: "bold", marginVertical: 15 }}>Suggested</Text>
       {suggested.map((item, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             style={{ flexDirection: "row", width: "90%" }}
             onPress={() => {
               const newArr = checked.map((item, i) => {
@@ -662,7 +660,7 @@ function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
           >
             <Checkbox status={checked[index] ? "checked" : "unchecked"} />
             <Text>{item}</Text>
-          </Pressable>
+          </TouchableOpacity>
         );
       })} */}
     </List.Accordion>
@@ -709,7 +707,7 @@ function AdvancedPred({
         <View>
           {englishLevels.map((item, index) => {
             return (
-              <Pressable
+              <TouchableOpacity
                 key={index + 1}
                 onPress={() => setEnglishLevel(item)}
                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -720,7 +718,7 @@ function AdvancedPred({
                   status={englishLevel === item ? "checked" : "unchecked"}
                 />
                 <Text>{englishLevels[index]}</Text>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -729,7 +727,7 @@ function AdvancedPred({
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
         {hourPerWeeks.map((item, index) => {
           return (
-            <Pressable
+            <TouchableOpacity
               key={index + 1}
               onPress={() => setHour(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
@@ -740,7 +738,7 @@ function AdvancedPred({
                 status={checkHour === item ? "checked" : "unchecked"}
               />
               <Text>{hourPerWeeks[index]}</Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -750,7 +748,7 @@ function AdvancedPred({
         </Text>
         {["male", "female", "both"].map((item, index) => {
           return (
-            <Pressable
+            <TouchableOpacity
               key={index + 1}
               onPress={() => setGender(item)}
               style={{ flexDirection: "row", alignItems: "center" }}
@@ -761,7 +759,7 @@ function AdvancedPred({
                 status={gender === item ? "checked" : "unchecked"}
               />
               <Text>{item}</Text>
-            </Pressable>
+            </TouchableOpacity>
           );
         })}
       </View>

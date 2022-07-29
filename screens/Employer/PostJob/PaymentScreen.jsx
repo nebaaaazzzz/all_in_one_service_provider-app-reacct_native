@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
   ScrollView,
   StatusBar,
   useWindowDimensions,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
 
 import { ProgressBar } from "react-native-paper";
@@ -20,7 +20,24 @@ const PaymentScreen = ({ navigation }) => {
   const [paymentStyle, setPaymentStyle] = React.useState();
 
   const [toBudget, setToBudget] = useState("");
+  const [bool, setBool] = useState(false);
   const exp = ["Fixed", "By Negotiation", "By The Organization Scale"];
+  useEffect(() => {
+    if (paymentStyle !== undefined) {
+      if (paymentStyle > 0) {
+        setBool(true);
+      } else {
+        setBool(
+          parseFloat(fromBudget) &&
+            parseFloat(toBudget) &&
+            parseFloat(fromBudget) < parseFloat(toBudget)
+        );
+      }
+    } else {
+      setBool(false);
+    }
+  }, [paymentStyle, fromBudget, toBudget]);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -43,7 +60,7 @@ const PaymentScreen = ({ navigation }) => {
         <View style={{ marginVertical: 14 }}>
           {exp.map((item, index) => {
             return (
-              <Pressable
+              <TouchableOpacity
                 key={index + 1}
                 style={{
                   flexDirection: "row",
@@ -62,7 +79,7 @@ const PaymentScreen = ({ navigation }) => {
                 <View>
                   <Text style={{ fontSize: 16 }}>{item}</Text>
                 </View>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -117,16 +134,8 @@ const PaymentScreen = ({ navigation }) => {
           borderColor: "#000",
         }}
       >
-        <Pressable
-          disabled={
-            !(fromBudget && toBudget) &&
-            !(
-              paymentStyle == 0 &&
-              parseFloat(fromBudget) &&
-              parseFloat(toBudget) &&
-              parseFloat(fromBudget) < parseFloat(toBudget)
-            )
-          }
+        <TouchableOpacity
+          disabled={!bool}
           onPress={() => {
             if (paymentStyle == 0) {
               dispatch({
@@ -160,14 +169,7 @@ const PaymentScreen = ({ navigation }) => {
           style={{
             width: "80%",
             borderRadius: 20,
-            backgroundColor:
-              paymentStyle > 0 ||
-              (paymentStyle == 0 &&
-                parseFloat(fromBudget) &&
-                parseFloat(toBudget) &&
-                parseFloat(fromBudget) < parseFloat(toBudget))
-                ? "#0244d0"
-                : "rgba(0,0,0,0.3)",
+            backgroundColor: bool ? "#0244d0" : "rgba(0,0,0,0.3)",
             height: "50%",
             alignItems: "center",
             justifyContent: "center",
@@ -175,7 +177,7 @@ const PaymentScreen = ({ navigation }) => {
         >
           <Text
             style={{
-              color: fromBudget && toBudget ? "#fff" : "rgba(0,0,0,0.5)",
+              color: bool ? "#fff" : "rgba(0,0,0,0.5)",
             }}
           >
             {/* 
@@ -185,7 +187,7 @@ const PaymentScreen = ({ navigation }) => {
              */}
             Next: Review
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

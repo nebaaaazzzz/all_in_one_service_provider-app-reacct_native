@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Keyboard,
-  Pressable,
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
@@ -88,7 +87,7 @@ const LoginScreen = ({ navigation, route }) => {
         justifyContent: "center",
       }}
     >
-      <Pressable onPress={() => Keyboard.dismiss()}>
+      <TouchableOpacity onPress={() => Keyboard.dismiss()}>
         <ScrollView>
           <View style={{ paddingHorizontal: 25 }}>
             <Text
@@ -246,7 +245,7 @@ const LoginScreen = ({ navigation, route }) => {
             </View>
           </View>
         </ScrollView>
-      </Pressable>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

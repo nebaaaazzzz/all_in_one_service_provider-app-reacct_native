@@ -1,4 +1,10 @@
-import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostHouseContext } from "./PostHouseScreen";
@@ -76,7 +82,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
         >
           {highLight.map((item, index) => {
             return (
-              <Pressable
+              <TouchableOpacity
                 key={index + 1}
                 style={{
                   width: 100,
@@ -103,7 +109,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                 <Text style={{ textAlign: "center", color: "#000" }}>
                   {item.name}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -118,7 +124,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={!active}
           onPress={() => {
             const newArr = active
@@ -153,7 +159,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

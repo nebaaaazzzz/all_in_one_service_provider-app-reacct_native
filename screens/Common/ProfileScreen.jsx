@@ -14,7 +14,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
 import {
   Avatar,
@@ -101,7 +101,7 @@ const Profile = ({ navigation }) => {
                   key={index + 1}
                   style={{
                     flexDirection: "row",
-                    backgroundColor: "#0244d0",
+                    // backgroundColor: "#0244d0",
                     margin: 5,
                     padding: "3%",
                     paddingVertical: 5,
@@ -110,14 +110,13 @@ const Profile = ({ navigation }) => {
                 >
                   <Text
                     style={{
-                      color: "#fff",
                       fontSize: 16,
                       marginHorizontal: "3%",
                     }}
                   >
                     {item}
                   </Text>
-                  <Pressable
+                  <TouchableOpacity
                     onPress={() => {
                       setSkills(
                         skills.filter((i) => {
@@ -127,7 +126,7 @@ const Profile = ({ navigation }) => {
                     }}
                   >
                     <Icon name="close" color="red" size={20} />
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               ))}
             </View>
@@ -230,14 +229,14 @@ const ProfileScreen = ({ navigation }) => {
             elevation: 0,
           },
           headerRight: () => (
-            <Pressable
+            <TouchableOpacity
               style={{ marginHorizontal: "5%" }}
               onPress={() => {
                 navigation.navigate("profile/edit");
               }}
             >
               <FontAwesome5 name="user-edit" size={24} color="black" />
-            </Pressable>
+            </TouchableOpacity>
           ),
         }}
         name="profile/"

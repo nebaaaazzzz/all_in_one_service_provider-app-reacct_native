@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, Pressable } from "react-native";
+import { View, Text, StatusBar, TouchableOpacity } from "react-native";
 import React from "react";
 import Styled from "styled-components";
 const SText = Styled(Text)`
@@ -33,7 +33,7 @@ const HostScreen = () => {
             alignItems: "center",
           }}
         >
-          <Pressable
+          <TouchableOpacity
             style={{
               position: "absolute",
               backgroundColor: "#0099ff",
@@ -48,7 +48,7 @@ const HostScreen = () => {
             <Text style={{ fontSize: 18, color: "#fff", textAlign: "center" }}>
               Let's Go
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

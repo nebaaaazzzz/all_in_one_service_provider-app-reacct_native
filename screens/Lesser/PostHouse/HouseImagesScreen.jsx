@@ -2,7 +2,7 @@ import {
   ScrollView,
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   Image,
   StatusBar,
 } from "react-native";
@@ -140,7 +140,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
                     visible={visible[index]}
                     onDismiss={() => closeMenu(index)}
                     anchor={
-                      <Pressable
+                      <TouchableOpacity
                         onPress={() => openMenu(index)}
                         style={{
                           backgroundColor: "rgba(255,255,255,0.8)",
@@ -153,7 +153,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
                           size={20}
                           color="#0244d0"
                         />
-                      </Pressable>
+                      </TouchableOpacity>
                     }
                   >
                     {/* add moving image forward and backward after major feature completion */}
@@ -221,7 +221,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
               </View>
             );
           })}
-          <Pressable
+          <TouchableOpacity
             onPress={async () => {
               let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -253,7 +253,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
             )}
 
             <Text>Upload from your device</Text>
-          </Pressable>
+          </TouchableOpacity>
         </ScrollView>
       </View>
 
@@ -267,7 +267,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           disabled={imgUri.length < 5}
           onPress={() => {
             dispatch({
@@ -293,7 +293,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

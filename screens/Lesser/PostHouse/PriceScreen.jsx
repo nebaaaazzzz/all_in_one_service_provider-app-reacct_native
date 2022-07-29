@@ -1,4 +1,10 @@
-import { ScrollView, View, Text, Pressable, StatusBar } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -50,7 +56,7 @@ const PriceScreen = ({ navigation, route }) => {
               justifyContent: "space-evenly",
             }}
           >
-            <Pressable
+            <TouchableOpacity
               style={{
                 borderRadius: 50,
                 backgroundColor: "rgba(0,0,0,0.3)",
@@ -65,13 +71,13 @@ const PriceScreen = ({ navigation, route }) => {
               }}
             >
               <Icon size={20} name="minus" />
-            </Pressable>
+            </TouchableOpacity>
             <TextInput
               value={price}
               style={{ fontSize: 20, textAlign: "center", width: "70%" }}
               keyboardType="numeric"
             />
-            <Pressable
+            <TouchableOpacity
               style={{
                 borderRadius: 50,
                 backgroundColor: "rgba(0,0,0,0.3)",
@@ -80,7 +86,7 @@ const PriceScreen = ({ navigation, route }) => {
               onPress={() => setPrice(String(+price + 1))}
             >
               <Icon name="plus" size={20} />
-            </Pressable>
+            </TouchableOpacity>
           </View>
           <Text style={{ textAlign: "center" }}>ETB per month</Text>
         </View>
@@ -95,7 +101,7 @@ const PriceScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
             dispatch({
               type: "add",
@@ -120,7 +126,7 @@ const PriceScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

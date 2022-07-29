@@ -1,8 +1,8 @@
-import { Text, Pressable } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import React from "react";
 const PlaceDescription = ({ title, description, pressHandler, id, active }) => {
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={() => {
         pressHandler(id + 1);
       }}
@@ -29,7 +29,7 @@ const PlaceDescription = ({ title, description, pressHandler, id, active }) => {
           {description}
         </Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

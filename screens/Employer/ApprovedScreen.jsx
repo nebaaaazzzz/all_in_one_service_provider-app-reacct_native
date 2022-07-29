@@ -1,7 +1,7 @@
 // import {
 //   View,
 //   Text,
-//   Pressable,
+//   TouchableOpacity,
 //   Image,
 //   FlatList,
 //   ActivityIndicator,
@@ -23,7 +23,7 @@
 //     <View>
 //       {item.map((i, index) => {
 //         return (
-//           <Pressable key={index + 1} onPress={() => pressHandler(i._id)}>
+//           <TouchableOpacity key={index + 1} onPress={() => pressHandler(i._id)}>
 //             <Divider
 //               style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.5)" }}
 //             />
@@ -52,7 +52,7 @@
 //             <Divider
 //               style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.5)" }}
 //             />
-//           </Pressable>
+//           </TouchableOpacity>
 //         );
 //       })}
 //     </View>
@@ -168,7 +168,7 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   Image,
   FlatList,
   ActivityIndicator,
@@ -202,7 +202,7 @@ const Users = ({ item, pressHandler }) => {
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable key={index + 1} onPress={() => pressHandler(i._id)}>
+          <TouchableOpacity key={index + 1} onPress={() => pressHandler(i._id)}>
             <Divider
               style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.5)" }}
             />
@@ -231,7 +231,7 @@ const Users = ({ item, pressHandler }) => {
             <Divider
               style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.5)" }}
             />
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>

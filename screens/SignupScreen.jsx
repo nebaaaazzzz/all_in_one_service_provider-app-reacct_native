@@ -85,7 +85,8 @@ const SignupScreen = ({ navigation }) => {
     // );
   }
   if (isSuccess) {
-    navigation.navigate("validate", { data });
+    // navigation.navigate("validate", { data });
+    navigation.navigate("login");
   }
 
   return (
@@ -465,7 +466,7 @@ const SignupScreen = ({ navigation }) => {
         >
           <Text>Already registered?</Text>
           <TouchableOpacity onPress={() => navigation.push("login")}>
-            <Text style={{ color: "#0244d0", fontWeight: "700" }}> </Text>
+            <Text style={{ color: "#0244d0", fontWeight: "700" }}>SignIn </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

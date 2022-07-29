@@ -4,7 +4,7 @@ import {
   View,
   Text,
   StatusBar,
-  Pressable,
+  TouchableOpacity,
   FlatList,
   Image,
   ActivityIndicator,
@@ -47,7 +47,7 @@ const Home = ({ item, pressHandler }) => {
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             onPress={() => pressHandler(i._id)}
             key={index + 1}
             onPressIn={() => setBgColor(true)}
@@ -81,7 +81,7 @@ const Home = ({ item, pressHandler }) => {
               </View>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.price}</Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>
@@ -305,7 +305,7 @@ const Lessee = ({ navigation }) => {
             <Text style={{ fontWeight: "bold", marginRight: 10 }}>Gender</Text>
             {["male", "female", "both", "Any"].map((item, index) => {
               return (
-                <Pressable
+                <TouchableOpacity
                   key={index + 1}
                   onPress={() => {
                     if (index == 3) {
@@ -322,7 +322,7 @@ const Lessee = ({ navigation }) => {
                     status={gender === item ? "checked" : "unchecked"}
                   />
                   <Text>{item}</Text>
-                </Pressable>
+                </TouchableOpacity>
               );
             })}
           </View>
@@ -336,7 +336,7 @@ const Lessee = ({ navigation }) => {
             <Text style={{ fontWeight: "bold" }}>permanent</Text>
             {["yes", "no", "Any"].map((item, index) => {
               return (
-                <Pressable
+                <TouchableOpacity
                   key={index + 1}
                   onPress={() => {
                     if (index == 0) {
@@ -356,7 +356,7 @@ const Lessee = ({ navigation }) => {
                     status={gender === item ? "checked" : "unchecked"}
                   />
                   <Text>{item}</Text>
-                </Pressable>
+                </TouchableOpacity>
               );
             })}
           </View>
@@ -370,7 +370,7 @@ const Lessee = ({ navigation }) => {
             <Text style={{ fontWeight: "bold" }}>cv required</Text>
             {["yes", "no", "Any"].map((item, index) => {
               return (
-                <Pressable
+                <TouchableOpacity
                   key={index + 1}
                   onPress={() => {
                     if (index == 0) {
@@ -390,12 +390,12 @@ const Lessee = ({ navigation }) => {
                     status={gender === item ? "checked" : "unchecked"}
                   />
                   <Text>{item}</Text>
-                </Pressable>
+                </TouchableOpacity>
               );
             })}
           </View>
           <View style={{ flexDirection: "row" }}>
-            <Pressable
+            <TouchableOpacity
               style={{
                 elevation: 10,
                 backgroundColor: "#0244d0",
@@ -408,8 +408,8 @@ const Lessee = ({ navigation }) => {
               onPress={() => setOpenModal(false)}
             >
               <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
-            </Pressable>
-            <Pressable
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
                 elevation: 10,
                 backgroundColor: "#0244d0",
@@ -421,12 +421,12 @@ const Lessee = ({ navigation }) => {
               onPress={() => setOpenModal(false)}
             >
               <Text style={{ fontSize: 18, color: "#fff" }}>Save</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
       <FilterModal visible={visible} setVisible={setVisible} />
-      <Pressable
+      <TouchableOpacity
         style={{
           marginTop: "2%",
           alignSelf: "flex-end",
@@ -447,8 +447,8 @@ const Lessee = ({ navigation }) => {
           color="#fff"
           style={{ elevation: 10 }}
         />
-      </Pressable>
-      <Pressable
+      </TouchableOpacity>
+      <TouchableOpacity
         onPress={() => {
           setOpenModal(true);
         }}
@@ -461,7 +461,7 @@ const Lessee = ({ navigation }) => {
         }}
       >
         <MaterialCommunityIcons name="filter" size={26} color="#0244d0" />
-      </Pressable>
+      </TouchableOpacity>
       <Searchbar
         style={{ marginTop: "2%", marginHorizontal: 10, borderRadius: 20 }}
         placeholder="Search"
@@ -477,7 +477,7 @@ const Lessee = ({ navigation }) => {
             data={list}
             renderItem={({ item, index }) => {
               return (
-                <Pressable
+                <TouchableOpacity
                   onPress={() => {
                     if (index === 1) {
                       setNearBy(true);
@@ -499,7 +499,7 @@ const Lessee = ({ navigation }) => {
                     style={{ textAlign: "center" }}
                   />
                   <Text style={{ color: "#0244d0" }}>{item.title}</Text>
-                </Pressable>
+                </TouchableOpacity>
               );
             }}
           />

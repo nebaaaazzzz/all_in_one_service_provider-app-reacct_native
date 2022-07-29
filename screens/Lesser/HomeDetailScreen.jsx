@@ -2,14 +2,14 @@ import {
   ScrollView,
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   Image,
   ActivityIndicator,
   ToastAndroid,
   useWindowDimensions,
 } from "react-native";
 import React from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { Divider, Badge } from "react-native-paper";
 
@@ -31,16 +31,34 @@ const HomeDetailScreen = ({ navigation, route }) => {
     ["house", route.params.id],
     fetchHouse
   );
-  if (isLoading || isFetching) {
+  const delteMutuation = useMutation(async () => {
+    const response = await fetch(`${BASEURI}/lesser/house/${data._id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("error occured");
+    }
+    return response.json();
+  });
+  if (isLoading || isFetching || delteMutuation.isLoading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <ActivityIndicator></ActivityIndicator>
       </View>
     );
   }
-  console.log(data);
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
+  }
+  if (delteMutuation.isSuccess) {
+    ToastAndroid.show("successfully Deleted", ToastAndroid.LONG);
+    navigation.navigate("lesser");
+  }
+  if (delteMutuation.isError) {
+    ToastAndroid.show(delteMutuation.error.message, ToastAndroid.LONG);
   }
   return (
     <View
@@ -56,7 +74,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           justifyContent: "center",
         }}
       >
-        <Pressable
+        <TouchableOpacity
           style={{
             marginVertical: 10,
             paddingHorizontal: 10,
@@ -75,8 +93,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
         >
           <Badge>{data?.applicants?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Applicants</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={{
             marginVertical: 10,
             paddingHorizontal: 10,
@@ -95,8 +113,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
         >
           <Badge>{data?.approved?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Approved</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={{
             marginVertical: 10,
             paddingHorizontal: 10,
@@ -115,7 +133,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
         >
           <Badge>{data?.rejected?.length || 0} </Badge>
           <Text style={{ color: "#fff" }}>Rejected</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -148,7 +166,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           />
 
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("lesser/viewimages", {
                 images: data.houseImages,
@@ -165,7 +183,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ color: "#fff" }}>View All Images</Text>
-          </Pressable>
+          </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             {data.placeName}
           </Text>
@@ -191,9 +209,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -219,9 +236,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -247,9 +263,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -276,39 +291,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
-                        backgroundColor: "#0244d0",
-                      }}
-                    >
-                      {item}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
-          ) : (
-            <></>
-          )}
-
-          <Divider />
-          {data?.contain?.length ? (
-            <View style={{ marginVertical: "2%" }}>
-              <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Contain
-              </Text>
-              {data?.contain?.map((item, index) => {
-                return (
-                  <View style={{ flexDirection: "row" }}>
-                    <Text
-                      key={index + 1}
-                      style={{
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        color: "#fff",
-                        borderRadius: 15,
-                        backgroundColor: "#0244d0",
+                        // backgroundColor: "#0244d0",
                       }}
                     >
                       {item}
@@ -408,7 +392,25 @@ const HomeDetailScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <Pressable
+        <TouchableOpacity
+          onPress={() => {
+            delteMutuation.mutate();
+          }}
+          style={{
+            backgroundColor: "#0244d0",
+            width: 100,
+            alignSelf: "flex-end",
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            Delete Post
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("lesser/posthouse", {
               data,
@@ -425,7 +427,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>Edit Post</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

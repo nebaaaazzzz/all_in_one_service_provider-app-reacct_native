@@ -1,7 +1,7 @@
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
   FlatList,
   ActivityIndicator,
 } from "react-native";
@@ -29,7 +29,7 @@ const Jobs = ({ pressHandler, item }) => {
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             key={index + 1}
             onPress={() => pressHandler(i._id)}
             style={{
@@ -64,7 +64,7 @@ const Jobs = ({ pressHandler, item }) => {
               {i.description}
             </Text>
             <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.placeName}</Text>
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>

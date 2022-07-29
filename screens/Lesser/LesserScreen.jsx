@@ -4,7 +4,7 @@ import {
   Text,
   StatusBar,
   Image,
-  Pressable,
+  TouchableOpacity,
   FlatList,
   ToastAndroid,
 } from "react-native";
@@ -110,7 +110,7 @@ const Home = ({ navigation }) => {
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <View style={{ alignItems: "flex-end", backgroundColor: "#fff" }}>
         {user?.left > 0 ? (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               requestAnimationFrame(() => {
                 navigation.navigate("lesser/posthouse");
@@ -127,9 +127,9 @@ const Home = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "#fff" }}> Post House</Text>
-          </Pressable>
+          </TouchableOpacity>
         ) : (
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               requestAnimationFrame(() => {
                 navigation.navigate("lesser/payment");
@@ -146,7 +146,7 @@ const Home = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "#fff" }}> pay</Text>
-          </Pressable>
+          </TouchableOpacity>
         )}
       </View>
       <LesserTopTabNavigator.Navigator>
@@ -222,7 +222,7 @@ const Post = ({ item, pressHandler }) => {
     <View>
       {item.map((i, index) => {
         return (
-          <Pressable
+          <TouchableOpacity
             key={index + 1}
             onPress={() => {
               setBgColor(true);
@@ -256,7 +256,7 @@ const Post = ({ item, pressHandler }) => {
 
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.price} birr</Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>
