@@ -59,7 +59,7 @@ const JobDetailScreen = ({ navigation, route }) => {
   if (isLoading || isFetching || delteMutuation.isLoading) {
     return (
       <View style={{ marginTop: "50%" }}>
-        <ActivityIndicator></ActivityIndicator>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
       </View>
     );
   }
@@ -222,27 +222,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             ) : (
               <></>
             )}
-            <View style={{ flexDirection: "row" }}>
-              {data.deadline ? (
-                <View>
-                  <Text>deadline {new Date(data.deadline).toDateString()}</Text>
-                </View>
-              ) : (
-                <></>
-              )}
-              {data.deadtime ? (
-                <View>
-                  <Text>
-                    deadtime
-                    {new Date(data.deadline).getHours() +
-                      " " +
-                      new Date(data.deadline).getMinutes()}
-                  </Text>
-                </View>
-              ) : (
-                <></>
-              )}
-            </View>
+
             {data.budget ? (
               <View>
                 <Text>
@@ -424,8 +404,10 @@ const JobDetailScreen = ({ navigation, route }) => {
           backgroundColor: "#fff",
           borderTopWidth: 2,
           width: "100%",
+          flexDirection: "row",
+          alignItems: "center",
           height: 60,
-          justifyContent: "center",
+          justifyContent: "space-around",
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
@@ -434,9 +416,8 @@ const JobDetailScreen = ({ navigation, route }) => {
             delteMutuation.mutate();
           }}
           style={{
-            backgroundColor: "#0244d0",
+            backgroundColor: "red",
             width: 100,
-            alignSelf: "flex-end",
             marginHorizontal: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,
@@ -456,7 +437,6 @@ const JobDetailScreen = ({ navigation, route }) => {
           style={{
             backgroundColor: "#0244d0",
             width: 100,
-            alignSelf: "flex-end",
             marginHorizontal: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,

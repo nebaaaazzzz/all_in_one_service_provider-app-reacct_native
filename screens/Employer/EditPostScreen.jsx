@@ -1,4 +1,7 @@
-import React, { useState, useContext } from "react";
+import SelectDropdown from "react-native-select-dropdown";
+import { categoryList } from "../../constants/data";
+
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +11,8 @@ import {
   TouchableOpacity,
   Keyboard,
   ToastAndroid,
+  Pressable,
+  ActivityIndicator,
 } from "react-native";
 import {
   RadioButton,
@@ -18,33 +23,67 @@ import {
 } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as DocumentPicker from "expo-document-picker";
-import Ionicons from "react-native-vector-icons/Ionicons";
-
 import DatePicker from "@react-native-community/datetimepicker";
 import { useQueryClient } from "react-query";
-import SelectDropdown from "react-native-select-dropdown";
-import { categoryList } from "../../constants/data";
 import { useMutation } from "react-query";
-import { BASEURI, BASETOKEN } from "../../urls";
-
+import { BASEURI, BASETOKEN } from "./../../urls";
+const englishLevels = [
+  "Any level",
+  "Conversational or better",
+  "Fluent or better",
+  "Native or bilingual only",
+];
+const hourPerWeeks = [
+  "More than 30 hrs.week",
+  "Less than 30hrs/week",
+  "I'm not sure",
+];
+const exp = [
+  {
+    title: "Entry",
+    description: "Looking for someone relatively new to this field",
+  },
+  {
+    title: "Intermediate",
+    description: "Looking for substantial experience in this field",
+  },
+  {
+    title: "Expert",
+    description: "Looking for comprehensive and deep expertise in this filed",
+  },
+];
+const genderList = ["Male", "Female", "Both"];
 const EditPostScreen = ({ navigation, route }) => {
-  const jobPost = route.params.data;
   const queryClient = useQueryClient();
+  const jobPost = route.params.data;
+  const [fromBudget, setFromBudget] = useState(jobPost?.budget?.from);
+  const [toBudget, setToBudget] = useState(jobPost?.budget?.to);
+  const [paymentStyle, setPaymentStyle] = useState();
+  const [experience, setExperience] = React.useState(
+    exp.findIndex((item) => item.title === jobPost?.experience?.title)
+  );
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date(jobPost.deadline));
+  const [open1, setOpen1] = useState(false);
+  const [date, setDate] = useState(
+    jobPost?.deadline ? new Date(jobPost?.deadline) : undefined
+  );
+  const [datetime, setDatetime] = useState(
+    jobPost?.deadtime ? date : undefined
+  );
   const [cvRequired, setCvRequired] = useState(jobPost.cvRequired);
   const dimension = useWindowDimensions();
   const [category, setCategory] = useState(jobPost.category);
+  const [skills, setSkills] = useState(jobPost?.skills || []);
+  const [skill, setSkill] = useState("");
   const [expanded, setExpanded] = useState(false);
   const handlePress = () => setExpanded(!expanded);
   const [file, setFile] = useState("");
   const [description, setDescription] = useState(jobPost.description);
-  const [englishLevel, setEnglishLevel] = useState();
-  const [questions, setQuestions] = useState([]);
-  const [headLine, setHeadLine] = useState(jobPost.title);
-  const [checkHour, setHour] = useState();
-  const [gender, setGender] = useState();
-  const [permanent, setPermanet] = useState(jobPost.permanent);
+  const [englishLevel, setEnglishLevel] = useState(jobPost?.englishLevel);
+  const [checkHour, setHour] = useState(jobPost?.hourPerWeek);
+  const [gender, setGender] = useState(jobPost?.gender);
+  const [permanent, setPermanet] = useState(jobPost?.permanent);
+  const [headline, setHeadline] = useState(jobPost.title);
   const fileSelector = async () => {
     const doc = await DocumentPicker.getDocumentAsync({
       multiple: true,
@@ -62,13 +101,16 @@ const EditPostScreen = ({ navigation, route }) => {
   };
   const { error, isError, isLoading, isSuccess, mutate } = useMutation(
     async (data) => {
-      const response = await fetch(`${BASEURI}/employer/postjob`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${BASETOKEN}`,
-        },
-        body: data,
-      });
+      const response = await fetch(
+        `${BASEURI}/employer/update/${jobPost._id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${BASETOKEN}`,
+          },
+          body: data,
+        }
+      );
       return response.json();
     }
   );
@@ -81,32 +123,48 @@ const EditPostScreen = ({ navigation, route }) => {
         type: file.mimeType,
       });
     }
-    formData.append("body", JSON.stringify(jobPost));
+
+    formData.append(
+      "body",
+      JSON.stringify({
+        headline,
+        description,
+        datetime,
+        deadline,
+        category,
+        skill,
+        permanent,
+        cvRequired,
+        englishLevel,
+        hourPerWeeks,
+        gender,
+      })
+    );
     mutate(formData);
   };
 
   if (isSuccess) {
-    navigation.navigate("employer/");
+    navigation.navigate("employer/jobdetail", {
+      id: jobPOst._id,
+    });
     queryClient.invalidateQueries("myhouses");
   }
 
   if (isError) {
-    return (
-      <View>
-        <Text>{error.message}</Text>
-      </View>
-    );
+    ToastAndroid.show(error.message, ToastAndroid.SHORT);
   }
   if (isLoading) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View
+        style={{ flex1: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <ActivityIndicator size={"large"} color="#0244d0" />
       </View>
     );
   }
   return (
     <View style={{ flex: 1 }}>
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
           Keyboard.dismiss();
         }}
@@ -115,7 +173,7 @@ const EditPostScreen = ({ navigation, route }) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
-            marginBottom: 60,
+            marginBottom: 80,
             marginTop: StatusBar.currentHeight,
             flex: 1,
           }}
@@ -128,7 +186,7 @@ const EditPostScreen = ({ navigation, route }) => {
               fontWeight: "bold",
             }}
           >
-            Edit Your Post
+            Now finish and review your job post
           </Text>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
@@ -136,10 +194,9 @@ const EditPostScreen = ({ navigation, route }) => {
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>Headline</Text>
             <TextInput
-              value={headLine}
-              onChangeText={(text) => {
-                setHeadLine(text);
-              }}
+              value={headline}
+              onChangeText={setHeadline}
+              multiline={true}
             />
           </View>
           <Divider
@@ -151,12 +208,12 @@ const EditPostScreen = ({ navigation, route }) => {
             </Text>
             <View style={{ marginTop: 10 }}>
               <Text style={{ fontSize: 16 }}>
-                This is how talent figures out what you need and why you’re
+                This is how employees figures out what you need and why you’re
                 great to work with!
               </Text>
               <Text style={{ fontSize: 16, marginVertical: 10 }}>
                 Include your expectations about the task or deliverable, what
-                you’re looking for in a work relationship, and anything unique
+                you’re looking for in a work environment, and anything unique
                 about your project, team, or company.Minumun 50 characters.
               </Text>
             </View>
@@ -167,6 +224,7 @@ const EditPostScreen = ({ navigation, route }) => {
               placeholder="Already have a job description?Paste it here!"
               onChangeText={(text) => setDescription(text)}
             />
+            <Text style={{ textAlign: "right" }}>{description.length}</Text>
             <TouchableOpacity
               onPress={fileSelector}
               style={{
@@ -203,59 +261,107 @@ const EditPostScreen = ({ navigation, route }) => {
               >
                 Category
               </Text>
-              <SelectDropdown
-                rowStyle={{
-                  color: "rgba(0,0,0,0.2)",
-                }}
-                dropdownOverlayColor="transparent"
-                buttonStyle={{
-                  borderWidth: 1,
-                  marginTop: "5%",
-                  borderColor: "#0244d0",
-                  width: "90%",
-                  borderRadius: 15,
-                }}
-                data={categoryList}
-                onSelect={(selectedItem, index) => {
-                  setCategory(selectedItem);
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  // text represented after item is selected
-                  // if data array is an array of objects then return selectedItem.property to render after item is selected
-                  return selectedItem;
-                }}
-                defaultButtonText={category}
-                rowTextForSelection={(item, index) => {
-                  // text represented for each item in dropdown
-                  // if data array is an array of objects then return item.property to represent item in dropdown
-                  return item;
-                }}
-              />
-              <View
-                style={{ flexDirection: "row", alignItems: "center" }}
-              ></View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <SelectDropdown
+                  rowStyle={{
+                    color: "rgba(0,0,0,0.2)",
+                  }}
+                  dropdownOverlayColor="transparent"
+                  buttonStyle={{
+                    borderWidth: 1,
+                    marginTop: "5%",
+                    borderColor: "#0244d0",
+                    width: "90%",
+                    borderRadius: 15,
+                  }}
+                  data={categoryList}
+                  onSelect={(selectedItem, index) => {
+                    setCategory(selectedItem);
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem;
+                  }}
+                  defaultButtonText={category}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item;
+                  }}
+                />
+              </View>
             </View>
             <View style={{ marginVertical: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: "15%",
+                }}
+              >
+                <TextInput
+                  value={skill}
+                  onChangeText={setSkill}
+                  style={{ flex: 1 }}
+                />
+                <TouchableOpacity
+                  disabled={skill.length < 3}
+                  onPress={() => {
+                    setSkills([...skills, skill]);
+                    setSkill("");
+                  }}
+                >
+                  <Text
+                    style={{
+                      backgroundColor:
+                        skill.length > 2 ? "#0244d0" : "rgba(0,0,0,0.3)",
+                      marginHorizontal: "5%",
+                      textAlign: "center",
+                      color: skill.length > 2 ? "#fff" : "rgba(0,0,0,0.5)",
+                      paddingHorizontal: 10,
+                      paddingVertical: 5,
+                      borderRadius: 5,
+                    }}
+                  >
+                    Add
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
                 skills
               </Text>
               <View style={{ flexDirection: "row" }}>
-                {jobPost?.skills?.map((item, index) => {
+                {skills?.map((item, index) => {
                   return (
-                    <Text
+                    <View
                       key={index + 1}
                       style={{
-                        paddingHorizontal: 13,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        backgroundColor: "rgba(0,0,0,0.2)",
+                        margin: 5,
+                        padding: "3%",
                         paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        borderRadius: 15,
-                        // backgroundColor: "#0244d0",
+                        borderRadius: 20,
                       }}
                     >
-                      {item}
-                    </Text>
+                      <Text style={{ fontSize: 16 }}>{item}</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setSkills(
+                            skills.filter((i) => {
+                              return item != i;
+                            })
+                          );
+                        }}
+                      >
+                        <Icon name="close" color="red" size={20} />
+                      </TouchableOpacity>
+                    </View>
                   );
                 })}
               </View>
@@ -270,16 +376,58 @@ const EditPostScreen = ({ navigation, route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Budget
+                    Salary
                   </Text>
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16, marginLeft: "5%" }}>
                       {jobPost.budget.from} birr- {jobPost.budget.to} birr
                     </Text>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#0244d0",
+                        paddingHorizontal: 15,
+                        paddingVertical: 5,
+                        borderRadius: 10,
+                        elevation: 10,
+                        marginLeft: "5%",
+                      }}
+                      onPress={() => {
+                        navigation.navigate("employer/postjob", {
+                          screen: "employer/postjob/payment",
+                          params: {
+                            data: {
+                              paymentStyle,
+                              fromBudget,
+                              toBudget,
+                              setFromBudget,
+                              setToBudget,
+                              setPaymentStyle,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      <Text style={{ color: "#fff" }}>Change Salary</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               ) : (
-                <></>
+                <View>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 17,
+                      marginVertical: 10,
+                    }}
+                  >
+                    Salary
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
+                      {jobPost.paymentStyle}
+                    </Text>
+                  </View>
+                </View>
               )}
             </View>
             <View>
@@ -294,8 +442,29 @@ const EditPostScreen = ({ navigation, route }) => {
                   >
                     Work place
                   </Text>
-                  <View style={{ flexDirection: "row", marginLeft: "5%" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: "5%",
+                      flexWrap: "wrap",
+                    }}
+                  >
                     <Text style={{ fontSize: 16 }}>{jobPost.placeName}</Text>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#0244d0",
+                        paddingHorizontal: 15,
+                        paddingVertical: 5,
+                        borderRadius: 10,
+                        elevation: 10,
+                        marginLeft: "5%",
+                      }}
+                      onPress={() => {
+                        console.log("hello");
+                      }}
+                    >
+                      <Text style={{ color: "#fff" }}>Change Place</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               ) : (
@@ -303,29 +472,45 @@ const EditPostScreen = ({ navigation, route }) => {
               )}
             </View>
             <View>
-              {jobPost?.experience ? (
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                      marginVertical: 10,
-                    }}
-                  >
-                    Experience
-                  </Text>
-                  <View style={{ marginLeft: "5%" }}>
-                    <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                      {jobPost.experience.title}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>
-                      {jobPost.experience.description}
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                <></>
-              )}
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 17,
+                  marginVertical: 10,
+                }}
+              >
+                Experience
+              </Text>
+              <View style={{ marginVertical: 14 }}>
+                {exp.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index + 1}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginVertical: 5,
+                      }}
+                      onPress={() => setExperience(index)}
+                    >
+                      <RadioButton
+                        value={index}
+                        color="#0244d0"
+                        onPress={() => setExperience(index)}
+                        status={experience === index ? "checked" : "unchecked"}
+                      />
+                      <View>
+                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                          {item.title}
+                        </Text>
+                        <Text style={{ marginRight: "10%" }}>
+                          {item.description}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
             </View>
           </View>
           <Divider
@@ -341,46 +526,62 @@ const EditPostScreen = ({ navigation, route }) => {
           >
             <Text>DeadLine</Text>
             <TouchableOpacity
+              // style={{ alignItems: "center" }}
               onPress={() => setOpen(true)}
-              style={{
-                flexDirection: "row",
-                borderBottomColor: "#ccc",
-                borderBottomWidth: 1,
-                paddingBottom: 8,
-                marginBottom: 30,
-              }}
             >
-              <Ionicons
-                name="calendar-outline"
-                size={20}
-                color="#666"
-                style={{ marginRight: 5 }}
-              />
               {open ? (
                 <DatePicker
                   value={date ? new Date(date) : new Date()} //initial date from state
                   mode="date" //The enum of date, datetime and time
                   display="calendar"
+                  maxDate="01-01-2019"
                   textColor="red"
-                  //   minimumDate={new Date()}
+                  minimumDate={new Date(1950, 0, 1)}
+                  maximumDate={new Date(2000, 10, 20)}
                   onChange={({ nativeEvent: { timestamp } }) => {
-                    if (timestamp && timestamp > Date.now()) {
+                    if (timestamp) {
                       setDate(new Date(timestamp));
-                    } else {
-                      ToastAndroid.show("can't set date befor today");
                     }
                     setOpen(false);
                   }}
                 />
               ) : (
-                <Text style={{ color: "#666", marginLeft: 5, marginTop: 5 }}>
+                <Text style={{ color: "#666", marginLeft: 5 }}>
                   {date
-                    ? date.getDay() +
+                    ? date.getDate() +
                       "/" +
-                      date.getMonth() +
+                      (date.getMonth() + 1) +
                       "/" +
                       date.getFullYear()
-                    : "date of birth"}
+                    : "set deadline date"}
+                </Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginLeft: "10%" }}
+              onPress={() => setOpen1(true)}
+            >
+              {open1 ? (
+                <DatePicker
+                  value={datetime ? new Date(datetime) : new Date()} //initial date from state
+                  mode="time" //The enum of date, datetime and time
+                  display="clock"
+                  maxDate="01-01-2019"
+                  textColor="red"
+                  minimumDate={new Date(1950, 0, 1)}
+                  maximumDate={new Date(2000, 10, 20)}
+                  onChange={({ nativeEvent: { timestamp } }) => {
+                    if (timestamp) {
+                      setDatetime(new Date(timestamp));
+                    }
+                    setOpen1(false);
+                  }}
+                />
+              ) : (
+                <Text style={{ color: "#666", marginLeft: 5 }}>
+                  {datetime
+                    ? datetime.getHours() + " : " + datetime.getMinutes()
+                    : "set date linetime"}
                 </Text>
               )}
             </TouchableOpacity>
@@ -421,12 +622,12 @@ const EditPostScreen = ({ navigation, route }) => {
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
           />
           <List.Section>
-            <ScreeningQuestion
+            {/* <ScreeningQuestion
               expanded={expanded}
               questions={questions}
               setQuestions={setQuestions}
               handlePress={handlePress}
-            />
+            /> */}
             <AdvancedPred
               expanded={expanded}
               handlePress={handlePress}
@@ -439,7 +640,7 @@ const EditPostScreen = ({ navigation, route }) => {
             />
           </List.Section>
         </ScrollView>
-      </TouchableOpacity>
+      </Pressable>
 
       <View
         style={{
@@ -457,215 +658,43 @@ const EditPostScreen = ({ navigation, route }) => {
         <TouchableOpacity
           disabled={description.length < 50}
           onPress={() => {
-            dispatch({
-              type: "add",
-              payload: {
-                description,
-                file,
-                deadline: date,
-                gender,
-                permanent,
-                englishLevel,
-                cvRequired,
-                hourPerWeek: checkHour,
-                questions,
-              },
-            });
+            if (date && datetime) {
+              date.setHours(datetime.getHours() + 3);
+              date.setMinutes(datetime.getMinutes());
+            }
+            // dispatch({
+            //   type: "add",
+            //   payload: {
+            //     description,
+            //     file,
+            //     deadline: date,
+            //     datetime: datetime ? true : false,
+            //     gender,
+            //     permanent,
+            //     englishLevel,
+            //     cvRequired,
+            //     hourPerWeek: checkHour,
+            //   },
+            // });
             submitHandler();
           }}
           style={{
+            width: "80%",
+            borderRadius: 20,
             backgroundColor:
-              description.length > 50 ? "#0244d0" : "rgba(0,0,0,0.7)",
-
-            width: 100,
-            right: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
+              description.length > 49 ? "blue" : "rgba(0,0,0,0.6)",
+            height: "70%",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>Post Job</Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>Update Job</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-function ScreeningQuestion({ expanded, handlePress, questions, setQuestions }) {
-  const [isTextInput, setIsTextInput] = useState(false);
-  const [question, setQuestion] = useState("");
-  const [deleteIndex, setDeleteIndex] = useState("");
-  return (
-    <List.Accordion
-      left={(props) => (
-        <View {...props}>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            Screening questions(optional)
-          </Text>
-          <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-            Narrow down your candidated
-          </Text>
-        </View>
-      )}
-    >
-      {/* question must be more than 3 char */}
-      {!isTextInput ? (
-        <>
-          <TouchableOpacity
-            onPress={() => setIsTextInput(true)}
-            style={{
-              flexDirection: "row",
-              borderRadius: 20,
-              width: "90%",
-              alignSelf: "center",
-              alignItems: "center",
-              borderColor: "rgba(0,0,0,0.7))",
-              paddingVertical: 10,
-              elevation: 5,
-              marginVertical: 10,
-              justifyContent: "center",
-              backgroundColor: "#0244d0",
-            }}
-          >
-            <Icon size={18} color="#fff" name="plus" />
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#fff",
-                marginLeft: 10,
-                textAlign: "center",
-              }}
-            >
-              Write your own question
-            </Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <></>
-      )}
 
-      {isTextInput ? (
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row", flex: 1 }}>
-            <TextInput
-              style={{ width: "80%" }}
-              numberOfLines={10}
-              multiline={true}
-              defaultValue={question}
-              maxLength={255}
-              onChangeText={setQuestion}
-            />
-            <TouchableOpacity
-              style={{ alignSelf: "center" }}
-              onPress={() => {
-                if (deleteIndex) {
-                  const newArr = questions.filter((i, j) => {
-                    return j + 1 != deleteIndex;
-                  });
-                  setQuestions(newArr);
-                  setQuestion("");
-                  setDeleteIndex("");
-                }
-                setIsTextInput(false);
-              }}
-            >
-              <Icon color="red" name="delete" size={24} />
-            </TouchableOpacity>
-          </View>
-          <Text style={{ marginLeft: "70%", marginVertical: 10 }}>
-            {question.length}/255
-          </Text>
-          <TouchableOpacity
-            disabled={!(question.length > 5)}
-            onPress={() => {
-              if (deleteIndex) {
-                setQuestions(
-                  questions.map((item, index) => {
-                    return index === deleteIndex ? item : question;
-                  })
-                );
-                setDeleteIndex("");
-              } else {
-                setQuestions([...questions, question]);
-              }
-              setIsTextInput(false);
-              setQuestion("");
-            }}
-            style={{
-              borderRadius: 20,
-              width: "80%",
-              paddingVertical: 10,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor:
-                question.length > 5 ? "#0244d0" : "rgba(0,0,0,0.6)",
-            }}
-          >
-            <Text style={{ color: "#fff", fontSize: 16 }}>Save question</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <></>
-      )}
-      {/* {questions.length > 0 && !isTextInput ? (
-        <View>
-          <Text
-            style={{ fontWeight: "bold", fontSize: 20, marginVertical: 10 }}
-          >
-            Your questions
-          </Text>
-          <View>
-            {questions.map((item, index) => {
-              return (
-                <View
-                  key={index + 1}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginVertical: "2%",
-                  }}
-                >
-                  <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
-                    {item}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setIsTextInput(true);
-                      setQuestion(item);
-                      setDeleteIndex(index + 1);
-                    }}
-                  >
-                    <Icon size={20} name="circle-edit-outline" />
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-      ) : (
-        <></>
-      )} */}
-
-      {/* uncomment this and show suggested question for the user */}
-      {/* <Text style={{ fontWeight: "bold", marginVertical: 15 }}>Suggested</Text>
-      {suggested.map((item, index) => {
-        return (
-          <TouchableOpacity
-            style={{ flexDirection: "row", width: "90%" }}
-            onPress={() => {
-              const newArr = checked.map((item, i) => {
-                return i == index ? !checked[index] : item;
-              });
-              setChecked(newArr);
-            }}
-          >
-            <Checkbox status={checked[index] ? "checked" : "unchecked"} />
-            <Text>{item}</Text>
-          </TouchableOpacity>
-        );
-      })} */}
-    </List.Accordion>
-  );
-}
 function AdvancedPred({
   expanded,
   handlePress,
@@ -676,17 +705,6 @@ function AdvancedPred({
   checkHour,
   setHour,
 }) {
-  const englishLevels = [
-    "Any level",
-    "Conversational or better",
-    "Fluent or better",
-    "Native or bilingual only",
-  ];
-  const hourPerWeeks = [
-    "More than 30 hrs.week",
-    "Less than 30hrs/week",
-    "I'm not sure",
-  ];
   return (
     <List.Accordion
       left={(props) => (
@@ -715,6 +733,7 @@ function AdvancedPred({
                 <RadioButton
                   color="#0244d0"
                   value={item}
+                  onPress={() => setEnglishLevel(item)}
                   status={englishLevel === item ? "checked" : "unchecked"}
                 />
                 <Text>{englishLevels[index]}</Text>
@@ -734,6 +753,7 @@ function AdvancedPred({
             >
               <RadioButton
                 color="#0244d0"
+                onPress={() => setHour(item)}
                 value={item}
                 status={checkHour === item ? "checked" : "unchecked"}
               />
@@ -746,7 +766,7 @@ function AdvancedPred({
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
           Gender required
         </Text>
-        {["male", "female", "both"].map((item, index) => {
+        {genderList.map((item, index) => {
           return (
             <TouchableOpacity
               key={index + 1}
@@ -754,6 +774,7 @@ function AdvancedPred({
               style={{ flexDirection: "row", alignItems: "center" }}
             >
               <RadioButton
+                onPress={() => setGender(item)}
                 color="#0244d0"
                 value={item}
                 status={gender === item ? "checked" : "unchecked"}
@@ -766,5 +787,4 @@ function AdvancedPred({
     </List.Accordion>
   );
 }
-
 export default EditPostScreen;

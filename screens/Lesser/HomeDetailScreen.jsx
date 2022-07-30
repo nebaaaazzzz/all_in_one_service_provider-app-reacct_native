@@ -46,7 +46,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
   if (isLoading || isFetching || delteMutuation.isLoading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator></ActivityIndicator>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
       </View>
     );
   }
@@ -383,12 +383,14 @@ const HomeDetailScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 110,
+          top: dimension.height - 130,
           backgroundColor: "#fff",
           borderTopWidth: 2,
           width: "100%",
+          flexDirection: "row",
+          alignItems: "center",
           height: 60,
-          justifyContent: "center",
+          justifyContent: "space-around",
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
@@ -397,9 +399,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
             delteMutuation.mutate();
           }}
           style={{
-            backgroundColor: "#0244d0",
+            backgroundColor: "red",
             width: 100,
-            alignSelf: "flex-end",
             marginHorizontal: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,
@@ -419,7 +420,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
           style={{
             backgroundColor: "#0244d0",
             width: 100,
-            alignSelf: "flex-end",
             marginHorizontal: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,

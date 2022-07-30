@@ -141,7 +141,7 @@ const Lessee = ({ navigation }) => {
         }}
         ListFooterComponent={() => {
           if (isFetchingNextPage) {
-            return <ActivityIndicator></ActivityIndicator>;
+            return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
             return (

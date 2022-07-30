@@ -34,12 +34,13 @@ const fetchHouses = async ({ pageParam = 1 }) => {
 };
 
 const MyPosts = ({ navigation }) => {
+  console.log(BASETOKEN);
+
   const {
     data,
     error,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery("myhouses", fetchHouses, {

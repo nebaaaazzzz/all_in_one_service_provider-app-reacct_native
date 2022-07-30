@@ -101,7 +101,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   ) {
     return (
       <View style={{ marginTop: "50%" }}>
-        <ActivityIndicator></ActivityIndicator>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
       </View>
     );
   }

@@ -59,7 +59,7 @@ const JobDetailScreen = ({ navigation, route }) => {
   if (isLoading || isFetching || applyMutuation.isLoading) {
     return (
       <View style={{ marginTop: "50%" }}>
-        <ActivityIndicator></ActivityIndicator>
+        <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
       </View>
     );
   }

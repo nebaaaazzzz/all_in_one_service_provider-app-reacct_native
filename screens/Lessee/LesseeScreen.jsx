@@ -10,12 +10,14 @@ import {
   ActivityIndicator,
   Modal,
   ToastAndroid,
+  Pressable,
+  Keyboard,
+  RefreshControl,
 } from "react-native";
-import { categoryList, regionsList } from "../../constants/data";
+import { regionsList } from "../../constants/data";
 import SelectDropdown from "react-native-select-dropdown";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, TextInput } from "react-native-paper";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { RadioButton } from "react-native-paper";
 import React, { useState, useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
@@ -32,15 +34,28 @@ import fromNow from "../../utils/time";
 import AppliedScreen from "./AppliedScreen";
 import PaymentScreen from "../Common/PaymentScreen";
 const LesseeStackNavigator = createStackNavigator();
-const fetchHouses = async ({ pageParam = 1 }) => {
-  const response = await fetch(`${BASEURI}/lessee/?page=${pageParam}`, {
-    headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
-    },
-  });
+const fetchHouses = async ({ pageParam = 1, queryKey }) => {
+  console.log(queryKey);
+  const response = await fetch(
+    `${BASEURI}/lessee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&propertyType=${queryKey[4]}&price=${queryKey[5]}`,
+    {
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    }
+  );
   return await response.json();
 };
-
+const propertyType = [
+  "Home",
+  "Villa",
+  "Apartment",
+  "Cottage",
+  "Hut",
+  "Tiny home",
+  "Guest house",
+  "Office space",
+];
 const Home = ({ item, pressHandler }) => {
   const [bgColor, setBgColor] = useState(false);
   return (
@@ -92,9 +107,11 @@ const Lessee = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [nearBy, setNearBy] = useState(false);
   const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(false); // while location fetch
 
   useEffect(() => {
     if (nearBy) {
+      setLoading(true);
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
@@ -103,11 +120,18 @@ const Lessee = ({ navigation }) => {
             ToastAndroid.LONG
           );
         }
-        let {
-          coords: { latitude, longitude },
-        } = await Location.getCurrentPositionAsync({});
+        let coords;
+        setTimeout(async () => {
+          if (!coords) {
+            coords = (await Location.getLastKnownPositionAsync({})).coords;
+            setLocation(`${coords.longitude},${coords.latitude}`);
+            setLoading(false);
+          }
+        }, 2000);
+        coords = (await Location.getCurrentPositionAsync({})).coords;
         if (latitude && longitude) {
-          setLocation(`${longitude},${latitude}`);
+          setLocation(`${coords.longitude},${coords.latitude}`);
+          setLoading(false);
         }
       })();
     } else {
@@ -124,46 +148,8 @@ const Lessee = ({ navigation }) => {
       name: "home",
     },
     {
-      title: "Islands",
-      name: "team",
-    },
-    {
-      title: "Arctic",
-      name: "setting",
-    },
-    {
-      title: "Amazing pools",
-      name: "picture",
-    },
-    {
-      title: "surfing",
-      name: "inbox",
-    },
-    {
-      title: "Bed & Breakfast",
-      name: "cloudo",
-    },
-    {
-      title: "Design",
-      name: "camera",
-    },
-    { title: "National parks", name: "phone" },
-    {
-      title: "shared homes",
-      name: "smileo",
-    },
-    {
-      title: "caves",
-      name: "piechart",
-    },
-    { title: "tropical", name: "dingding" },
-    {
-      title: "Amazing view",
-      name: "windowso",
-    },
-    {
-      title: "Earth Home",
-      name: "phone",
+      title: "NearBy",
+      name: "enviromento",
     },
   ];
   function pressHandler(id) {
@@ -179,29 +165,19 @@ const Lessee = ({ navigation }) => {
   /*Modal states */
   const [openModal, setOpenModal] = useState(false);
   const [region, setRegion] = useState("");
-  const [category, setCategory] = useState("");
-  const [gender, setGender] = useState("");
-  const [permanent, setPermanet] = useState("");
-  const [cvRequired, setCvRequired] = useState("");
+  const [placeType, setPlaceType] = useState("");
+  const [price, setPrice] = useState("");
   /* */
   const {
     data,
     error,
     fetchNextPage,
     hasNextPage,
+    isLoading,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery(
-    [
-      "houses",
-      location,
-      searchQuery,
-      region,
-      category,
-      gender,
-      permanent,
-      cvRequired,
-    ],
+    ["houses", location, searchQuery, region, placeType, price],
     fetchHouses,
     {
       getNextPageParam: (lastPage, pages) => {
@@ -212,218 +188,168 @@ const Lessee = ({ navigation }) => {
       },
     }
   );
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    queryClient.refetchQueries([
+      "houses",
+      location,
+      searchQuery,
+      region,
+      placeType,
+      price,
+    ]);
+    wait(500).then(() => setRefreshing(false));
+  }, []);
 
   if (status === "error") {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
+  }
+  if (isLoading || loading) {
+    <View style={{ flex: 1 }}>
+      <ActivityIndicator color={"#0244d0"} size={"large"} />
+    </View>;
   }
 
   return (
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <Modal visible={openModal}>
-        <View style={{ alignItems: "center", flex: 1 }}>
-          <SelectDropdown
-            rowStyle={{
-              color: "rgba(0,0,0,0.2)",
-            }}
-            dropdownOverlayColor="transparent"
-            buttonStyle={{
-              borderWidth: 1,
-              marginTop: "5%",
-              borderColor: "#0244d0",
-              width: "70%",
-              height: 30,
-              borderRadius: 15,
-            }}
-            buttonTextStyle={{
-              fontSize: 15,
-              color: "rgba(0,0,0,0.8)",
-            }}
-            data={["Any", ...regionsList]}
-            onSelect={(selectedItem, index) => {
-              if (index == 0) {
-                setRegion("");
-              } else {
-                setRegion(selectedItem);
-              }
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return selectedItem;
-            }}
-            defaultButtonText="Select Region"
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return item;
-            }}
-          />
-          <SelectDropdown
-            rowStyle={{
-              color: "rgba(0,0,0,0.2)",
-            }}
-            buttonTextStyle={{
-              fontSize: 15,
-              color: "rgba(0,0,0,0.8)",
-            }}
-            dropdownOverlayColor="transparent"
-            buttonStyle={{
-              borderWidth: 1,
-              marginTop: "5%",
-              borderColor: "#0244d0",
-              width: "70%",
-              width: "70%",
-              height: 30,
-              borderRadius: 15,
-            }}
-            data={["Any", ...categoryList]}
-            onSelect={(selectedItem, index) => {
-              if (index == 0) {
-                setCategory("");
-              }
-              setCategory(selectedItem);
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return selectedItem;
-            }}
-            defaultButtonText="Select Category"
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return item;
-            }}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: "5%",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontWeight: "bold", marginRight: 10 }}>Gender</Text>
-            {["male", "female", "both", "Any"].map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index + 1}
-                  onPress={() => {
-                    if (index == 3) {
-                      setGender("");
-                    }
-                    setGender(item);
-                  }}
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                >
-                  <RadioButton
-                    color="#0244d0"
-                    onPress={() => setGender(item)}
-                    value={item}
-                    status={gender === item ? "checked" : "unchecked"}
-                  />
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: "5%",
-            }}
-          >
-            <Text style={{ fontWeight: "bold" }}>permanent</Text>
-            {["yes", "no", "Any"].map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index + 1}
-                  onPress={() => {
-                    if (index == 0) {
-                      setPermanet(true);
-                    } else if (index == 1) {
-                      setPermanet(false);
-                    } else {
-                      setPermanent("");
-                    }
-                  }}
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                >
-                  <RadioButton
-                    color="#0244d0"
-                    onPress={() => setGender(item)}
-                    value={item}
-                    status={gender === item ? "checked" : "unchecked"}
-                  />
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: "5%",
-            }}
-          >
-            <Text style={{ fontWeight: "bold" }}>cv required</Text>
-            {["yes", "no", "Any"].map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index + 1}
-                  onPress={() => {
-                    if (index == 0) {
-                      setCvRequired(true);
-                    } else if (index == 1) {
-                      setCvRequired(false);
-                    } else {
-                      setCvRequired("");
-                    }
-                  }}
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                >
-                  <RadioButton
-                    color="#0244d0"
-                    onPress={() => setGender(item)}
-                    value={item}
-                    status={gender === item ? "checked" : "unchecked"}
-                  />
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              style={{
-                elevation: 10,
-                backgroundColor: "#0244d0",
-                marginRight: "5%",
-                paddingHorizontal: "10%",
-                paddingVertical: "2%",
-                marginTop: "10%",
+        <Pressable
+          style={{ flex: 1 }}
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View style={{ alignItems: "center", flex: 1 }}>
+            <SelectDropdown
+              rowStyle={{
+                color: "rgba(0,0,0,0.2)",
+              }}
+              dropdownOverlayColor="transparent"
+              buttonStyle={{
+                borderWidth: 1,
+                marginTop: "5%",
+                borderColor: "#0244d0",
+                width: "70%",
+                height: 30,
                 borderRadius: 5,
               }}
-              onPress={() => setOpenModal(false)}
-            >
-              <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                elevation: 10,
-                backgroundColor: "#0244d0",
-                paddingHorizontal: "10%",
-                paddingVertical: "2%",
-                marginTop: "10%",
+              buttonTextStyle={{
+                fontSize: 15,
+                color: "rgba(0,0,0,0.8)",
+              }}
+              data={["Any", ...regionsList]}
+              onSelect={(selectedItem, index) => {
+                if (index == 0) {
+                  setRegion("");
+                } else {
+                  setRegion(selectedItem);
+                }
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
+              }}
+              defaultButtonText={region || "Select Region"}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
+            />
+            <SelectDropdown
+              rowStyle={{
+                color: "rgba(0,0,0,0.2)",
+              }}
+              buttonTextStyle={{
+                fontSize: 15,
+                color: "rgba(0,0,0,0.8)",
+              }}
+              dropdownOverlayColor="transparent"
+              buttonStyle={{
+                borderWidth: 1,
+                marginTop: "5%",
+                borderColor: "#0244d0",
+                width: "70%",
+                width: "70%",
+                height: 30,
                 borderRadius: 5,
               }}
-              onPress={() => setOpenModal(false)}
+              data={["Any", ...propertyType]}
+              onSelect={(selectedItem, index) => {
+                if (index == 0) {
+                  setPlaceType("");
+                } else {
+                  setPlaceType(selectedItem);
+                }
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
+              }}
+              defaultButtonText={placeType || "Select PlaceType"}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                paddingHorizontal: "15%",
+                marginVertical: "5%",
+                alignItems: "center",
+              }}
             >
-              <Text style={{ fontSize: 18, color: "#fff" }}>Save</Text>
-            </TouchableOpacity>
+              <Text style={{ fontWeight: "bold", marginHorizontal: "2%" }}>
+                Starting Price
+              </Text>
+              <TextInput
+                value={price}
+                onChangeText={(text) => {
+                  setPrice(text.replace(/\D/g, ""));
+                }}
+                keyboardType="numeric"
+                style={{ flex: 1, height: 40 }}
+              />
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{
+                  elevation: 10,
+                  backgroundColor: "#0244d0",
+                  marginRight: "5%",
+                  paddingHorizontal: "10%",
+                  paddingVertical: "2%",
+                  marginTop: "10%",
+                  borderRadius: 5,
+                }}
+                onPress={() => setOpenModal(false)}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  elevation: 10,
+                  backgroundColor: "#0244d0",
+                  paddingHorizontal: "10%",
+                  paddingVertical: "2%",
+                  marginTop: "10%",
+                  borderRadius: 5,
+                }}
+                onPress={() => setOpenModal(false)}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>Save</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </Pressable>
       </Modal>
       <FilterModal visible={visible} setVisible={setVisible} />
       <TouchableOpacity
@@ -516,6 +442,10 @@ const Lessee = ({ navigation }) => {
         <FlatList
           style={{ marginTop: 20 }}
           data={data.pages}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           onEndReached={() => {
             if (hasNextPage) {
               fetchNextPage();
@@ -523,7 +453,9 @@ const Lessee = ({ navigation }) => {
           }}
           ListFooterComponent={() => {
             if (isFetchingNextPage) {
-              return <ActivityIndicator></ActivityIndicator>;
+              return (
+                <ActivityIndicator color={"#0244d0"} r></ActivityIndicator>
+              );
             }
             if (!hasNextPage) {
               return (

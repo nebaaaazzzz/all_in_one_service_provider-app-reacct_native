@@ -140,7 +140,7 @@ const Home = ({ navigation }) => {
               source={require("./../assets/homescreenicons/lesser.png")}
             />
 
-            <SText>Lesser</SText>
+            <SText>Lessor</SText>
           </STouchableOpacity>
         </View>
       </View>

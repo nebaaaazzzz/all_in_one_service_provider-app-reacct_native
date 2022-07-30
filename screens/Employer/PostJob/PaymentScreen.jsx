@@ -13,15 +13,17 @@ import { TextInput } from "react-native-paper";
 import { PostJobContext } from "./PostJobScreen";
 import { RadioButton, Divider } from "react-native-paper";
 
-const PaymentScreen = ({ navigation }) => {
+const PaymentScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
-  const [fromBudget, setFromBudget] = useState("");
-  const [paymentStyle, setPaymentStyle] = React.useState();
-
-  const [toBudget, setToBudget] = useState("");
-  const [bool, setBool] = useState(false);
+  const [fromBudget, setFromBudget] = useState();
   const exp = ["Fixed", "By Negotiation", "By The Organization Scale"];
+  const [paymentStyle, setPaymentStyle] = React.useState(
+    exp.findIndex((item) => data?.paymentStyle === item)
+  );
+
+  const [toBudget, setToBudget] = useState();
+  const [bool, setBool] = useState(false);
   useEffect(() => {
     if (paymentStyle !== undefined) {
       if (paymentStyle > 0) {
@@ -155,15 +157,15 @@ const PaymentScreen = ({ navigation }) => {
                   paymentStyle: exp[paymentStyle],
                 },
               });
+
+              // if (
+              //   parseFloat(fromBudget) &&
+              //   parseFloat(toBudget) &&
+              //   parseFloat("2") < parseFloat("565")
+              // ) {
+
+              navigation.navigate("employer/postjob/review");
             }
-
-            // if (
-            //   parseFloat(fromBudget) &&
-            //   parseFloat(toBudget) &&
-            //   parseFloat("2") < parseFloat("565")
-            // ) {
-
-            navigation.navigate("employer/postjob/review");
             // }
           }}
           style={{

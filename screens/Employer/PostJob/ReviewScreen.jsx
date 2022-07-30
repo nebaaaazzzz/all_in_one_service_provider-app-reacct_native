@@ -756,7 +756,6 @@ function AdvancedPred({
                 onPress={() => setGender(item)}
                 color="#0244d0"
                 value={item}
-                onPress={() => setGender(item)}
                 status={gender === item ? "checked" : "unchecked"}
               />
               <Text>{item}</Text>

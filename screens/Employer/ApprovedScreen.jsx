@@ -187,7 +187,7 @@ const EmployerStackNavigator = createStackNavigator();
 
 const fetchApproved = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
-    `${BASEURI}/employer/approved/${queryKey[1]}.?page=${pageParam}`,
+    `${BASEURI}/employer/approved/${queryKey[1]}?page=${pageParam}`,
     {
       headers: {
         Authorization: `Bearer ${BASETOKEN}`,
@@ -303,7 +303,7 @@ const Employer = ({ navigation, route }) => {
         }}
         ListFooterComponent={() => {
           if (isFetchingNextPage) {
-            return <ActivityIndicator></ActivityIndicator>;
+            return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
             return (
