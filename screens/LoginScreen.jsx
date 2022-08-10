@@ -9,7 +9,6 @@ import {
   Pressable,
   TextInput,
   StatusBar,
-  ToastAndroid,
 } from "react-native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -20,18 +19,7 @@ import * as SecureStore from "expo-secure-store";
 
 import { useMutation, useQueryClient } from "react-query";
 import { BASEURI } from "../urls";
-import * as yup from "yup";
-const yupPhoneSchema = yup.object().shape({
-  phoneNumber: yup
-    .string()
-    .matches(/^9/, "must stary with 9")
-    .max(9)
-    .min(9)
-    .required(),
-});
-const yupPasswordSchema = yup.object().shape({
-  password: yup.string().required().min(6),
-});
+
 const LoginScreen = ({ navigation, route }) => {
   const [password, setPassword] = React.useState("");
   const queryClient = useQueryClient();
@@ -42,8 +30,6 @@ const LoginScreen = ({ navigation, route }) => {
     async () => {
       try {
         if (!(passwordError && phoneError)) {
-          console.log("world");
-
           const response = await fetch(`${BASEURI}/auth/login`, {
             method: "POST",
             headers: {
@@ -51,13 +37,10 @@ const LoginScreen = ({ navigation, route }) => {
             },
             body: JSON.stringify({ phoneNumber, password }),
           });
-          console.log("hello1");
 
           if (!response.ok) {
-            console.log("reponse text", response.statusText);
             throw new Error((await response.json()).err);
           }
-          console.log("hello");
           return await response.json();
         }
       } catch (err) {
@@ -129,14 +112,6 @@ const LoginScreen = ({ navigation, route }) => {
                   selectionColor={"#000"}
                   value={phoneNumber}
                   onChangeText={(text) => {
-                    yupPhoneSchema
-                      .validate({ phoneNumber: text })
-                      .then(() => {
-                        setPhoneError("");
-                      })
-                      .catch((err) => {
-                        setPhoneError(err.message);
-                      });
                     setPhoneNumber(text);
                   }}
                   placeholder={"Phone number"}
@@ -147,11 +122,6 @@ const LoginScreen = ({ navigation, route }) => {
                   }}
                 />
               </View>
-              {phoneError ? (
-                <Text style={{ color: "red" }}>{phoneError}</Text>
-              ) : (
-                <></>
-              )}
             </View>
             <View style={{ marginBottom: 25 }}>
               <View
@@ -172,14 +142,6 @@ const LoginScreen = ({ navigation, route }) => {
                   selectionColor={"#000"}
                   value={password}
                   onChangeText={(text) => {
-                    yupPasswordSchema
-                      .validate({ password: text })
-                      .then(() => {
-                        setPasswordError("");
-                      })
-                      .catch((err) => {
-                        setPasswordError(err.message);
-                      });
                     setPassword(text);
                   }}
                   placeholder={"Password"}
@@ -187,11 +149,6 @@ const LoginScreen = ({ navigation, route }) => {
                   secureTextEntry={true}
                 />
               </View>
-              {passwordError ? (
-                <Text style={{ color: "red" }}>{passwordError}</Text>
-              ) : (
-                <></>
-              )}
             </View>
 
             <TouchableOpacity

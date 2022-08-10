@@ -87,7 +87,7 @@ const AppNavigator = ({ navigation }) => {
     <SafeAreaView style={{ martinTop: StatusBar.currentHeight, flex: 1 }}>
       <NavigationContainer
         linking={linking}
-        theme={scheme === "dark" ? DarkTheme : DefaultTheme}
+        // theme={scheme === "dark" ? DarkTheme : DefaultTheme}
       >
         <UserContext.Provider value={data}>
           <StackNavigator.Navigator screenOptions={{ headerShown: false }}>

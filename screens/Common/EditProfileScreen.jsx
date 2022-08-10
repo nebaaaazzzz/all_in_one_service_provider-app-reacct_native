@@ -173,7 +173,6 @@ const EditProfileScreen = ({ navigation }) => {
   }
   if (mutation.isError) {
     ToastAndroid.show(mutation.error.message, ToastAndroid.LONG);
-    console.log(mutation.error.message);
   }
   if (mutation.isSuccess) {
     queryClient.refetchQueries("user");
@@ -246,10 +245,6 @@ const EditProfileScreen = ({ navigation }) => {
                 }}
               >
                 <ImageBackground
-                  onError={(e) => {
-                    console.l;
-                    console.log("error loading image");
-                  }}
                   source={
                     image
                       ? {

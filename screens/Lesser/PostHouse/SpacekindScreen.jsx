@@ -18,7 +18,7 @@ const SpacekindScreen = ({ navigation, route }) => {
       (item) => item == route.params.data?.placeKind
     );
   }
-  const [active, setActive] = useState(index);
+  const [active, setActive] = useState(index > 0 ? index : undefined);
   const pressHandler = (id) => {
     setActive(id);
   };
@@ -82,7 +82,6 @@ const SpacekindScreen = ({ navigation, route }) => {
               },
             });
             if (route.params?.data) {
-              console.log("hello");
               return navigation.navigate("lesser/posthouse/pinspot", {
                 data: route.params.data,
               });

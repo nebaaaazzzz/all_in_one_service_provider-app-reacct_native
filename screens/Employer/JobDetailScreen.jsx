@@ -318,7 +318,6 @@ const JobDetailScreen = ({ navigation, route }) => {
                     fileUri,
                     fileName = "File"
                   ) => {
-                    console.log(fileUri);
                     try {
                       const fileString = await FileSystem.readAsStringAsync(
                         fileUri,

@@ -1,5 +1,5 @@
 import * as SecureStore from "expo-secure-store";
-const BASEURI = `http://10.42.0.1:5000`;
+const BASEURI = `http://192.168.43.136:5000`;
 let BASETOKEN;
 (async () => {
   BASETOKEN = await SecureStore.getItemAsync("token");

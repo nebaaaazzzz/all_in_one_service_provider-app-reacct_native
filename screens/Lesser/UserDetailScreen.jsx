@@ -17,8 +17,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Requests permissions for external directory
 
 const fetchUser = async ({ queryKey }) => {
-  console.log(`${BASEURI}/lesser/${queryKey[1]}/${queryKey[2]}`);
-
   const response = await fetch(
     `${BASEURI}/lesser/${queryKey[1]}/${queryKey[2]}`,
     {
@@ -72,7 +70,6 @@ const UserDetailScreen = ({ navigation, route }) => {
     ["user", route.params.houseId, route.params.id],
     fetchUser
   );
-  console.log(data);
   if (!isFocused) {
     queryClient.invalidateQueries([
       "user",

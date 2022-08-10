@@ -15,12 +15,15 @@ const DrawerNavigator = createDrawerNavigator();
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileScreen from "./Common/ProfileScreen";
 import SettingsScreen from "./Common/SettingsScreen";
+import AntDesign from "react-native-vector-icons/AntDesign";
 import DatePicker from "@react-native-community/datetimepicker";
-
-import MessagesScreen from "./Common/MessagesScreen";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AboutScreen from "./Common/AboutScreen";
+import FeedbackScreen from "./Common/FeedbackScreen";
+import Entypo from "@expo/vector-icons/Entypo";
 import CustomDrawer from "../components/CustomDrawer";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-
+import ContactusScreen from "./Common/ContactusScreen";
 const STouchableOpacity = styled(TouchableOpacity)`
   overflow: hidden;
   border-radius: 10px;
@@ -33,6 +36,7 @@ const SText = styled(Text)`
   font-size: 18px;
   margin-bottom: 10px;
 `;
+
 const Home = ({ navigation }) => {
   const dimen = useWindowDimensions();
   return (
@@ -41,13 +45,15 @@ const Home = ({ navigation }) => {
         justifyContent: "center",
         flex: 1,
         martinTop: StatusBar.currentHeight,
-        backgroundColor: "#0244d0",
+        // backgroundColor: "#0244d0",
       }}
     >
-      <View style={{ height: "5%" }}>
+      {/* <View style={{ height: "5%" }}>
         <Svg
           xmlns="http://www.w3.org/2000/svg"
           width={dimen.width}
+          // width={450}
+          // height={450}
           height={dimen.height}
           viewBox={`0 0 ${dimen.width} ${dimen.height}`}
         >
@@ -59,7 +65,7 @@ const Home = ({ navigation }) => {
             fill="#fff"
           />
         </Svg>
-      </View>
+      </View> */}
       <View style={{ paddingTop: "10%" }}>
         <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 20 }}>
           Continue as ...
@@ -150,7 +156,6 @@ const Home = ({ navigation }) => {
 
 const HomeScreen = () => {
   const handleOpenURL = (url) => {
-    console.log(url);
     // if (isSucceedPayment(url)) {
     //   console.log("hello");
     //   // your condition
@@ -198,7 +203,7 @@ const HomeScreen = () => {
           headerTitleAlign: "center",
           headerTintColor: "#fff",
           drawerIcon: ({ color }) => (
-            <Ionicons name="person-outline" size={22} color={color} />
+            <Entypo name="home" size={22} color={"#0244d0"} />
           ),
         }}
       />
@@ -210,18 +215,40 @@ const HomeScreen = () => {
           return {
             headerShown: bool ? false : true,
             drawerIcon: ({ color }) => (
-              <Ionicons name="person-outline" size={22} color={color} />
+              <Ionicons name="person-outline" size={22} color={"#0244d0"} />
             ),
           };
         }}
       />
 
       <DrawerNavigator.Screen
-        name="FeedBack"
-        component={MessagesScreen}
+        name="About"
+        component={AboutScreen}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
+            <AntDesign name="infocirlceo" size={22} color={"#0244d0"} />
+          ),
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="Contact us"
+        component={ContactusScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialIcons name="contact-page" size={22} color={"#0244d0"} />
+          ),
+        }}
+      />
+      <DrawerNavigator.Screen
+        name="FeedBack"
+        component={FeedbackScreen}
+        options={{
+          drawerIcon: ({ color }) => (
+            <Ionicons
+              name="chatbox-ellipses-outline"
+              size={22}
+              color={"#0244d0"}
+            />
           ),
         }}
       />

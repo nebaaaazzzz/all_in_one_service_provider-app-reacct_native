@@ -7,6 +7,9 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcon from "@expo/vector-icons/MaterialIcons";
+import FontAwsome from "@expo/vector-icons/FontAwesome";
+import FontAwsome5 from "@expo/vector-icons/FontAwesome5";
 import { PostHouseContext } from "./PostHouseScreen";
 
 const List = ({ question, arr, state, setState }) => {
@@ -41,8 +44,7 @@ const List = ({ question, arr, state, setState }) => {
                 alignItems: "center",
               }}
             >
-              <Text>{item.name}</Text>
-              <Icon name={item.icon} />
+              {item.icon}
             </TouchableOpacity>
           );
         })}
@@ -55,72 +57,73 @@ const PlaceOfferScreen = ({ navigation, route }) => {
   const amenities = [
     {
       name: "pool",
-      icon: "pool",
+      icon: <Icon name={"pool"} />,
+      // icon: "pool",
     },
 
     {
       name: "Fire pit",
-      icon: "campfire",
+      icon: <Icon name={"campfire"} />,
     },
     {
       name: "Pool table",
-      icon: "table-tennis",
+      icon: <Icon name={"table-tennis"} />,
     },
     {
       name: "Indoor fireplace",
-      icon: "fireplace",
+      icon: <Icon name={"fireplace"} />,
     },
     {
       name: "Out door dininig area",
-      icon: "dinner-dining", //materialIcon
+      icon: <MaterialIcon name={"dinner-dining"} />,
     },
     {
       name: "Exercise equipment",
-      icon: "run",
+      icon: <MaterialIcon name={"run"} />,
     },
   ];
   const guestFav = [
     {
       name: "Wifi",
-      icon: "wifi",
+      icon: <Icon name={"wifi"} />,
     },
     {
       name: "Tv",
-      icon: "yotube-tv",
+      icon: <FontAwsome name="tv" />,
     },
     {
       name: "Kitchen",
-      icon: "kitchen", //material
+      icon: <MaterialIcon name={"kitchen"} />,
     },
     {
       name: "Wahser",
-      icon: "dishwasher",
+      icon: <Icon name={"washer"} />,
     },
     {
       name: "Free parking on premises",
-      icon: "parking",
+      icon: <Icon name={"parking"} />,
     },
     {
       name: "Paid parking on premises",
-      icon: "car-parking-lights",
+      icon: <Icon name={"car-parking-lights"} />,
     },
     {
       name: "Air conditioning",
-      icon: "air-conditioner",
+      icon: <Icon name={"air-conditioner"} />,
     },
     {
       name: "Dedicated workspace",
-      icon: "facebook-workplace",
+      icon: <Icon name={"facebook-workspace"} />,
     },
   ];
   const saftyItems = [
     {
       name: "Smoke alarm",
-      icon: "smoke-detector-variant",
+      icon: <Icon name={"smoke-detector-variant"} />,
     },
     {
       name: "First aid kit",
-      icon: "first-aid", //fontawsome
+      icon: <FontAwsome5 name={"first-aid"} />,
     },
 
     { name: "Fire extinguisher", icon: "fire-extinguisher" },

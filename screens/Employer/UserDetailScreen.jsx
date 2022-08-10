@@ -41,7 +41,6 @@ const fetchUser = async ({ queryKey }) => {
 };
 
 const UserDetailScreen = ({ navigation, route }) => {
-  console.log(route.params);
   const approveMutation = useMutation(async () => {
     const response = await fetch(
       `${BASEURI}/employer/accept/${route.params.id}/${route.params.jobId}`,

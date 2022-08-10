@@ -7,31 +7,33 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Entypo from "@expo/vector-icons/Entypo";
 import { PostHouseContext } from "./PostHouseScreen";
 const DescribePlaceScreen = ({ navigation, route }) => {
   //limit active
-
+  const [limit, setLimit] = useState([]);
   const highLight = [
     {
       name: "Peaceful",
-      icon: "peace",
+      icon: <Icon name="peace" />,
     },
     {
       name: "Unique",
-      icon: "lighthouse",
+      icon: <IcEntypoon name="dot-single" />,
     },
     {
       name: "Family-friendky",
-      icon: "horse-human",
+      icon: <Icon name="horse-human" />,
     },
     {
       name: "Stylish",
-      icon: "House-sidining",
+      icon: <MaterialIcons name="style" />,
     },
-    { name: "Central", icon: "location" },
+    { name: "Central", icon: <MaterialIcons name="center-focus-strong" /> },
     {
       name: "Spacious",
-      icon: "account-multiple-outline",
+      icon: <Icon name="account-multiple-outline" />,
     },
   ];
   let titleList;
@@ -84,11 +86,13 @@ const DescribePlaceScreen = ({ navigation, route }) => {
             return (
               <TouchableOpacity
                 key={index + 1}
+                disabled={limit.length > 2}
                 style={{
                   width: 100,
                   borderWidth: 1,
-                  borderColor: active[index] ? "#0244d0" : "rgba(0,0,0,0.2)",
+                  borderColor: limit[index] ? "#0244d0" : "rgba(0,0,0,0.2)",
                   margin: 10,
+                  backgroundColor: limit.length < 3 ? "rgba(0,0,0,0.8)" : "",
                   right: 20,
                   flexDirection: "row",
                   alignItems: "center",
@@ -98,11 +102,9 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                   borderRadius: 5,
                 }}
                 onPress={() => {
-                  setActive(
-                    active.map((bool, j) => {
-                      return j == index ? !bool : bool;
-                    })
-                  );
+                  if (limit.length < 2) {
+                    setLimit([...limit, index]);
+                  }
                 }}
               >
                 <Icon name={item.icon} size={18} />
@@ -125,7 +127,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
         }}
       >
         <TouchableOpacity
-          disabled={!active}
+          // disabled={!active}
           onPress={() => {
             const newArr = active
               .map((i, j) => {

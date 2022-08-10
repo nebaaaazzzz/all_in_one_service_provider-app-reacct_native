@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -25,7 +25,6 @@ import DatePicker from "@react-native-community/datetimepicker";
 import { useQueryClient } from "react-query";
 import { useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../../urls";
-import { UserContext } from "./../../../App.Navigator";
 const ReviewScreen = ({ navigation }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -112,7 +111,6 @@ const ReviewScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: 80,
-            marginTop: StatusBar.currentHeight,
             flex: 1,
           }}
         >

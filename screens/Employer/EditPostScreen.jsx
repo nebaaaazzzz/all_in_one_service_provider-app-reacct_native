@@ -1,7 +1,6 @@
 import SelectDropdown from "react-native-select-dropdown";
 import { categoryList } from "../../constants/data";
-
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -13,14 +12,18 @@ import {
   ToastAndroid,
   Pressable,
   ActivityIndicator,
+  Modal,
 } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import {
   RadioButton,
   Checkbox,
   List,
   Divider,
   TextInput,
+  Searchbar,
 } from "react-native-paper";
+import { MAPBOXTOKEN, MAPBOXURI } from "../../urls";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as DocumentPicker from "expo-document-picker";
 import DatePicker from "@react-native-community/datetimepicker";
@@ -52,31 +55,116 @@ const exp = [
     description: "Looking for comprehensive and deep expertise in this filed",
   },
 ];
+const pay = ["Fixed", "By Negotiation", "By The Organization Scale"];
+
 const genderList = ["Male", "Female", "Both"];
 const EditPostScreen = ({ navigation, route }) => {
+  /*LOCATION SCREEN STATES */
+  const [isFull, setIsFull] = useState(false);
+  const [locationQuery, setLocationQuery] = useState("");
+  const [search, setSearch] = useState(false);
+  const [searchResult, setSearchResut] = useState([]);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const inputRef = useRef();
+  const pressHandler = async () => {
+    await Location.enableNetworkProviderAsync();
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      ToastAndroid.show(
+        "Permission to access location was denied",
+        ToastAndroid.LONG
+      );
+      return;
+    }
+    try {
+      const getLocation = async (location) => {
+        try {
+          const response = await fetch(
+            `${MAPBOXURI}/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=${MAPBOXTOKEN}`
+          );
+          const r = await response.json();
+          if (r.features[0].place_name && r.features[0].center) {
+            setIsGettingLocation(false);
+            setCenter(r.features[0].center);
+            setLocationModal(false);
+            setPinSpotModal(true);
+          }
+        } catch (err) {
+          ToastAndroid.show(
+            "check your internet connection",
+            ToastAndroid.LONG
+          );
+          setIsGettingLocation(false);
+          throw err;
+        }
+      };
+
+      setIsGettingLocation(true);
+      const t = setTimeout(async () => {
+        try {
+          const location = await Location.getLastKnownPositionAsync();
+          getLocation(location);
+        } catch (err) {
+          throw err;
+        }
+      }, 10000);
+      try {
+        const location = await Location.getCurrentPositionAsync();
+        clearTimeout(t);
+        getLocation(location);
+
+        // navigation.navigate("employer/postjob/pinspot", {
+        //   center,
+        //   placeName,
+        // });
+      } catch (err) {
+        throw err;
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
+  const searchListPressHandler = (index) => {
+    setCenter(searchResult[index].center);
+    setLocationModal(false);
+    setPinSpotModal(true);
+  };
+
+  /* */
   const queryClient = useQueryClient();
   const jobPost = route.params.data;
-  const [fromBudget, setFromBudget] = useState(jobPost?.budget?.from);
-  const [toBudget, setToBudget] = useState(jobPost?.budget?.to);
-  const [paymentStyle, setPaymentStyle] = useState();
-  const [experience, setExperience] = React.useState(
-    exp.findIndex((item) => item.title === jobPost?.experience?.title)
-  );
+  const dimension = useWindowDimensions();
+
+  /*for data and time to open */
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  /* */
+
+  /*for place modal controller */
+  const [locationModal, setLocationModal] = useState(false);
+  const [pinSpotModal, setPinSpotModal] = useState(false);
+
+  const handlePress = () => setExpanded(!expanded);
+  const [expanded, setExpanded] = useState(false); //for advanced accordion
+  const [bool, setBool] = useState(false); //for payment to make button active
+  const [skill, setSkill] = useState("");
+
+  /* post data*/
   const [date, setDate] = useState(
     jobPost?.deadline ? new Date(jobPost?.deadline) : undefined
   );
   const [datetime, setDatetime] = useState(
-    jobPost?.deadtime ? date : undefined
+    jobPost?.deadtime ? new Date(jobPost?.deadline) : undefined
   );
+  const [experience, setExperience] = useState(
+    exp.findIndex((item) => item.title === jobPost?.experience?.title)
+  );
+  const [center, setCenter] = useState(jobPost?.location?.coordinates);
   const [cvRequired, setCvRequired] = useState(jobPost.cvRequired);
-  const dimension = useWindowDimensions();
   const [category, setCategory] = useState(jobPost.category);
   const [skills, setSkills] = useState(jobPost?.skills || []);
-  const [skill, setSkill] = useState("");
-  const [expanded, setExpanded] = useState(false);
-  const handlePress = () => setExpanded(!expanded);
+  const [placeName, setPlaceName] = useState(jobPost.placeName);
+  const [region, setRegion] = useState(jobPost.region);
   const [file, setFile] = useState("");
   const [description, setDescription] = useState(jobPost.description);
   const [englishLevel, setEnglishLevel] = useState(jobPost?.englishLevel);
@@ -84,6 +172,34 @@ const EditPostScreen = ({ navigation, route }) => {
   const [gender, setGender] = useState(jobPost?.gender);
   const [permanent, setPermanet] = useState(jobPost?.permanent);
   const [headline, setHeadline] = useState(jobPost.title);
+  /*payment */
+  const [fromBudget, setFromBudget] = useState(
+    jobPost?.budget?.from ? String(jobPost?.budget?.from) : undefined
+  );
+  const [toBudget, setToBudget] = useState(
+    jobPost?.budget?.to ? String(jobPost?.budget?.to) : undefined
+  );
+  const [paymentStyle, setPaymentStyle] = React.useState(
+    pay.findIndex((item) => jobPost?.paymentStyle === item)
+  );
+  /* */
+
+  useEffect(() => {
+    if (paymentStyle !== undefined) {
+      if (paymentStyle > 0) {
+        setBool(true);
+      } else {
+        setBool(
+          parseFloat(fromBudget) &&
+            parseFloat(toBudget) &&
+            parseFloat(fromBudget) < parseFloat(toBudget)
+        );
+      }
+    } else {
+      setBool(false);
+    }
+  }, [paymentStyle, fromBudget, toBudget]);
+  /* */
   const fileSelector = async () => {
     const doc = await DocumentPicker.getDocumentAsync({
       multiple: true,
@@ -104,7 +220,7 @@ const EditPostScreen = ({ navigation, route }) => {
       const response = await fetch(
         `${BASEURI}/employer/update/${jobPost._id}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${BASETOKEN}`,
           },
@@ -123,30 +239,41 @@ const EditPostScreen = ({ navigation, route }) => {
         type: file.mimeType,
       });
     }
-
+    //experience placeName file
     formData.append(
       "body",
       JSON.stringify({
-        headline,
+        title: headline,
         description,
-        datetime,
+        datetime: datetime ? true : false,
         deadline,
+        experience: exp[experience],
         category,
-        skill,
+        skills,
         permanent,
+        placeName,
         cvRequired,
         englishLevel,
         hourPerWeeks,
         gender,
+        ...(region ? { region } : {}),
+        ...(paymentStyle == 0
+          ? {
+              paymentStyle: exp[paymentStyle],
+              budget: {
+                from: fromBudget,
+                to: toBudget,
+              },
+            }
+          : { paymentStyle: exp[paymentStyle] }),
       })
     );
     mutate(formData);
   };
 
   if (isSuccess) {
-    navigation.navigate("employer/jobdetail", {
-      id: jobPOst._id,
-    });
+    navigation.goBack();
+    ToastAndroid.show("successfuly updated");
     queryClient.invalidateQueries("myhouses");
   }
 
@@ -162,8 +289,304 @@ const EditPostScreen = ({ navigation, route }) => {
       </View>
     );
   }
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetch(
+        `${MAPBOXURI}/mapbox.places/${locationQuery}.json?access_token=${MAPBOXTOKEN}`
+      )
+        .then(async (res) => {
+          const s = await res.json();
+          if (s.features) {
+            setSearchResut(s.features);
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [locationQuery]);
   return (
     <View style={{ flex: 1 }}>
+      <Modal visible={locationModal}>
+        <Pressable
+          style={{ flex: 1 }}
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              // backgroundColor: "#0099ff",
+              backgroundColor: "rgba(0,0,0,0.3)",
+              marginTop: StatusBar.currentHeight,
+            }}
+          >
+            <Modal visible={isGettingLocation} animationType="fade">
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View>
+                  <ActivityIndicator color={"#0244d0"} size="large" />
+                  <Text style={{ marginTop: "10%" }}>
+                    Getting Current Location
+                  </Text>
+                </View>
+              </View>
+            </Modal>
+
+            <View
+              style={{
+                backgroundColor: "#fff",
+                flex: 1,
+              }}
+            >
+              {isFull ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingHorizontal: 5,
+                    paddingVertical: 5,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIsFull(false);
+                      setLocationQuery("");
+                      inputRef.current.clear();
+                    }}
+                  >
+                    <Icon size={20} name="arrow-left" />
+                  </TouchableOpacity>
+                  <Text style={{ fontWeight: "600", fontSize: 20 }}>
+                    Enter your address
+                  </Text>
+                  <Text></Text>
+                </View>
+              ) : (
+                <></>
+              )}
+
+              {isFull ? (
+                <></>
+              ) : (
+                <MapView
+                  style={{
+                    flex: 1,
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                  }}
+                  cacheEnabled
+                  initialRegion={{
+                    latitude: 11.5968568,
+                    longitude: 37.3981523,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                />
+              )}
+
+              <Searchbar
+                onChangeText={setLocationQuery}
+                icon={"location-enter"}
+                iconColor={"#0244d0"}
+                ref={inputRef}
+                onFocus={() => {
+                  if (isFull) {
+                    setSearch(true);
+                  } else {
+                    inputRef.current.blur();
+                    setIsFull(true);
+                  }
+                }}
+                onBlur={() => {
+                  setSearch(false);
+                }}
+                style={{
+                  borderRadius: 10,
+                  marginTop: "10%",
+                  width: "90%",
+                  position: isFull ? "relative" : "absolute",
+                  // top: "10%",
+                  transform: [{ translateX: 10 }],
+                }}
+              />
+              {isFull && (search || locationQuery) ? (
+                <ScrollView
+                  style={{ marginVertical: 10, paddingHorizontal: 20 }}
+                  showsVerticalScrollIndicator={false}
+                >
+                  {searchResult.map((place, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index + 1}
+                        onPress={() => {
+                          searchListPressHandler(index);
+                        }}
+                        style={{ borderBottomWidth: 0.2, marginVertical: 5 }}
+                      >
+                        <Text style={{ marginVertical: "2%" }}>
+                          {place.place_name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              ) : (
+                <></>
+              )}
+              {isFull && !search && !locationQuery ? (
+                <>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      transform: [{ translateX: 25 }],
+
+                      marginTop: "5%",
+                    }}
+                    onPress={pressHandler}
+                  >
+                    <FIcon name="location-arrow" color="#0244d0" size={20} />
+                    <Text style={{ marginLeft: "5%", fontSize: 18 }}>
+                      Use my current location
+                    </Text>
+                  </TouchableOpacity>
+                  {/* add this feature to add address manually */}
+                  {/* <TouchableOpacity
+                style={{
+                  marginVertical: 10,
+
+                  transform: [{ translateX: 25 }],
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "900",
+                    textDecorationLine: "underline",
+                    fontSize: 18,
+                  }}
+                >
+                  Enter address manually
+                </Text>
+              </TouchableOpacity> */}
+                </>
+              ) : (
+                <></>
+              )}
+            </View>
+          </View>
+        </Pressable>
+        <Pressable onPress={() => setLocationModal(false)}>
+          <Text>Close</Text>
+        </Pressable>
+      </Modal>
+      <Modal visible={pinSpotModal}>
+        <View
+          style={{
+            marginTop: StatusBar.currentHeight,
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.02)",
+          }}
+        >
+          <Text
+            style={{
+              color: "rgba(0,0,0,0.6)",
+              fontSize: 18,
+              textAlign: "center",
+              margin: "5%",
+            }}
+          >
+            Is this the correct location, in the red marker? you can press and
+            drag and change locations!
+          </Text>
+          <MapView
+            style={{
+              flex: 1,
+            }}
+            region={{
+              latitude: center[1],
+              longitude: center[0],
+              latitudeDelta: 0.0022,
+              longitudeDelta: 0.0021,
+            }}
+            initialRegion={{
+              latitude: center[1],
+              longitude: center[0],
+              latitudeDelta: 0.0022,
+              longitudeDelta: 0.0021,
+            }}
+          >
+            <Marker
+              onDragEnd={({ nativeEvent: { coordinate } }) => {
+                setCenter([coordinate.longitude, coordinate.latitude]);
+              }}
+              flat
+              draggable
+              coordinate={{ latitude: center[1], longitude: center[0] }}
+            />
+          </MapView>
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderTopWidth: 2,
+              alignItems: "flex-end",
+              height: 60,
+              justifyContent: "center",
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+          >
+            <TouchableOpacity
+              onPress={async () => {
+                const response = await fetch(
+                  `${MAPBOXURI}/mapbox.places/${center[0]},${center[1]}.json?access_token=${MAPBOXTOKEN}`
+                );
+                const r = await response.json();
+                if (r?.features[0]?.place_name && r.features[0].center) {
+                  if (r.features[0].place_type[0] === "locality") {
+                    const region = r.features[0].context.filter((i, j) => {
+                      return i.id.startsWith("region");
+                    });
+                    setCenter(r.features[0].center);
+                    setRegion(region[0]?.text);
+                    setPlaceName(r.features[0].place_name);
+                  } else {
+                    dispatch({
+                      type: "add",
+                      payload: {
+                        center: r.features[0].center,
+                        placeName: r?.features[0]?.place_name,
+                      },
+                    });
+                  }
+                  navigation.navigate("employer/postjob/payment");
+                }
+              }}
+              style={{
+                backgroundColor: "#0244d0",
+                width: 100,
+                right: 20,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Pressable onPress={() => setPinSpotModal(false)}>
+          <Text>Close</Text>
+        </Pressable>
+      </Modal>
       <Pressable
         onPress={() => {
           Keyboard.dismiss();
@@ -174,7 +597,6 @@ const EditPostScreen = ({ navigation, route }) => {
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: 80,
-            marginTop: StatusBar.currentHeight,
             flex: 1,
           }}
         >
@@ -186,7 +608,7 @@ const EditPostScreen = ({ navigation, route }) => {
               fontWeight: "bold",
             }}
           >
-            Now finish and review your job post
+            Edit Your Post and Update
           </Text>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
@@ -272,7 +694,8 @@ const EditPostScreen = ({ navigation, route }) => {
                     marginTop: "5%",
                     borderColor: "#0244d0",
                     width: "90%",
-                    borderRadius: 15,
+                    height: 40,
+                    borderRadius: 5,
                   }}
                   data={categoryList}
                   onSelect={(selectedItem, index) => {
@@ -366,8 +789,38 @@ const EditPostScreen = ({ navigation, route }) => {
                 })}
               </View>
             </View>
+
             <View>
-              {jobPost?.budget ? (
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Salary</Text>
+              <View style={{ marginVertical: 14 }}>
+                {pay.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index + 1}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginVertical: 5,
+                      }}
+                      onPress={() => setPaymentStyle(index)}
+                    >
+                      <RadioButton
+                        value={index}
+                        color="#0244d0"
+                        onPress={() => setPaymentStyle(index)}
+                        status={
+                          paymentStyle === index ? "checked" : "unchecked"
+                        }
+                      />
+
+                      <View>
+                        <Text style={{ fontSize: 16 }}>{item}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              {paymentStyle === 0 ? (
                 <View>
                   <Text
                     style={{
@@ -376,58 +829,26 @@ const EditPostScreen = ({ navigation, route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Salary
+                    Start and End Price
                   </Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
-                      {jobPost.budget.from} birr- {jobPost.budget.to} birr
-                    </Text>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#0244d0",
-                        paddingHorizontal: 15,
-                        paddingVertical: 5,
-                        borderRadius: 10,
-                        elevation: 10,
-                        marginLeft: "5%",
-                      }}
-                      onPress={() => {
-                        navigation.navigate("employer/postjob", {
-                          screen: "employer/postjob/payment",
-                          params: {
-                            data: {
-                              paymentStyle,
-                              fromBudget,
-                              toBudget,
-                              setFromBudget,
-                              setToBudget,
-                              setPaymentStyle,
-                            },
-                          },
-                        });
-                      }}
-                    >
-                      <Text style={{ color: "#fff" }}>Change Salary</Text>
-                    </TouchableOpacity>
+                    <TextInput
+                      style={{ flex: 1, marginHorizontal: 5 }}
+                      value={fromBudget}
+                      keyboardType="number-pad"
+                      onChangeText={setFromBudget}
+                    />
+
+                    <TextInput
+                      style={{ flex: 1, marginHorizontal: 5 }}
+                      value={toBudget}
+                      keyboardType="number-pad"
+                      onChangeText={setToBudget}
+                    />
                   </View>
                 </View>
               ) : (
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                      marginVertical: 10,
-                    }}
-                  >
-                    Salary
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
-                      {jobPost.paymentStyle}
-                    </Text>
-                  </View>
-                </View>
+                <></>
               )}
             </View>
             <View>
@@ -449,7 +870,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       flexWrap: "wrap",
                     }}
                   >
-                    <Text style={{ fontSize: 16 }}>{jobPost.placeName}</Text>
+                    <Text style={{ fontSize: 16 }}>{placeName}</Text>
                     <TouchableOpacity
                       style={{
                         backgroundColor: "#0244d0",
@@ -460,7 +881,7 @@ const EditPostScreen = ({ navigation, route }) => {
                         marginLeft: "5%",
                       }}
                       onPress={() => {
-                        console.log("hello");
+                        setLocationModal(true);
                       }}
                     >
                       <Text style={{ color: "#fff" }}>Change Place</Text>
@@ -645,7 +1066,7 @@ const EditPostScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 60,
+          top: dimension.height - 80,
           alignItems: "center",
           justifyContent: "center",
           height: 60,
@@ -656,7 +1077,7 @@ const EditPostScreen = ({ navigation, route }) => {
         }}
       >
         <TouchableOpacity
-          disabled={description.length < 50}
+          disabled={description.length < 50 || !bool}
           onPress={() => {
             if (date && datetime) {
               date.setHours(datetime.getHours() + 3);
@@ -682,7 +1103,7 @@ const EditPostScreen = ({ navigation, route }) => {
             width: "80%",
             borderRadius: 20,
             backgroundColor:
-              description.length > 49 ? "blue" : "rgba(0,0,0,0.6)",
+              description.length > 49 && bool ? "blue" : "rgba(0,0,0,0.6)",
             height: "70%",
             alignItems: "center",
             justifyContent: "center",

@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  Pressable,
   Modal,
   ToastAndroid,
 } from "react-native";
@@ -106,7 +107,7 @@ const LocationScreen = ({ navigation }) => {
     return () => clearTimeout(delayDebounceFn);
   }, [locationQuery]);
   return (
-    <TouchableWithoutFeedback
+    <Pressable
       style={{ flex: 1 }}
       onPress={() => {
         Keyboard.dismiss();
@@ -169,6 +170,7 @@ const LocationScreen = ({ navigation }) => {
             <></>
           ) : (
             <MapView
+              provider={"google"}
               style={{
                 flex: 1,
                 borderTopLeftRadius: 15,
@@ -274,7 +276,7 @@ const LocationScreen = ({ navigation }) => {
           )}
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 

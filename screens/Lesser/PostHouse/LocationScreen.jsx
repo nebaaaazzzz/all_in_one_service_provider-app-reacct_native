@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Keyboard,
+  StyleSheet,
   Pressable,
   ActivityIndicator,
   Modal,
@@ -17,7 +18,11 @@ import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { MAPBOXTOKEN, MAPBOXURI } from "./../../../urls.js";
+import MapboxGL from "@rnmapbox/maps";
 
+MapboxGL.setAccessToken(
+  `pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHA3N2h6MHo2OTNmcWZtM3dwMXpsdSJ9.0ZNxqzOJaZy43QFzonyELQ`
+);
 const LocationScreen = ({ navigation, route }) => {
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
@@ -185,20 +190,17 @@ const LocationScreen = ({ navigation, route }) => {
           {isFull ? (
             <></>
           ) : (
-            <MapView
-              style={{
-                flex: 1,
-                borderTopLeftRadius: 15,
-                borderTopRightRadius: 15,
-              }}
-              cacheEnabled
-              initialRegion={{
-                latitude: 11.5968568,
-                longitude: 37.3981523,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
+            <MapboxGL.MapView style={styles.map} />
+            // <MapView
+
+            //   cacheEnabled
+            //   initialRegion={{
+            //     latitude: 11.5968568,
+            //     longitude: 37.3981523,
+            //     latitudeDelta: 0.0922,
+            //     longitudeDelta: 0.0421,
+            //   }}
+            // />
           )}
 
           <Searchbar
@@ -294,5 +296,20 @@ const LocationScreen = ({ navigation, route }) => {
     </Pressable>
   );
 };
-
+const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF",
+  },
+  container: {
+    height: 300,
+    width: 300,
+    backgroundColor: "tomato",
+  },
+  map: {
+    flex: 1,
+  },
+});
 export default LocationScreen;

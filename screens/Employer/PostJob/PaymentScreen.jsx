@@ -11,7 +11,7 @@ import {
 import { ProgressBar } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import { PostJobContext } from "./PostJobScreen";
-import { RadioButton, Divider } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
 
 const PaymentScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostJobContext);

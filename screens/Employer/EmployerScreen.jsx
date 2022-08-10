@@ -48,7 +48,7 @@ const Post = ({ pressHandler, item }) => {
             onPress={() => pressHandler(i._id)}
             style={{
               padding: 15,
-              backgroundColor: "rgba(0,0,0,0.1)",
+              backgroundColor: "rgba(0,0,0,0.03)",
               marginVertical: 5,
             }}
           >
@@ -163,7 +163,7 @@ const MyPosts = ({ navigation }) => {
 function Home({ navigation }) {
   const user = useContext(UserContext);
   return (
-    <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <View style={{ alignItems: "flex-end", backgroundColor: "#fff" }}>
         {user?.left > 0 ? (
           <TouchableOpacity

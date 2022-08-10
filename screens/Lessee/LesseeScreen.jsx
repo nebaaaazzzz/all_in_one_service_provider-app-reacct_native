@@ -35,7 +35,6 @@ import AppliedScreen from "./AppliedScreen";
 import PaymentScreen from "../Common/PaymentScreen";
 const LesseeStackNavigator = createStackNavigator();
 const fetchHouses = async ({ pageParam = 1, queryKey }) => {
-  console.log(queryKey);
   const response = await fetch(
     `${BASEURI}/lessee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&propertyType=${queryKey[4]}&price=${queryKey[5]}`,
     {
@@ -327,7 +326,6 @@ const Lessee = ({ navigation }) => {
                   marginRight: "5%",
                   paddingHorizontal: "10%",
                   paddingVertical: "2%",
-                  marginTop: "10%",
                   borderRadius: 5,
                 }}
                 onPress={() => setOpenModal(false)}
@@ -354,7 +352,6 @@ const Lessee = ({ navigation }) => {
       <FilterModal visible={visible} setVisible={setVisible} />
       <TouchableOpacity
         style={{
-          marginTop: "2%",
           alignSelf: "flex-end",
           backgroundColor: "#0244d0",
           paddingHorizontal: 10,

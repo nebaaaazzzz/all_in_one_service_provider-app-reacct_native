@@ -34,8 +34,6 @@ const fetchHouses = async ({ pageParam = 1 }) => {
 };
 
 const MyPosts = ({ navigation }) => {
-  console.log(BASETOKEN);
-
   const {
     data,
     error,
@@ -108,7 +106,7 @@ const MyPosts = ({ navigation }) => {
 const Home = ({ navigation }) => {
   const user = useContext(UserContext);
   return (
-    <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <View style={{ alignItems: "flex-end", backgroundColor: "#fff" }}>
         {user?.left > 0 ? (
           <TouchableOpacity
@@ -231,7 +229,7 @@ const Post = ({ item, pressHandler }) => {
             }}
             style={{
               paddingVertical: 15,
-              backgroundColor: bgColor ? "rgba(0,0,0,0.05)" : "transparent",
+              backgroundColor: bgColor ? "rgba(0,0,0,0.02)" : "transparent",
             }}
           >
             <Image

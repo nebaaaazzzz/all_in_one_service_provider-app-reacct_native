@@ -17,7 +17,6 @@ import { BASETOKEN, BASEURI } from "../../../urls";
 const ReviewListingScreen = ({ navigation, route }) => {
   const clientQuery = useQueryClient();
   const { housePost } = useContext(PostHouseContext);
-  console.log(housePost);
   const { isSuccess, isLoading, isError, error, data, mutate } = useMutation(
     async () => {
       const formData = new FormData();
