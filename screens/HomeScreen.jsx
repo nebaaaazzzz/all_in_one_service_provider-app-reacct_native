@@ -24,6 +24,10 @@ import Entypo from "@expo/vector-icons/Entypo";
 import CustomDrawer from "../components/CustomDrawer";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import ContactusScreen from "./Common/ContactusScreen";
+import MapboxGL from "@rnmapbox/maps";
+import { MAPBOXTOKEN } from "../urls";
+MapboxGL.setAccessToken(`${MAPBOXTOKEN}`);
+MapboxGL.setTelemetryEnabled(false);
 const STouchableOpacity = styled(TouchableOpacity)`
   overflow: hidden;
   border-radius: 10px;
@@ -149,6 +153,13 @@ const Home = ({ navigation }) => {
             <SText>Lessor</SText>
           </STouchableOpacity>
         </View>
+      </View>
+      <View style={{ backgroundColor: "red", width: 100, height: 100 }}>
+        <MapboxGL.MapView showUserLocation={true} style={{ flex: 1 }}>
+          <MapboxGL.ShapeSource id="customSourceExample">
+            <MapboxGL.FillExtrusionLayer id="customSourceFill" />
+          </MapboxGL.ShapeSource>
+        </MapboxGL.MapView>
       </View>
     </View>
   );

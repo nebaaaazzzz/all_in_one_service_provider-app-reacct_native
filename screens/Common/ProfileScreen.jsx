@@ -1,6 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "../../App.Navigator";
 import { BASETOKEN, BASEURI } from "../../urls";
+import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
 
 //       <Text>{user.email}</Text>
 //       <Text>{user.description}</Text>
@@ -31,6 +33,16 @@ import EditProfileScreen from "./EditProfileScreen";
 const ProfileStackNavigator = createStackNavigator();
 const Profile = ({ navigation }) => {
   const user = useContext(UserContext);
+  const [cvExists, setCvExists] = React.useState(false);
+
+  useEffect(() => {
+    async function check() {
+      setCvExists(
+        await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${user.cv}`)
+      );
+    }
+    check();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -198,7 +210,48 @@ const Profile = ({ navigation }) => {
               })}
             </View>
           )}
-
+          {user.cv ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#0244d0",
+                paddingVertical: 5,
+                paddingHorizontal: 5,
+                borderRadius: 5,
+                alignSelf: "flex-end",
+              }}
+              onPress={async () => {
+                if (cvExists) {
+                  FileViewer.open(localFile);
+                } else {
+                  const options = {
+                    fromUrl: `${BASEURI}/cv/${user.cv}`,
+                    toFile: localFile,
+                  };
+                  RNFS.downloadFile(options, {
+                    begin: (s) => console.log(s),
+                    progress: (s) => {
+                      console.log(s);
+                    },
+                  })
+                    .promise.then(() => FileViewer.open(localFile))
+                    .then(() => {
+                      // success
+                    })
+                    .catch((error) => {
+                      // error
+                    });
+                }
+              }}
+            >
+              {cvExists ? (
+                <Text style={{ color: "#fff" }}>Open cv</Text>
+              ) : (
+                <Text style={{ color: "#fff" }}>Download and open cv</Text>
+              )}
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
           <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
             <Text
               style={{
