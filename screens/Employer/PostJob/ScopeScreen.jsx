@@ -80,7 +80,7 @@ const ScopeScreen = ({ navigation }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 80,
+          top: dimension.height - 100,
           alignItems: "center",
           justifyContent: "center",
           height: 60,

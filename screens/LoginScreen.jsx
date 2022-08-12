@@ -105,7 +105,7 @@ const LoginScreen = ({ navigation, route }) => {
                 <MaterialIcons
                   name="phone"
                   size={20}
-                  color="#666"
+                  color="#0244d0"
                   style={{ marginRight: 5 }}
                 />
                 <TextInput
@@ -135,7 +135,7 @@ const LoginScreen = ({ navigation, route }) => {
                 <Ionicons
                   name="ios-lock-closed-outline"
                   size={20}
-                  color="#666"
+                  color="#0244d0"
                   style={{ marginRight: 5 }}
                 />
                 <TextInput

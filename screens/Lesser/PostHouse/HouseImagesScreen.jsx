@@ -16,7 +16,7 @@ import { BASETOKEN, BASEURI } from "../../../urls";
 
 const HouseImagesScreen = ({ navigation, route }) => {
   const { dispatch } = useContext(PostHouseContext);
-  let imgList;
+  let imgList = [];
   if (route.params?.data) {
     imgList = route.params.data?.houseImages;
   }
@@ -48,7 +48,6 @@ const HouseImagesScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <View
@@ -79,7 +78,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
             marginTop: 10,
           }}
         >
-          {imgUri.map((item, index) => {
+          {[...imgList, ...imgUri].map((item, index) => {
             return (
               <View
                 key={index + 1}
@@ -141,7 +140,9 @@ const HouseImagesScreen = ({ navigation, route }) => {
                     onDismiss={() => closeMenu(index)}
                     anchor={
                       <TouchableOpacity
-                        onPress={() => openMenu(index)}
+                        onPress={() => {
+                          openMenu(index);
+                        }}
                         style={{
                           backgroundColor: "rgba(255,255,255,0.8)",
                           borderRadius: 50,
@@ -246,7 +247,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
             }}
           >
             <Icon name={"file-image-plus"} size={30} color="#0244d0" />
-            {5 - imgUri.length > 0 ? (
+            {5 - (imgUri.length + imgList.length) > 0 ? (
               <Text>Add atleast {5 - imgUri.length} photos</Text>
             ) : (
               <Text>Add photos</Text>
@@ -268,12 +269,12 @@ const HouseImagesScreen = ({ navigation, route }) => {
         }}
       >
         <TouchableOpacity
-          disabled={imgUri.length < 5}
+          disabled={imgUri.length + imgList.length < 5}
           onPress={() => {
             dispatch({
               type: "add",
               payload: {
-                houseImages: imgUri,
+                houseImages: [...imgUri, ...imgList],
               },
             });
             if (route.params?.data) {
@@ -284,7 +285,10 @@ const HouseImagesScreen = ({ navigation, route }) => {
             navigation.navigate("lesser/posthouse/placename");
           }}
           style={{
-            backgroundColor: imgUri.length < 5 ? "rgba(0,0,0,0.7)" : "#0244d0",
+            backgroundColor:
+              imgUri.length + imgList.length < 5
+                ? "rgba(0,0,0,0.7)"
+                : "#0244d0",
             width: 100,
             right: 20,
             paddingHorizontal: 10,

@@ -44,7 +44,9 @@ const List = ({ question, arr, state, setState }) => {
                 alignItems: "center",
               }}
             >
-              {item.icon}
+              <Text>{item.icon}</Text>
+              <Text>{item.name}</Text>
+              {/*  */}
             </TouchableOpacity>
           );
         })}
@@ -79,7 +81,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
     },
     {
       name: "Exercise equipment",
-      icon: <MaterialIcon name={"run"} />,
+      icon: <MaterialIcon name="sports-cricket" size={24} color="black" />,
     },
   ];
   const guestFav = [
@@ -97,7 +99,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
     },
     {
       name: "Wahser",
-      icon: <Icon name={"washer"} />,
+      icon: <Icon name={"dishwasher"} />,
     },
     {
       name: "Free parking on premises",
@@ -113,7 +115,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
     },
     {
       name: "Dedicated workspace",
-      icon: <Icon name={"facebook-workspace"} />,
+      icon: <MaterialIcon name={"workspaces-filled"} />,
     },
   ];
   const saftyItems = [
@@ -126,7 +128,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       icon: <FontAwsome5 name={"first-aid"} />,
     },
 
-    { name: "Fire extinguisher", icon: "fire-extinguisher" },
+    { name: "Fire extinguisher", icon: <Icon name="fire-extinguisher" /> },
   ];
   let amenIndex, guefavIndex, saftyIndex;
   if (route.params?.data) {
@@ -167,7 +169,6 @@ const PlaceOfferScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView

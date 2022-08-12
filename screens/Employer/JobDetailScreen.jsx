@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { Divider, Badge } from "react-native-paper";
 import { useMutation, useQuery } from "react-query";
-
+import { useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
 import { BASEURI, BASETOKEN } from "../../urls";
@@ -32,6 +32,7 @@ const fetchJob = async ({ queryKey }) => {
 
 const JobDetailScreen = ({ navigation, route }) => {
   // navigation.setOptions({
+  const queryClient = useQueryClient();
   //   headerRight: () => (
 
   //   ),
@@ -45,7 +46,7 @@ const JobDetailScreen = ({ navigation, route }) => {
   const downloadPath =
     FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
   const delteMutuation = useMutation(async () => {
-    const response = await fetch(`${BASEURI}/employer/house/${data._id}`, {
+    const response = await fetch(`${BASEURI}/employer/job/${data._id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${BASETOKEN}`,
@@ -68,7 +69,8 @@ const JobDetailScreen = ({ navigation, route }) => {
   }
   if (delteMutuation.isSuccess) {
     ToastAndroid.show("successfully Deleted", ToastAndroid.LONG);
-    navigation.navigate("employer");
+    queryClient.invalidateQueries("myjobs");
+    navigation.navigate("employer/");
   }
   if (delteMutuation.isError) {
     ToastAndroid.show(delteMutuation.error.message, ToastAndroid.LONG);

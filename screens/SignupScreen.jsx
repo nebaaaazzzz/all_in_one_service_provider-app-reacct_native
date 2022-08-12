@@ -131,7 +131,7 @@ const SignupScreen = ({ navigation }) => {
             <Ionicons
               name="person-outline"
               size={20}
-              color="#666"
+              color="#0244d0"
               style={{ marginRight: 5 }}
             />
 
@@ -174,7 +174,7 @@ const SignupScreen = ({ navigation }) => {
             <Ionicons
               name="person-outline"
               size={20}
-              color="#666"
+              color="#0244d0"
               style={{ marginRight: 5 }}
             />
 
@@ -216,7 +216,7 @@ const SignupScreen = ({ navigation }) => {
             <MaterialIcons
               name="phone"
               size={20}
-              color="#666"
+              color="#0244d0"
               style={{ marginRight: 5 }}
             />
             <TextInput
@@ -287,7 +287,7 @@ const SignupScreen = ({ navigation }) => {
             <Ionicons
               name="ios-lock-closed-outline"
               size={20}
-              color="#666"
+              color="#0244d0"
               style={{ marginRight: 5 }}
             />
             <TextInput
@@ -326,7 +326,7 @@ const SignupScreen = ({ navigation }) => {
             <Ionicons
               name="ios-lock-closed-outline"
               size={20}
-              color="#666"
+              color="#0244d0"
               style={{ marginRight: 5 }}
             />
             <TextInput
@@ -376,7 +376,7 @@ const SignupScreen = ({ navigation }) => {
           <Ionicons
             name="calendar-outline"
             size={20}
-            color="#666"
+            color="#0244d0"
             style={{ marginRight: 5 }}
           />
           {open ? (

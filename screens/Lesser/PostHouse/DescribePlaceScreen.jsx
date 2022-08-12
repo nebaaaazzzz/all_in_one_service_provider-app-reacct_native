@@ -20,10 +20,10 @@ const DescribePlaceScreen = ({ navigation, route }) => {
     },
     {
       name: "Unique",
-      icon: <IcEntypoon name="dot-single" />,
+      icon: <Entypo name="dot-single" />,
     },
     {
-      name: "Family-friendky",
+      name: "Family-friendly",
       icon: <Icon name="horse-human" />,
     },
     {
@@ -51,7 +51,6 @@ const DescribePlaceScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView
@@ -90,9 +89,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                 style={{
                   width: 100,
                   borderWidth: 1,
-                  borderColor: limit[index] ? "#0244d0" : "rgba(0,0,0,0.2)",
                   margin: 10,
-                  backgroundColor: limit.length < 3 ? "rgba(0,0,0,0.8)" : "",
                   right: 20,
                   flexDirection: "row",
                   alignItems: "center",
@@ -107,7 +104,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                   }
                 }}
               >
-                <Icon name={item.icon} size={18} />
+                {item.icon}
                 <Text style={{ textAlign: "center", color: "#000" }}>
                   {item.name}
                 </Text>

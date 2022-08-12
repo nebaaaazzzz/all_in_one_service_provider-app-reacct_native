@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Keyboard,
+  Image,
   StyleSheet,
   Pressable,
   ActivityIndicator,
@@ -18,11 +19,7 @@ import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { MAPBOXTOKEN, MAPBOXURI } from "./../../../urls.js";
-import MapboxGL from "@rnmapbox/maps";
 
-MapboxGL.setAccessToken(
-  `pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHA3N2h6MHo2OTNmcWZtM3dwMXpsdSJ9.0ZNxqzOJaZy43QFzonyELQ`
-);
 const LocationScreen = ({ navigation, route }) => {
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
@@ -43,23 +40,16 @@ const LocationScreen = ({ navigation, route }) => {
     try {
       const getLocation = async (location) => {
         try {
-          const response = await fetch(
-            `${MAPBOXURI}/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=${MAPBOXTOKEN}`
-          );
-          const r = await response.json();
-          if (r.features[0].place_name && r.features[0].center) {
-            setIsGettingLocation(false);
-            if (route.params?.data) {
-              return navigation.navigate("lesser/posthouse/pinspot", {
-                center: r.features[0].center,
-                data: route.params.data,
-              });
-            }
-
-            navigation.navigate("lesser/posthouse/pinspot", {
-              center: r.features[0].center,
+          setIsGettingLocation(false);
+          if (route.params?.data) {
+            return navigation.navigate("lesser/posthouse/pinspot", {
+              center: [location.coords.longitude, location.coords.latitude],
+              data: route.params.data,
             });
           }
+          navigation.navigate("lesser/posthouse/pinspot", {
+            center: [location.coords.longitude, location.coords.latitude],
+          });
         } catch (err) {
           ToastAndroid.show(
             "check your internet connection",
@@ -97,27 +87,24 @@ const LocationScreen = ({ navigation, route }) => {
   };
   const searchListPressHandler = (index) => {
     if (route.params?.data) {
-      console.log(r.features[0].center);
-
       return navigation.navigate("lesser/posthouse/pinspot", {
-        center: searchResult[index].center,
+        center: [searchResult[index].lon, searchResult[index].lat],
         data: route.params.data,
       });
     }
-
     navigation.navigate("lesser/posthouse/pinspot", {
-      center: searchResult[index].center,
+      center: [searchResult[index].lon, searchResult[index].lat],
     });
   };
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?country=et&access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+        `${MAPBOXURI}geocode/search?text=/${locationQuery}&filter=countrycode:et&format=json&apiKey=${MAPBOXTOKEN}`
       )
         .then(async (res) => {
           const s = await res.json();
-          if (s.features) {
-            setSearchResut(s.features);
+          if (s.results) {
+            setSearchResut(s.results);
           }
         })
         .catch((err) => {
@@ -139,7 +126,6 @@ const LocationScreen = ({ navigation, route }) => {
           flex: 1,
           // backgroundColor: "#0099ff",
           backgroundColor: "rgba(0,0,0,0.3)",
-          marginTop: StatusBar.currentHeight,
         }}
       >
         <Modal visible={isGettingLocation} animationType="fade">
@@ -184,23 +170,16 @@ const LocationScreen = ({ navigation, route }) => {
               <Text></Text>
             </View>
           ) : (
-            <></>
-          )}
-
-          {isFull ? (
-            <></>
-          ) : (
-            <MapboxGL.MapView style={styles.map} />
-            // <MapView
-
-            //   cacheEnabled
-            //   initialRegion={{
-            //     latitude: 11.5968568,
-            //     longitude: 37.3981523,
-            //     latitudeDelta: 0.0922,
-            //     longitudeDelta: 0.0421,
-            //   }}
-            // />
+            <Image
+              style={{
+                flex: 1,
+                // borderTopLeftRadius: 15,
+                // borderTopRightRadius: 15,
+              }}
+              source={{
+                uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=600&height=400&center=lonlat:38.761252,9.010793&zoom=14&apiKey=${MAPBOXTOKEN}`,
+              }}
+            />
           )}
 
           <Searchbar
@@ -243,7 +222,7 @@ const LocationScreen = ({ navigation, route }) => {
                     style={{ borderBottomWidth: 0.2, marginVertical: 5 }}
                   >
                     <Text style={{ marginVertical: "2%" }}>
-                      {place.place_name}
+                      {place.formatted}
                     </Text>
                   </TouchableOpacity>
                 );

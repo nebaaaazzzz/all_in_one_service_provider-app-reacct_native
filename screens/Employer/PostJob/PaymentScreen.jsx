@@ -18,12 +18,14 @@ const PaymentScreen = ({ navigation, route }) => {
   const dimension = useWindowDimensions();
   const [fromBudget, setFromBudget] = useState();
   const exp = ["Fixed", "By Negotiation", "By The Organization Scale"];
-  const [paymentStyle, setPaymentStyle] = React.useState(
-    exp.findIndex((item) => data?.paymentStyle === item)
-  );
+  const [paymentStyle, setPaymentStyle] = React
+    .useState
+    // exp.findIndex((item) => data?.paymentStyle === item)
+    ();
 
   const [toBudget, setToBudget] = useState();
   const [bool, setBool] = useState(false);
+  console.log(bool);
   useEffect(() => {
     if (paymentStyle !== undefined) {
       if (paymentStyle > 0) {

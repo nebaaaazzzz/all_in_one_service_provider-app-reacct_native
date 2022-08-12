@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  Image,
   Pressable,
   Modal,
   ToastAndroid,
@@ -38,16 +39,10 @@ const LocationScreen = ({ navigation }) => {
     try {
       const getLocation = async (location) => {
         try {
-          const response = await fetch(
-            `${MAPBOXURI}/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=${MAPBOXTOKEN}`
-          );
-          const r = await response.json();
-          if (r.features[0].place_name && r.features[0].center) {
-            setIsGettingLocation(false);
-            navigation.navigate("employer/postjob/pinspot", {
-              center: r.features[0].center,
-            });
-          }
+          setIsGettingLocation(false);
+          navigation.navigate("employer/postjob/pinspot", {
+            center: [location.coords.longitude, location.coords.latitude],
+          });
         } catch (err) {
           ToastAndroid.show(
             "check your internet connection",
@@ -85,18 +80,19 @@ const LocationScreen = ({ navigation }) => {
   };
   const searchListPressHandler = (index) => {
     navigation.navigate("employer/postjob/pinspot", {
-      center: searchResult[index].center,
+      center: [searchResult[index].lon, searchResult[index].lat],
+      region: searchResult[index].state,
     });
   };
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationQuery}.json?access_token=pk.eyJ1IjoibmViYWFhYXp6enoiLCJhIjoiY2w0bHB0bWVkMHJibDNmbzFpenA5dmRkbyJ9.jSio18EC3_YJ0EcxYsFx-w`
+        `${MAPBOXURI}geocode/search?text=/${locationQuery}&filter=countrycode:et&format=json&apiKey=${MAPBOXTOKEN}`
       )
         .then(async (res) => {
           const s = await res.json();
-          if (s.features) {
-            setSearchResut(s.features);
+          if (s.results) {
+            setSearchResut(s.results);
           }
         })
         .catch((err) => {
@@ -118,7 +114,6 @@ const LocationScreen = ({ navigation }) => {
           flex: 1,
           // backgroundColor: "#0099ff",
           backgroundColor: "rgba(0,0,0,0.3)",
-          marginTop: StatusBar.currentHeight,
         }}
       >
         <Modal visible={isGettingLocation} animationType="fade">
@@ -163,25 +158,14 @@ const LocationScreen = ({ navigation }) => {
               <Text></Text>
             </View>
           ) : (
-            <></>
-          )}
-
-          {isFull ? (
-            <></>
-          ) : (
-            <MapView
-              provider={"google"}
+            <Image
               style={{
                 flex: 1,
-                borderTopLeftRadius: 15,
-                borderTopRightRadius: 15,
+                // borderTopLeftRadius: 15,
+                // borderTopRightRadius: 15,
               }}
-              cacheEnabled
-              initialRegion={{
-                latitude: 11.5968568,
-                longitude: 37.3981523,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+              source={{
+                uri: `${MAPBOXURI}staticmap?style=osm-carto&width=600&height=400&center=lonlat:38.761252,9.010793&zoom=14&apiKey=${MAPBOXTOKEN}`,
               }}
             />
           )}
@@ -226,7 +210,7 @@ const LocationScreen = ({ navigation }) => {
                     style={{ borderBottomWidth: 0.2, marginVertical: 5 }}
                   >
                     <Text style={{ marginVertical: "2%" }}>
-                      {place.place_name}
+                      {place.formatted}
                     </Text>
                   </TouchableOpacity>
                 );

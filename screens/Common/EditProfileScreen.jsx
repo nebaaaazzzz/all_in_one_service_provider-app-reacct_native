@@ -43,31 +43,42 @@ const EditProfileScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
 
   /* user info states */
-
+  const [skills, setSkills] = useState([]);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
+
   const [date, setDate] = useState(
     user.dateOfBirth ? new Date(user.dateOfBirth) : undefined
   );
-  const [skills, setSkills] = useState(user.skills || []);
   const [skill, setSkill] = useState("");
 
-  const [education, setEducation] = useState(
-    user.education.length ? user.education : []
-  );
-  const [gender, setGender] = useState(
-    user.gender ? (user.gender == "male" ? "male" : "female") : undefiend
-  );
+  const [education, setEducation] = useState([]);
+  const [gender, setGender] = useState();
   const [email, setEmail] = useState(user.email);
   const [description, setDescription] = useState();
   const [languages, setLanguages] = useState(user.languages || []);
-  const [city, setCity] = useState();
-  const [region, setRegion] = useState();
+  const [city, setCity] = useState("");
+  const [region, setRegion] = useState("");
+  useEffect(() => {
+    setSkills(user.skills || []);
+    setFirstName(user.firstName || "");
+    setLastName(user.lastName || "");
+    setRegion(user.region || "");
+    setCity(user.city || "");
+    setLanguages(user.languages || []);
+    setDescription(user.description || "");
+    setEducation(user.education.length ? user.education : []);
+    setEmail(user.email || "");
+    setGender(
+      user.gender ? (user.gender == "male" ? "male" : "female") : undefiend
+    );
+  }, []);
   /*user info error state */
   const [firstNameError, setFirstNameError] = useState();
   const [lastNameError, setLastNameError] = useState();
   const [emailError, setEmailError] = useState();
   /* */
+
   const regionsList = [
     "Addis Ababa",
     "Afar",
@@ -226,8 +237,6 @@ const EditProfileScreen = ({ navigation }) => {
                   });
                   /*
                     if you want to discard them image just set imageUri to null
-                  
-                  
                    */
                   if (!result.cancelled) {
                     setImage(result);
@@ -294,7 +303,7 @@ const EditProfileScreen = ({ navigation }) => {
 
           <View>
             <View style={styles.action}>
-              <FontAwesome name="user-o" color={colors.text} size={20} />
+              <FontAwesome name="user-o" color={"#0244d0"} size={20} />
               <TextInput
                 value={firstName}
                 selectionColor={"black"}
@@ -330,7 +339,7 @@ const EditProfileScreen = ({ navigation }) => {
           </View>
           <View>
             <View style={styles.action}>
-              <FontAwesome name="user-o" color={colors.text} size={20} />
+              <FontAwesome name="user-o" color={"#0244d0"} size={20} />
               <TextInput
                 selectionColor={"black"}
                 value={lastName}
@@ -366,7 +375,7 @@ const EditProfileScreen = ({ navigation }) => {
           </View>
           <View>
             <View style={styles.action}>
-              <FontAwesome name="envelope-o" color={colors.text} size={20} />
+              <FontAwesome name="envelope-o" color={"#0244d0"} size={20} />
 
               <TextInput
                 selectionColor={"black"}
@@ -441,6 +450,7 @@ const EditProfileScreen = ({ navigation }) => {
             <Ionicons
               name="calendar-outline"
               size={20}
+              color={"#0244d0"}
               style={{ marginRight: 5 }}
             />
             {open ? (
@@ -503,7 +513,7 @@ const EditProfileScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.action}>
-            <Icon name="map-marker-outline" color={colors.text} size={20} />
+            <Icon name="map-marker-outline" color={"#0244d0"} size={20} />
             <TextInput
               value={city}
               onChangeText={(text) => setCity(text)}
@@ -661,7 +671,7 @@ const EditProfileScreen = ({ navigation }) => {
                       }}
                       onPress={() => {
                         const lang = languages.filter((i, j) => {
-                          return i != index;
+                          return j != index;
                         });
                         setLanguages(lang);
                       }}
@@ -718,20 +728,22 @@ const EditProfileScreen = ({ navigation }) => {
                     >
                       <View style={{ flexDirection: "row" }}>
                         <Text>
-                          {item.start.getMonth() +
+                          {new Date(item.start).getMonth() +
                             "/" +
-                            item.start.getFullYear()}{" "}
+                            new Date(item.start).getFullYear()}{" "}
                           -
                         </Text>
                         <Text>
-                          {item.end.getMonth() + "/" + item.end.getFullYear()}
+                          {new Date(item.to).getMonth() +
+                            "/" +
+                            new Date(item.to).getFullYear()}
                         </Text>
                       </View>
 
                       <TouchableOpacity
                         onPress={() => {
                           const edu = education.filter((i, j) => {
-                            return i != index;
+                            return j != index;
                           });
                           setEducation(edu);
                         }}
@@ -750,7 +762,7 @@ const EditProfileScreen = ({ navigation }) => {
               })}
             </View>
             <View style={{ marginVertical: "5%" }}>
-              <Text>bio</Text>
+              <Text>Bio</Text>
               <TextInput
                 value={description}
                 onChangeText={(text) => setDescription(text)}
@@ -775,14 +787,19 @@ const EditProfileScreen = ({ navigation }) => {
               borderRadius: 15,
               marginHorizontal: 20,
               marginTop: 20,
+              borderColor: "#0244d0",
+              backgroundColor: "#0244d0",
               paddingVertical: 5,
               paddingHorizontal: 5,
               borderWidth: 1,
               alignSelf: "flex-start",
+              elevation: 5,
             }}
           >
-            <Icon size={16} name="attachment" />
-            <Text style={{ marginHorizontal: 5 }}>upload Cv</Text>
+            <Icon size={16} name="attachment" color={"#fff"} />
+            <Text style={{ marginHorizontal: 5, color: "#fff" }}>
+              upload Cv
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.commandButton}

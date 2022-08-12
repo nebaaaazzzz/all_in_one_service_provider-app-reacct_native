@@ -59,7 +59,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
     );
   }
   if (applyMutuation.isSuccess) {
-    navigation.navigate("lessee/applied/");
+    navigation.navigate("lessee/");
+    clientQuery.invalidateQueries(["houses"]);
     if (data.applied) {
       ToastAndroid.show("successfully removed", ToastAndroid.LONG);
     } else {

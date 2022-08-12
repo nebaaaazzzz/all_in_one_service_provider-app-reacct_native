@@ -54,11 +54,9 @@ const PlaceDescriptionScreen = ({ navigation, route }) => {
   ];
   let index;
   if (route.params?.data) {
-    console.log(route.params.data.placeDescription.title);
     index = placeDescriptions.findIndex(
       (item) => item.title === route.params.data?.placeDescription?.title
     );
-    console.log(index);
   }
   const { dispatch } = useContext(PostHouseContext);
   const [active, setActive] = useState(index);
@@ -75,7 +73,6 @@ const PlaceDescriptionScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView

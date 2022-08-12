@@ -221,7 +221,9 @@ const Home = ({ navigation }) => {
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <Pressable onPress={Keyboard.dismiss()} style={{ marginBottom: "35%" }}>
         <Modal visible={openModal}>
-          <View style={{ alignItems: "center", flex: 1 }}>
+          <View
+            style={{ alignItems: "center", flex: 1, backgroundColor: "red" }}
+          >
             <SelectDropdown
               rowStyle={{
                 color: "rgba(0,0,0,0.2)",
@@ -380,7 +382,7 @@ const Home = ({ navigation }) => {
                   // if data array is an array of objects then return selectedItem.property to render after item is selected
                   return selectedItem;
                 }}
-                defaultButtonText={gender || "Select Permanet"}
+                defaultButtonText={permanent || "Select Permanent"}
                 rowTextForSelection={(item, index) => {
                   // text represented for each item in dropdown
                   // if data array is an array of objects then return item.property to represent item in dropdown

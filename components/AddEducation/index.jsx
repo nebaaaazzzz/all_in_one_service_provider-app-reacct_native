@@ -183,7 +183,7 @@ const AddEducation = ({ education, addEducation, setOpenModal }) => {
           onPress={() => {
             addEducation([
               ...education,
-              { institution, degree, major, start: date1, end: date2 },
+              { institution, degree, major, start: date1, to: date2 },
             ]);
             setOpenModal(false);
           }}

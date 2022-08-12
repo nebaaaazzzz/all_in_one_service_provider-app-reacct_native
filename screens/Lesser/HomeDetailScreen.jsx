@@ -383,7 +383,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 130,
+          top: dimension.height - 110,
           backgroundColor: "#fff",
           borderTopWidth: 2,
           width: "100%",

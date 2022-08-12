@@ -14,9 +14,8 @@ const PriceScreen = ({ navigation, route }) => {
   if (route.params?.data) {
     p = route.params.data.price;
   }
-
   const { dispatch } = useContext(PostHouseContext);
-  const [price, setPrice] = useState(p || "1000");
+  const [price, setPrice] = useState(String(p) && "1000");
   return (
     <View
       horizontal={false}
@@ -74,6 +73,7 @@ const PriceScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TextInput
               value={price}
+              onChangeText={(text) => setPrice(text)}
               style={{ fontSize: 20, textAlign: "center", width: "70%" }}
               keyboardType="numeric"
             />

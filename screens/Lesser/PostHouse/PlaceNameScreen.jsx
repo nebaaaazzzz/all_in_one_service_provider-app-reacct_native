@@ -22,7 +22,6 @@ const PlaceNameScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView
@@ -47,6 +46,7 @@ const PlaceNameScreen = ({ navigation, route }) => {
           onChangeText={setText}
           maxLength={50}
           multiline
+          value={text}
           numberOfLines={10}
           placeholder="Cheerful 1-bedrrom villa in Addis Ababa"
         />

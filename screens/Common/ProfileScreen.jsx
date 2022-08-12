@@ -18,14 +18,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import {
-  Avatar,
-  Title,
-  Caption,
-  Text,
-  TouchableRipple,
-  Divider,
-} from "react-native-paper";
+import { Avatar, Title, Caption, Text, Divider } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -34,7 +27,7 @@ const ProfileStackNavigator = createStackNavigator();
 const Profile = ({ navigation }) => {
   const user = useContext(UserContext);
   const [cvExists, setCvExists] = React.useState(false);
-
+  const localFile = `${RNFS.DocumentDirectoryPath}/${user.cv}`;
   useEffect(() => {
     async function check() {
       setCvExists(
@@ -76,37 +69,59 @@ const Profile = ({ navigation }) => {
         </View>
 
         <View style={styles.userInfoSection}>
+          {user.city || user.region ? (
+            <View style={styles.row}>
+              <Icon name="map-marker-radius" color="#0244d0" size={20} />
+              <Text style={{ color: "#777777", marginLeft: 20 }}>
+                {user.city} {user.region}
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
           <View style={styles.row}>
-            <Icon name="map-marker-radius" color="#777777" size={20} />
-            <Text style={{ color: "#777777", marginLeft: 20 }}>
-              {user.city} {user.region} Ethiopia
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Icon name="phone" color="#777777" size={20} />
+            <Icon name="phone" color="#0244d0" size={20} />
             <Text style={{ color: "#777777", marginLeft: 20 }}>
               {user.phoneNumber}
             </Text>
           </View>
           <View style={styles.row}>
-            <Icon name="email" color="#777777" size={20} />
+            <Icon name="gender-male-female" color="#0244d0" size={20} />
+            <Text style={{ color: "rgba(0,0,0,0.6)", marginHorizontal: 20 }}>
+              {user.gender}
+            </Text>
+          </View>
+          <View style={styles.row}>
+            <Icon name="email" color="#0244d0" size={20} />
             <Text style={{ color: "#777777", marginLeft: 20 }}>
               {user.email}
             </Text>
           </View>
         </View>
-        <Divider />
-        <View style={{ paddingHorizontal: "10%", marginTop: "2%" }}>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontSize: 18 }}>gender</Text>
-            <Text style={{ color: "rgba(0,0,0,0.6)", marginHorizontal: 20 }}>
-              {user.gender}
-            </Text>
-          </View>
 
-          {user.skills || (
-            <View style={{ alignItems: "flex-start", marginTop: "2%" }}>
-              <Text>Skills</Text>
+        <Divider />
+        <View
+          style={{
+            paddingHorizontal: "10%",
+            marginVertical: 10,
+            marginTop: "2%",
+          }}
+        >
+          {user.skills.length ? (
+            <View
+              style={{
+                marginTop: "2%",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                Skills
+              </Text>
+              <Divider />
 
               {user.skills.map((item, index) => (
                 <View
@@ -122,34 +137,24 @@ const Profile = ({ navigation }) => {
                 >
                   <Text
                     style={{
-                      fontSize: 16,
                       marginHorizontal: "3%",
                     }}
                   >
                     {item}
                   </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSkills(
-                        skills.filter((i) => {
-                          return item != i;
-                        })
-                      );
-                    }}
-                  >
-                    <Icon name="close" color="red" size={20} />
-                  </TouchableOpacity>
                 </View>
               ))}
             </View>
+          ) : (
+            <></>
           )}
-          {user.education || (
+          {user.education.length ? (
             <View>
-              <Text>Education</Text>
+              <Text style={{ fontWeight: "bold" }}>Education</Text>
               {user.education.map((item, index) => {
                 return (
                   <View key={index + 1}>
-                    <Divider style={{ borderWidth: 0.5 }} />
+                    <Divider style={{ borderWidth: 0.25 }} />
                     <Text>{item.institution}</Text>
                     <View
                       style={{
@@ -159,13 +164,15 @@ const Profile = ({ navigation }) => {
                     >
                       <View style={{ flexDirection: "row" }}>
                         <Text>
-                          {item.start.getMonth() +
+                          {new Date(item.start).getMonth() +
                             "/" +
-                            item.start.getFullYear()}{" "}
+                            new Date(item.start).getFullYear()}
                           -
                         </Text>
                         <Text>
-                          {item.end.getMonth() + "/" + item.end.getFullYear()}
+                          {new Date(item.to).getMonth() +
+                            "/" +
+                            new Date(item.to).getFullYear()}
                         </Text>
                       </View>
                     </View>
@@ -179,37 +186,60 @@ const Profile = ({ navigation }) => {
                 );
               })}
             </View>
+          ) : (
+            <></>
           )}
-          {user.languages || (
-            <View>
-              <Text>Languages</Text>
-              {user.languages.map((item, index) => {
-                return (
-                  <View
-                    key={index + 1}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-around",
-                    }}
-                  >
+          {user.languages.length ? (
+            <View style={{ marginVertical: 15 }}>
+              <Text style={{ fontWeight: "bold" }}>Languages</Text>
+              <Divider />
+              <View style={{ paddingVertical: 10 }}>
+                {user.languages.map((item, index) => {
+                  return (
                     <View
+                      key={index + 1}
                       style={{
-                        paddingRight: "10%",
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        paddingVertical: 5,
                         flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-around",
                       }}
                     >
-                      <Text>{item.language}</Text>
-                      <Text>{item.level}</Text>
+                      <View
+                        style={{
+                          paddingRight: "10%",
+                          flex: 1,
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <Text>{item.language}</Text>
+                        <Text>{item.level}</Text>
+                      </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
+              </View>
             </View>
+          ) : (
+            <></>
           )}
+
+          <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                textAlign: "center",
+                marginVertical: "5%",
+              }}
+            >
+              Bio
+            </Text>
+            <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
+              {user.description}
+            </Text>
+          </View>
           {user.cv ? (
             <TouchableOpacity
               style={{
@@ -217,7 +247,6 @@ const Profile = ({ navigation }) => {
                 paddingVertical: 5,
                 paddingHorizontal: 5,
                 borderRadius: 5,
-                alignSelf: "flex-end",
               }}
               onPress={async () => {
                 if (cvExists) {
@@ -244,28 +273,32 @@ const Profile = ({ navigation }) => {
               }}
             >
               {cvExists ? (
-                <Text style={{ color: "#fff" }}>Open cv</Text>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    paddingVertical: 5,
+                    fontSize: 16,
+                    color: "#fff",
+                  }}
+                >
+                  Open cv
+                </Text>
               ) : (
-                <Text style={{ color: "#fff" }}>Download and open cv</Text>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    paddingVertical: 5,
+                    fontSize: 16,
+                    color: "#fff",
+                  }}
+                >
+                  Download and open cv
+                </Text>
               )}
             </TouchableOpacity>
           ) : (
             <></>
           )}
-          <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                textAlign: "center",
-                marginVertical: "5%",
-              }}
-            >
-              Bio
-            </Text>
-            <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
-              {user.description}
-            </Text>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -288,7 +321,7 @@ const ProfileScreen = ({ navigation }) => {
                 navigation.navigate("profile/edit");
               }}
             >
-              <FontAwesome5 name="user-edit" size={24} color="black" />
+              <FontAwesome5 name="user-edit" size={24} color="#0244d0" />
             </TouchableOpacity>
           ),
         }}
@@ -310,7 +343,6 @@ export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
   },
   userInfoSection: {

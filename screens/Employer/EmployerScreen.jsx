@@ -188,7 +188,7 @@ function Home({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               requestAnimationFrame(() => {
-                navigation.navigate("lesser/payment");
+                navigation.navigate("employer/payment");
                 // navigation.navigate("lesser/payment");
               });
             }}

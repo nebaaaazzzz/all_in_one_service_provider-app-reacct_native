@@ -24,10 +24,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import CustomDrawer from "../components/CustomDrawer";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import ContactusScreen from "./Common/ContactusScreen";
-import MapboxGL from "@rnmapbox/maps";
-import { MAPBOXTOKEN } from "../urls";
-MapboxGL.setAccessToken(`${MAPBOXTOKEN}`);
-MapboxGL.setTelemetryEnabled(false);
+import { MAPBOXTOKEN, MAPBOXURI } from "../urls";
 const STouchableOpacity = styled(TouchableOpacity)`
   overflow: hidden;
   border-radius: 10px;
@@ -49,7 +46,7 @@ const Home = ({ navigation }) => {
         justifyContent: "center",
         flex: 1,
         martinTop: StatusBar.currentHeight,
-        // backgroundColor: "#0244d0",
+        backgroundColor: "#0244d0",
       }}
     >
       {/* <View style={{ height: "5%" }}>
@@ -70,16 +67,59 @@ const Home = ({ navigation }) => {
           />
         </Svg>
       </View> */}
-      <View style={{ paddingTop: "10%" }}>
+
+      {/* <View
+        style={{
+          position: "absolute",
+          width: 120,
+          height: 120,
+          backgroundColor: "red",
+          right: -40,
+          top: 180,
+        }}
+      ></View> */}
+      <View
+        style={{
+          marginTop: dimen.height / 3.1,
+          flex: 1,
+          paddingTop: "10%",
+          backgroundColor: "#fff",
+          borderTopLeftRadius: 100,
+        }}
+      >
+        <View
+          style={{
+            position: "absolute",
+            width: dimen.height / 10,
+            height: dimen.height / 10,
+            backgroundColor: "#0244d0",
+            right: 0,
+            borderBottomRightRadius: 40,
+            // borderBoRadius: 100,
+            // borderRadius: 100,
+            top: -dimen.height / 10,
+            zIndex: 3,
+          }}
+        ></View>
+        <View
+          style={{
+            position: "absolute",
+            width: dimen.height / 10,
+            height: dimen.height / 10,
+            backgroundColor: "#fff",
+            right: -6,
+            top: -dimen.height / 10,
+          }}
+        ></View>
         <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 20 }}>
           Continue as ...
         </Text>
+
         <View
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
             width: "100%",
-            bacgroundColor: "red",
             justifyContent: "center",
           }}
         >
@@ -154,13 +194,6 @@ const Home = ({ navigation }) => {
           </STouchableOpacity>
         </View>
       </View>
-      <View style={{ backgroundColor: "red", width: 100, height: 100 }}>
-        <MapboxGL.MapView showUserLocation={true} style={{ flex: 1 }}>
-          <MapboxGL.ShapeSource id="customSourceExample">
-            <MapboxGL.FillExtrusionLayer id="customSourceFill" />
-          </MapboxGL.ShapeSource>
-        </MapboxGL.MapView>
-      </View>
     </View>
   );
 };
@@ -205,6 +238,9 @@ const HomeScreen = () => {
         name="home/"
         component={Home}
         options={{
+          headerStyle: {
+            elevation: 0,
+          },
           headerTitle: "",
           title: "Home",
           headerStyle: {
@@ -225,6 +261,9 @@ const HomeScreen = () => {
           const bool = getFocusedRouteNameFromRoute(route) == "profile/edit";
           return {
             headerShown: bool ? false : true,
+            headerStyle: {
+              elevation: 0,
+            },
             drawerIcon: ({ color }) => (
               <Ionicons name="person-outline" size={22} color={"#0244d0"} />
             ),
@@ -236,6 +275,9 @@ const HomeScreen = () => {
         name="About"
         component={AboutScreen}
         options={{
+          headerStyle: {
+            elevation: 0,
+          },
           drawerIcon: ({ color }) => (
             <AntDesign name="infocirlceo" size={22} color={"#0244d0"} />
           ),
@@ -245,6 +287,9 @@ const HomeScreen = () => {
         name="Contact us"
         component={ContactusScreen}
         options={{
+          headerStyle: {
+            elevation: 0,
+          },
           drawerIcon: ({ color }) => (
             <MaterialIcons name="contact-page" size={22} color={"#0244d0"} />
           ),
@@ -254,6 +299,9 @@ const HomeScreen = () => {
         name="FeedBack"
         component={FeedbackScreen}
         options={{
+          headerStyle: {
+            elevation: 0,
+          },
           drawerIcon: ({ color }) => (
             <Ionicons
               name="chatbox-ellipses-outline"

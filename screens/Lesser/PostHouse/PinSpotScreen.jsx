@@ -1,21 +1,41 @@
-import { View, Text, TouchableOpacity, StatusBar } from "react-native";
-import React, { useContext, useState } from "react";
-import MapView, { Marker } from "react-native-maps";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+  useWindowDimensions,
+  ActivityIndicator,
+} from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 
 import { PostHouseContext } from "./PostHouseScreen";
 
 import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
 
 const PinSpotScreen = ({ navigation, route }) => {
+  const dimen = useWindowDimensions();
   let cntr;
-
   if (route.params?.center) {
     cntr = route.params.center;
   } else {
     cntr = route.params?.data?.location?.coordinates;
   }
+  const [isLoaded, setIsLoaded] = useState(false);
   const [center, setCenter] = useState(cntr || [11, 21]);
+  const [region, setRegion] = useState("");
+  const [placeName, setPlaceName] = useState("");
   const { dispatch } = useContext(PostHouseContext);
+  useEffect(() => {
+    (async function () {
+      const result =
+        await fetch(`${MAPBOXURI}/geocode/reverse?lat=${cntr[1]}&lon=${cntr[0]}&format=json&apiKey=${MAPBOXTOKEN}
+    `);
+      const data = await result.json();
+      setRegion(data.results[0].state);
+      setPlaceName(data.results[0].formatted);
+    })();
+  }, []);
   return (
     <View
       style={{
@@ -24,43 +44,15 @@ const PinSpotScreen = ({ navigation, route }) => {
         backgroundColor: "rgba(0,0,0,0.02)",
       }}
     >
-      <Text
-        style={{
-          color: "rgba(0,0,0,0.6)",
-          fontSize: 18,
-          textAlign: "center",
-          margin: "5%",
-        }}
-      >
-        Is this the correct location, in the read marker? you can drag and
-        change locations!
-      </Text>
-      <MapView
-        style={{
-          flex: 1,
-        }}
-        region={{
-          latitude: center[1],
-          longitude: center[0],
-          latitudeDelta: 0.0022,
-          longitudeDelta: 0.0021,
-        }}
-        initialRegion={{
-          latitude: center[1],
-          longitude: center[0],
-          latitudeDelta: 0.0022,
-          longitudeDelta: 0.0021,
-        }}
-      >
-        <Marker
-          onDragEnd={({ nativeEvent: { coordinate } }) => {
-            setCenter([coordinate.longitude, coordinate.latitude]);
+      <View style={{ flex: 1 }}>
+        <Image
+          style={{ flex: 1 }}
+          source={{
+            uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${dimen.width}&height=${dimen.height}&center=lonlat:${cntr[0]},${cntr[1]}&zoom=14&marker=lonlat:${cntr[0]},${cntr[1]};color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
           }}
-          flat
-          draggable
-          coordinate={{ latitude: center[1], longitude: center[0] }}
         />
-      </MapView>
+      </View>
+
       <View
         style={{
           backgroundColor: "#fff",
@@ -87,39 +79,23 @@ const PinSpotScreen = ({ navigation, route }) => {
 
         <TouchableOpacity
           onPress={async () => {
-            const response = await fetch(
-              `${MAPBOXURI}/mapbox.places/${center[0]},${center[1]}.json?access_token=${MAPBOXTOKEN}`
-            );
-            const r = await response.json();
-            if (r?.features[0]?.place_name && r.features[0].center) {
-              if (r.features[0].place_type[0] === "locality") {
-                const region = r.features[0].context.filter((i, j) => {
-                  return i.id.startsWith("region");
-                });
-                dispatch({
-                  type: "add",
-                  payload: {
-                    center: r.features[0].center,
-                    ...(region[0].text && { region: region[0].text }),
-                    placeName: r.features[0].place_name,
-                  },
-                });
-              } else {
-                dispatch({
-                  type: "add",
-                  payload: {
-                    center: r.features[0].center,
-                    placeName: r?.features[0]?.place_name,
-                  },
-                });
-              }
-              if (route.params?.data) {
-                return navigation.navigate("lesser/posthouse/placeoffer", {
-                  data: route.params.data,
-                });
-              }
-              navigation.navigate("lesser/posthouse/placeoffer");
+            if (route.params?.data) {
+              return navigation.navigate("lesser/posthouse/placeoffer", {
+                data: route.params.data,
+                center: center,
+                placeName,
+                region,
+              });
             }
+            dispatch({
+              type: "add",
+              payload: {
+                center: center,
+                placeName,
+                region,
+              },
+            });
+            navigation.navigate("lesser/posthouse/placeoffer");
           }}
           style={{
             backgroundColor: "#0244d0",

@@ -2,25 +2,8 @@ import { ScrollView, Text, StyleSheet, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import IonIcons from "@expo/vector-icons/Ionicons";
 import React, { useState, useEffect } from "react";
-import MapboxGL from "@rnmapbox/maps";
 
 const AboutScreen = () => {
-  const _mapOptions = Object.keys(MapboxGL.StyleURL)
-    .map((key) => {
-      return {
-        label: key,
-        data: MapboxGL.StyleURL[key], // bad any, because enums
-      };
-    })
-    .sort(onSortOptions);
-  const [styleURL, setStyleURL] = useState({ styleURL: _mapOptions[0].data });
-  useEffect(() => {
-    MapboxGL.locationManager.start();
-
-    return () => {
-      MapboxGL.locationManager.stop();
-    };
-  }, []);
   function onSortOptions(a, b) {
     if (a.label < b.label) {
       return -1;
@@ -40,13 +23,6 @@ const AboutScreen = () => {
         marginBottom: "3%",
       }}
     >
-      <View style={{ width: 100, height: 100 }}>
-        <MapboxGL.MapView styleURL={styleURL.styleURL} style={{ flex: 1 }}>
-          <MapboxGL.Camera followZoomLevel={12} followUserLocation />
-
-          <MapboxGL.UserLocation />
-        </MapboxGL.MapView>
-      </View>
       <Text style={styles.header}>About all in one service provider. </Text>
       <Text style={styles.txt}>
         All in one service provider application is a platform that is

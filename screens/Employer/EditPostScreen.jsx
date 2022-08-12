@@ -8,6 +8,7 @@ import {
   StatusBar,
   useWindowDimensions,
   TouchableOpacity,
+  Image,
   Keyboard,
   ToastAndroid,
   Pressable,
@@ -25,10 +26,14 @@ import {
 } from "react-native-paper";
 import { MAPBOXTOKEN, MAPBOXURI } from "../../urls";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import FontAwesomeIcon from "@expo/vector-icons/FontAwesome";
+
 import * as DocumentPicker from "expo-document-picker";
 import DatePicker from "@react-native-community/datetimepicker";
 import { useQueryClient } from "react-query";
 import { useMutation } from "react-query";
+import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
 import { BASEURI, BASETOKEN } from "./../../urls";
 const englishLevels = [
   "Any level",
@@ -56,9 +61,9 @@ const exp = [
   },
 ];
 const pay = ["Fixed", "By Negotiation", "By The Organization Scale"];
-
 const genderList = ["Male", "Female", "Both"];
 const EditPostScreen = ({ navigation, route }) => {
+  const dimen = useWindowDimensions();
   /*LOCATION SCREEN STATES */
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
@@ -79,16 +84,10 @@ const EditPostScreen = ({ navigation, route }) => {
     try {
       const getLocation = async (location) => {
         try {
-          const response = await fetch(
-            `${MAPBOXURI}/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=${MAPBOXTOKEN}`
-          );
-          const r = await response.json();
-          if (r.features[0].place_name && r.features[0].center) {
-            setIsGettingLocation(false);
-            setCenter(r.features[0].center);
-            setLocationModal(false);
-            setPinSpotModal(true);
-          }
+          setIsGettingLocation(false);
+          navigation.navigate("employer/postjob/pinspot", {
+            center: [location.coords.longitude, location.coords.latitude],
+          });
         } catch (err) {
           ToastAndroid.show(
             "check your internet connection",
@@ -125,8 +124,9 @@ const EditPostScreen = ({ navigation, route }) => {
     }
   };
   const searchListPressHandler = (index) => {
-    setCenter(searchResult[index].center);
+    setCenter([searchResult[index].lon, searchResult[index].lat]);
     setLocationModal(false);
+    setSearchResut([]);
     setPinSpotModal(true);
   };
 
@@ -172,7 +172,14 @@ const EditPostScreen = ({ navigation, route }) => {
   const [gender, setGender] = useState(jobPost?.gender);
   const [permanent, setPermanet] = useState(jobPost?.permanent);
   const [headline, setHeadline] = useState(jobPost.title);
-  /*payment */
+  const [documentExits, setDocumentExits] = useState(false);
+  useEffect(() => {
+    (async function check() {
+      setDocumentExits(
+        await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${jobPost.document}`)
+      );
+    })();
+  }, []); /*payment */
   const [fromBudget, setFromBudget] = useState(
     jobPost?.budget?.from ? String(jobPost?.budget?.from) : undefined
   );
@@ -218,7 +225,8 @@ const EditPostScreen = ({ navigation, route }) => {
   const { error, isError, isLoading, isSuccess, mutate } = useMutation(
     async (data) => {
       const response = await fetch(
-        `${BASEURI}/employer/update/${jobPost._id}`,
+        // `${BASEURI}/employer/update/${jobPost._id}`,
+        `${BASEURI}/employer/update/629ef13df462f9bdfebbde07`,
         {
           method: "PATCH",
           headers: {
@@ -230,7 +238,8 @@ const EditPostScreen = ({ navigation, route }) => {
       return response.json();
     }
   );
-  const submitHandler = async () => {
+
+  const submitHandler = () => {
     const formData = new FormData();
     if (file) {
       formData.append("document", {
@@ -246,7 +255,7 @@ const EditPostScreen = ({ navigation, route }) => {
         title: headline,
         description,
         datetime: datetime ? true : false,
-        deadline,
+        deadline: date,
         experience: exp[experience],
         category,
         skills,
@@ -270,34 +279,17 @@ const EditPostScreen = ({ navigation, route }) => {
     );
     mutate(formData);
   };
+  const localFile = `${RNFS.DocumentDirectoryPath}/${jobPost.cv}`;
 
-  if (isSuccess) {
-    navigation.goBack();
-    ToastAndroid.show("successfuly updated");
-    queryClient.invalidateQueries("myhouses");
-  }
-
-  if (isError) {
-    ToastAndroid.show(error.message, ToastAndroid.SHORT);
-  }
-  if (isLoading) {
-    return (
-      <View
-        style={{ flex1: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <ActivityIndicator size={"large"} color="#0244d0" />
-      </View>
-    );
-  }
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       fetch(
-        `${MAPBOXURI}/mapbox.places/${locationQuery}.json?access_token=${MAPBOXTOKEN}`
+        `${MAPBOXURI}geocode/search?text=/${locationQuery}&filter=countrycode:et&format=json&apiKey=${MAPBOXTOKEN}`
       )
         .then(async (res) => {
           const s = await res.json();
-          if (s.features) {
-            setSearchResut(s.features);
+          if (s.results) {
+            setSearchResut(s.results);
           }
         })
         .catch((err) => {
@@ -307,6 +299,21 @@ const EditPostScreen = ({ navigation, route }) => {
 
     return () => clearTimeout(delayDebounceFn);
   }, [locationQuery]);
+  if (isSuccess) {
+    navigation.goBack();
+    ToastAndroid.show("successfuly updated", ToastAndroid.LONG);
+  }
+
+  if (isError) {
+    ToastAndroid.show(error.message, ToastAndroid.SHORT);
+  }
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size={"large"} color="#0244d0" />
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1 }}>
       <Modal visible={locationModal}>
@@ -372,24 +379,14 @@ const EditPostScreen = ({ navigation, route }) => {
                   <Text></Text>
                 </View>
               ) : (
-                <></>
-              )}
-
-              {isFull ? (
-                <></>
-              ) : (
-                <MapView
+                <Image
                   style={{
                     flex: 1,
-                    borderTopLeftRadius: 15,
-                    borderTopRightRadius: 15,
+                    // borderTopLeftRadius: 15,
+                    // borderTopRightRadius: 15,
                   }}
-                  cacheEnabled
-                  initialRegion={{
-                    latitude: 11.5968568,
-                    longitude: 37.3981523,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                  source={{
+                    uri: `${MAPBOXURI}staticmap?style=osm-carto&width=600&height=400&center=lonlat:${center[0]},${center[1]}&zoom=14&apiKey=${MAPBOXTOKEN}`,
                   }}
                 />
               )}
@@ -434,7 +431,7 @@ const EditPostScreen = ({ navigation, route }) => {
                         style={{ borderBottomWidth: 0.2, marginVertical: 5 }}
                       >
                         <Text style={{ marginVertical: "2%" }}>
-                          {place.place_name}
+                          {place.formatted}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -455,7 +452,11 @@ const EditPostScreen = ({ navigation, route }) => {
                     }}
                     onPress={pressHandler}
                   >
-                    <FIcon name="location-arrow" color="#0244d0" size={20} />
+                    <FontAwesomeIcon
+                      name="location-arrow"
+                      color="#0244d0"
+                      size={20}
+                    />
                     <Text style={{ marginLeft: "5%", fontSize: 18 }}>
                       Use my current location
                     </Text>
@@ -485,55 +486,45 @@ const EditPostScreen = ({ navigation, route }) => {
             </View>
           </View>
         </Pressable>
-        <Pressable onPress={() => setLocationModal(false)}>
-          <Text>Close</Text>
+        <Pressable
+          onPress={() => {
+            setSearchResut([]);
+            setLocationModal(false);
+          }}
+          style={{ backgroundColor: "#0244d0", paddingVertical: 10 }}
+        >
+          <Text style={{ color: "#fff", textAlign: "center" }}>Close</Text>
         </Pressable>
       </Modal>
-      <Modal visible={pinSpotModal}>
+      <Modal
+        visible={pinSpotModal}
+        onShow={() => {
+          (async function () {
+            const result =
+              await fetch(`${MAPBOXURI}/geocode/reverse?lat=${center[1]}&lon=${center[0]}&format=json&apiKey=${MAPBOXTOKEN}
+            `)();
+            const data = await result.json();
+            setRegion(data.results[0].state);
+            setPlaceName(data.results[0].formatted);
+          })();
+        }}
+      >
         <View
           style={{
-            marginTop: StatusBar.currentHeight,
             flex: 1,
             backgroundColor: "rgba(0,0,0,0.02)",
           }}
         >
-          <Text
-            style={{
-              color: "rgba(0,0,0,0.6)",
-              fontSize: 18,
-              textAlign: "center",
-              margin: "5%",
-            }}
-          >
-            Is this the correct location, in the red marker? you can press and
-            drag and change locations!
-          </Text>
-          <MapView
-            style={{
-              flex: 1,
-            }}
-            region={{
-              latitude: center[1],
-              longitude: center[0],
-              latitudeDelta: 0.0022,
-              longitudeDelta: 0.0021,
-            }}
-            initialRegion={{
-              latitude: center[1],
-              longitude: center[0],
-              latitudeDelta: 0.0022,
-              longitudeDelta: 0.0021,
-            }}
-          >
-            <Marker
-              onDragEnd={({ nativeEvent: { coordinate } }) => {
-                setCenter([coordinate.longitude, coordinate.latitude]);
+          <View style={{ flex: 1 }}>
+            <Image
+              onLayout={() => <ActivityIndicator />}
+              style={{ flex: 1 }}
+              source={{
+                uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${dimen.width}&height=${dimen.height}&center=lonlat:${center[0]},${center[1]}&zoom=14&marker=lonlat:${center[0]},${center[1]};color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
               }}
-              flat
-              draggable
-              coordinate={{ latitude: center[1], longitude: center[0] }}
             />
-          </MapView>
+          </View>
+
           <View
             style={{
               backgroundColor: "#fff",
@@ -546,29 +537,7 @@ const EditPostScreen = ({ navigation, route }) => {
           >
             <TouchableOpacity
               onPress={async () => {
-                const response = await fetch(
-                  `${MAPBOXURI}/mapbox.places/${center[0]},${center[1]}.json?access_token=${MAPBOXTOKEN}`
-                );
-                const r = await response.json();
-                if (r?.features[0]?.place_name && r.features[0].center) {
-                  if (r.features[0].place_type[0] === "locality") {
-                    const region = r.features[0].context.filter((i, j) => {
-                      return i.id.startsWith("region");
-                    });
-                    setCenter(r.features[0].center);
-                    setRegion(region[0]?.text);
-                    setPlaceName(r.features[0].place_name);
-                  } else {
-                    dispatch({
-                      type: "add",
-                      payload: {
-                        center: r.features[0].center,
-                        placeName: r?.features[0]?.place_name,
-                      },
-                    });
-                  }
-                  navigation.navigate("employer/postjob/payment");
-                }
+                setPinSpotModal(false);
               }}
               style={{
                 backgroundColor: "#0244d0",
@@ -579,13 +548,10 @@ const EditPostScreen = ({ navigation, route }) => {
                 borderRadius: 5,
               }}
             >
-              <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+              <Text style={{ textAlign: "center", color: "#fff" }}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <Pressable onPress={() => setPinSpotModal(false)}>
-          <Text>Close</Text>
-        </Pressable>
       </Modal>
       <Pressable
         onPress={() => {
@@ -670,8 +636,50 @@ const EditPostScreen = ({ navigation, route }) => {
                 color: "rgba(0,0,0,0.6)",
               }}
             >
-              Max file size: 100MB
+              Max file size: 10MB
             </Text>
+            {jobPost.document ? (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#0244d0",
+                  paddingVertical: 5,
+                  paddingHorizontal: 5,
+                  borderRadius: 5,
+                  alignSelf: "flex-end",
+                }}
+                onPress={async () => {
+                  if (documentExits) {
+                    FileViewer.open(localFile);
+                  } else {
+                    const options = {
+                      fromUrl: `${BASEURI}/cv/${jobPost.cv}`,
+                      toFile: localFile,
+                    };
+                    RNFS.downloadFile(options, {
+                      begin: (s) => console.log(s),
+                      progress: (s) => {
+                        console.log(s);
+                      },
+                    })
+                      .promise.then(() => FileViewer.open(localFile))
+                      .then(() => {
+                        // success
+                      })
+                      .catch((error) => {
+                        // error
+                      });
+                  }
+                }}
+              >
+                {cvExists ? (
+                  <Text style={{ color: "#fff" }}>Open cv</Text>
+                ) : (
+                  <Text style={{ color: "#fff" }}>Download and open cv</Text>
+                )}
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
           </View>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
@@ -1103,7 +1111,7 @@ const EditPostScreen = ({ navigation, route }) => {
             width: "80%",
             borderRadius: 20,
             backgroundColor:
-              description.length > 49 && bool ? "blue" : "rgba(0,0,0,0.6)",
+              description.length > 49 && bool ? "#0244d0" : "rgba(0,0,0,0.6)",
             height: "70%",
             alignItems: "center",
             justifyContent: "center",

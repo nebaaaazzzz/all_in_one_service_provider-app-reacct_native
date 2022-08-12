@@ -22,7 +22,6 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView
@@ -46,6 +45,7 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
         <TextInput
           onChangeText={setText}
           maxLength={500}
+          value={text}
           multiline
           numberOfLines={10}
           placeholder="You'll have a great time at this comfortable place to stay"

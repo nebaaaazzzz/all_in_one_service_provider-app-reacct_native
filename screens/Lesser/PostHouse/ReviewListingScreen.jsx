@@ -18,32 +18,42 @@ const ReviewListingScreen = ({ navigation, route }) => {
   const clientQuery = useQueryClient();
   const { housePost } = useContext(PostHouseContext);
   const { isSuccess, isLoading, isError, error, data, mutate } = useMutation(
-    async () => {
+    async (bool) => {
+      const imgFilterList = [];
       const formData = new FormData();
       for await (const img of housePost.houseImages) {
-        const uri = img.uri;
-        const arr = uri.split(".");
-        const ext = arr[arr.length - 1];
-        formData.append("houseImage", {
-          uri: img.uri,
-          type: "image/" + ext,
-          name: uri,
-        });
+        if (img?.length == 24) {
+          imgFilterList.push(img);
+        } else {
+          const uri = img.uri;
+          const arr = uri.split(".");
+          const ext = arr[arr.length - 1];
+          formData.append("houseImage", {
+            uri: img.uri,
+            type: "image/" + ext,
+            name: uri,
+          });
+        }
       }
-      const newObj = { ...housePost };
+      const newObj = { ...housePost, imgFilterList };
       newObj.guestFavourite = newObj.guestFav;
       delete newObj.guestFav;
       delete newObj.houseImages;
       formData.append("body", JSON.stringify(newObj));
       try {
-        const response = await fetch(`${BASEURI}/lesser/posthouse`, {
-          method: "post",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${BASETOKEN}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await fetch(
+          bool
+            ? `${BASEURI}/lesser/edit-post/${route.params?.data?._id}`
+            : `${BASEURI}/lesser/posthouse`,
+          {
+            method: "post",
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${BASETOKEN}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error((await response.json()).message);
         }
@@ -76,7 +86,6 @@ const ReviewListingScreen = ({ navigation, route }) => {
         flex: 1,
         // backgroundColor: "#0099ff",
         backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
       }}
     >
       <ScrollView
@@ -103,16 +112,31 @@ const ReviewListingScreen = ({ navigation, route }) => {
 
         <View>
           <Divider />
-          <Image
-            source={{ uri: housePost.houseImages[1].uri }}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.3)",
-              width: "90%",
-              aspectRatio: 2,
-              alignSelf: "center",
-              borderRadius: 10,
-            }}
-          />
+          {housePost.houseImages[1]?.length == 24 ? (
+            <Image
+              source={{
+                uri: `${BASEURI}/house/image/${housePost.houseImages[1]}`,
+                headers: {
+                  Authorization: `Bearer ${BASETOKEN}`,
+                },
+              }}
+              style={{
+                width: "100%",
+                height: 200,
+              }}
+            />
+          ) : (
+            <Image
+              source={{ uri: housePost.houseImages[1].uri }}
+              style={{
+                backgroundColor: "rgba(0,0,0,0.3)",
+                width: "90%",
+                aspectRatio: 2,
+                alignSelf: "center",
+                borderRadius: 10,
+              }}
+            />
+          )}
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("lesser/posthouse/viewimages", {
@@ -366,13 +390,13 @@ const ReviewListingScreen = ({ navigation, route }) => {
               <Text style={{ fontSize: 16 }}>
                 Type :{"  "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                  {housePost.placeDescription.title}
+                  {housePost?.placeDescription?.title}
                 </Text>
               </Text>
               <Text style={{ fontSize: 16 }}>
                 Description :{" "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                  {housePost.placeDescription.description}
+                  {housePost?.placeDescription?.description}
                 </Text>
               </Text>
             </View>
@@ -404,25 +428,39 @@ const ReviewListingScreen = ({ navigation, route }) => {
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            mutate();
-          }}
-          style={{
-            backgroundColor: "#0244d0",
-            width: 100,
-            right: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          {route.params?.data ? (
+        {route.params?.data ? (
+          <TouchableOpacity
+            onPress={() => {
+              mutate(true);
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              right: 20,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
             <Text style={{ textAlign: "center", color: "#fff" }}>Save</Text>
-          ) : (
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              mutate(false);
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              right: 20,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
             <Text style={{ textAlign: "center", color: "#fff" }}>Post</Text>
-          )}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
