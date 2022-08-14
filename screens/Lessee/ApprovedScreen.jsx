@@ -13,13 +13,17 @@ import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
 import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
+import * as SecureStore from "expo-secure-store";
+
 import fromNow from "../../utils/time";
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(
     `${BASEURI}/lessee/approved/?page=${pageParam}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );

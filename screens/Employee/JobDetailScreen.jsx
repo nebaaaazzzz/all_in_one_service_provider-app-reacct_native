@@ -10,7 +10,7 @@ import {
 import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { BASEURI, BASETOKEN } from "../../urls";
+import { BASEURI, BASETOKEN, MAPBOXURI, MAPBOXTOKEN } from "../../urls";
 
 import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
@@ -71,8 +71,17 @@ const JobDetailScreen = ({ navigation, route }) => {
   }
   if (applyMutuation.isSuccess) {
     if (data.applied) {
+      navigation.goBack();
+      clientQuery.invalidateQueries(["appliedjobs"]);
+
+      clientQuery.invalidateQueries(["jobs"]);
+
       ToastAndroid.show("successfully removed", ToastAndroid.LONG);
     } else {
+      navigation.navigate("employee/");
+
+      clientQuery.invalidateQueries(["jobs"]);
+
       ToastAndroid.show("successfully applied", ToastAndroid.LONG);
     }
     clientQuery.invalidateQueries("jobs");
@@ -326,12 +335,34 @@ const JobDetailScreen = ({ navigation, route }) => {
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontSize: 18 }}>phone Number</Text>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                data.user.phoneNumber
+                {data?.user?.phoneNumber}
               </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContext: "center",
+              }}
+            >
+              <Image
+                style={{ flex: 1 }}
+                source={{
+                  uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${200}&height=${200}&center=lonlat:${
+                    data.location.coordinates[0]
+                  },${data.location.coordinates[1]}&zoom=14&marker=lonlat:${
+                    data.location.coordinates[0]
+                  },${
+                    data.location.coordinates[1]
+                  };color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
+                }}
+              />
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontSize: 18 }}>Email</Text>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>data.user.email</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                {data?.user?.email}
+              </Text>
             </View>
           </View>
         )}

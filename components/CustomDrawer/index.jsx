@@ -94,7 +94,7 @@ const CustomDrawer = (props) => {
           onPress={async () => {
             await SecureStore.deleteItemAsync("token");
             queryClient.resetQueries();
-            queryCache.clear();
+            queryClient.clear();
           }}
           style={{ paddingVertical: 15 }}
         >

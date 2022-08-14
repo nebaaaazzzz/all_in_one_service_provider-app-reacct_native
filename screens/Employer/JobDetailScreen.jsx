@@ -14,13 +14,16 @@ import { useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
 import { BASEURI, BASETOKEN } from "../../urls";
+import * as SecureStore from "expo-secure-store";
 
 // Requests permissions for external directory
 
 const fetchJob = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/employer/job/${queryKey[1]}`, {
     headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
+      Authorization: `Bearer ${
+        BASETOKEN || (await SecureStore.getItemAsync("token"))
+      }`,
     },
   });
   if (!response.ok) {

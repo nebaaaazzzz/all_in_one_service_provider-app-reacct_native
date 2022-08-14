@@ -47,13 +47,12 @@ const HouseImagesScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
+        backgroundColor: "rgba(0,0,0,0.04)",
       }}
     >
       <View
         showsVerticalScrollIndicator={false}
         style={{
-          backgroundColor: "#fff",
           flex: 1,
           paddingHorizontal: 10,
         }}

@@ -12,6 +12,7 @@ import React from "react";
 import { useMutation, useQuery } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { Divider, Badge } from "react-native-paper";
+import * as SecureStore from "expo-secure-store";
 
 const fetchHouse = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/lesser/house/${queryKey[1]}`, {
@@ -35,7 +36,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
     const response = await fetch(`${BASEURI}/lesser/house/${data._id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     });
     if (!response.ok) {

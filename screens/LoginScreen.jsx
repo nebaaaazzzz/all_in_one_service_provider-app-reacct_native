@@ -13,12 +13,14 @@ import {
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { ScrollView } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
 
 import { useMutation, useQueryClient } from "react-query";
 import { BASEURI } from "../urls";
+import { List } from "react-native-paper";
 
 const LoginScreen = ({ navigation, route }) => {
   const [password, setPassword] = React.useState("");
@@ -39,7 +41,8 @@ const LoginScreen = ({ navigation, route }) => {
           });
 
           if (!response.ok) {
-            throw new Error((await response.json()).err);
+            console.log("hello");
+            throw new Error((await response.json()).message);
           }
           return await response.json();
         }
@@ -71,6 +74,35 @@ const LoginScreen = ({ navigation, route }) => {
         justifyContent: "center",
       }}
     >
+      <View
+        style={{
+          alignItems: "flex-end",
+          // marginRight: 20,
+          top: -35,
+          right: 0,
+          position: "absolute",
+        }}
+      >
+        <List.Accordion
+          style={{ width: 100, opacity: 1 }}
+          title="Uncontrolled Accordion"
+          right={(props) => (
+            <FontAwesome name="language" color="#0244d0" size={40} />
+          )}
+          // right={(props) => <></>}
+        >
+          <List.Item
+            title="አማርኛ"
+            style={{ margin: 0, padding: 0 }}
+            titleStyle={{ color: "#0244d0" }}
+          />
+          <List.Item
+            style={{ margin: 0, padding: 0 }}
+            title="English"
+            titleStyle={{ color: "#0244d0" }}
+          />
+        </List.Accordion>
+      </View>
       <Pressable onPress={() => Keyboard.dismiss()}>
         <ScrollView>
           <View style={{ paddingHorizontal: 25 }}>

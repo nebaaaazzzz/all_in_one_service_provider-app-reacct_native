@@ -76,7 +76,7 @@ const CategoryScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 100,
+          top: dimension.height - dimension.height / 5.5,
           alignItems: "center",
           justifyContent: "center",
           height: 60,

@@ -24,6 +24,8 @@ import ApprovedScreen from "./ApprovedScreen";
 import RejectedScreen from "./RejectedScreen";
 import EditPostScreen from "./EditPostScreen";
 import { UserContext } from "../../App.Navigator";
+import * as SecureStore from "expo-secure-store";
+
 import PaymentScreen from "../Common/PaymentScreen";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
@@ -32,7 +34,9 @@ const fetchJobs = async ({ pageParam = 1, nearBy }) => {
     `${BASEURI}/employer/posts?page=${pageParam}&nearby=${nearBy}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );
@@ -168,6 +172,12 @@ function Home({ navigation }) {
         {user?.left > 0 ? (
           <TouchableOpacity
             onPress={() => {
+              if (user.suspended) {
+                return ToastAndroid.show(
+                  "your Account Hasbeen suspened",
+                  ToastAndroid.LONG
+                );
+              }
               requestAnimationFrame(() => {
                 navigation.navigate("employer/postjob");
                 // navigation.navigate("lesser/payment");

@@ -22,6 +22,7 @@ import React, { useState, useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as SecureStore from "expo-secure-store";
 
 import { useInfiniteQuery } from "react-query";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -33,13 +34,16 @@ import ViewImagesScreen from "./ViewImagesScreen";
 import fromNow from "../../utils/time";
 import AppliedScreen from "./AppliedScreen";
 import PaymentScreen from "../Common/PaymentScreen";
+
 const LesseeStackNavigator = createStackNavigator();
 const fetchHouses = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
     `${BASEURI}/lessee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&propertyType=${queryKey[4]}&price=${queryKey[5]}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );
@@ -107,7 +111,6 @@ const Lessee = ({ navigation }) => {
   const [nearBy, setNearBy] = useState(false);
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false); // while location fetch
-
   useEffect(() => {
     if (nearBy) {
       setLoading(true);
@@ -123,11 +126,14 @@ const Lessee = ({ navigation }) => {
         setTimeout(async () => {
           if (!coords) {
             coords = (await Location.getLastKnownPositionAsync({})).coords;
+            console.log("coords ", coords);
             setLocation(`${coords.longitude},${coords.latitude}`);
             setLoading(false);
           }
         }, 2000);
         coords = (await Location.getCurrentPositionAsync({})).coords;
+        console.log("coords ", coords);
+
         if (latitude && longitude) {
           setLocation(`${coords.longitude},${coords.latitude}`);
           setLoading(false);
@@ -137,6 +143,7 @@ const Lessee = ({ navigation }) => {
       setLocation("");
     }
   }, [nearBy]);
+
   const [visible, setVisible] = React.useState(false);
   const [indexS, setIndex] = useState(0);
   // require('./assets/images/girl.jpg'),          // Local image
@@ -217,7 +224,11 @@ const Lessee = ({ navigation }) => {
     <View style={{ marginTop: StatusBar.currentHeight, flex: 1 }}>
       <Modal visible={openModal}>
         <Pressable
-          style={{ flex: 1 }}
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.1)",
+            paddingTop: "20%",
+          }}
           onPress={() => {
             Keyboard.dismiss();
           }}
@@ -323,19 +334,6 @@ const Lessee = ({ navigation }) => {
                 style={{
                   elevation: 10,
                   backgroundColor: "#0244d0",
-                  marginRight: "5%",
-                  paddingHorizontal: "10%",
-                  paddingVertical: "2%",
-                  borderRadius: 5,
-                }}
-                onPress={() => setOpenModal(false)}
-              >
-                <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  elevation: 10,
-                  backgroundColor: "#0244d0",
                   paddingHorizontal: "10%",
                   paddingVertical: "2%",
                   marginTop: "10%",
@@ -343,7 +341,7 @@ const Lessee = ({ navigation }) => {
                 }}
                 onPress={() => setOpenModal(false)}
               >
-                <Text style={{ fontSize: 18, color: "#fff" }}>Save</Text>
+                <Text style={{ fontSize: 18, color: "#fff" }}>close</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -378,7 +376,7 @@ const Lessee = ({ navigation }) => {
         style={{
           elevation: 10,
           position: "absolute",
-          top: 50,
+          top: 45,
           right: 50,
           zIndex: 10,
         }}

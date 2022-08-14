@@ -18,6 +18,8 @@ import React, { useState, useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { Divider, Checkbox } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as SecureStore from "expo-secure-store";
+
 import JobDetailScreen from "./JobDetailScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { categoryList, regionsList } from "../../constants/data";
@@ -35,7 +37,9 @@ const fetchJobs = async ({ pageParam = 1, queryKey }) => {
     `${BASEURI}/employee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&category=${queryKey[4]}&gender=${queryKey[5]}&permanent=${queryKey[6]}&cvRequired=${queryKey[7]}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );
@@ -222,7 +226,11 @@ const Home = ({ navigation }) => {
       <Pressable onPress={Keyboard.dismiss()} style={{ marginBottom: "35%" }}>
         <Modal visible={openModal}>
           <View
-            style={{ alignItems: "center", flex: 1, backgroundColor: "red" }}
+            style={{
+              alignItems: "center",
+              flex: 1,
+              backgroundColor: "rgba(0,0,0,0.1)",
+            }}
           >
             <SelectDropdown
               rowStyle={{

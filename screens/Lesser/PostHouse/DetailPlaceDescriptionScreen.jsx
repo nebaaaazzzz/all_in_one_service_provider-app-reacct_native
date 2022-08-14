@@ -21,7 +21,7 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
+        backgroundColor: "rgba(0,0,0,0.1)",
       }}
     >
       <ScrollView

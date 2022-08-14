@@ -1,3 +1,5 @@
+import RNFS from "react-native-fs";
+import FileViewer from "react-native-file-viewer";
 import {
   View,
   ActivityIndicator,
@@ -7,7 +9,7 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 
 import { BASEURI, BASETOKEN } from "../../urls";
@@ -15,13 +17,16 @@ import { useIsFocused } from "@react-navigation/native";
 import { Avatar, Title, Caption, Text, Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Requests permissions for external directory
+import * as SecureStore from "expo-secure-store";
 
 const fetchUser = async ({ queryKey }) => {
   const response = await fetch(
     `${BASEURI}/lesser/${queryKey[1]}/${queryKey[2]}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );
@@ -65,11 +70,23 @@ const UserDetailScreen = ({ navigation, route }) => {
   });
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
-
-  const { isLoading, isError, error, data, isFetching } = useQuery(
-    ["user", route.params.houseId, route.params.id],
-    fetchUser
-  );
+  const [cvExists, setCvExists] = React.useState(false);
+  const localFile = `${RNFS.DocumentDirectoryPath}/${user?.cv}`;
+  useEffect(() => {
+    async function check() {
+      setCvExists(
+        await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${user?.cv}`)
+      );
+    }
+    check();
+  }, []);
+  const {
+    isLoading,
+    isError,
+    error,
+    data: user,
+    isFetching,
+  } = useQuery(["user", route.params.houseId, route.params.id], fetchUser);
   if (!isFocused) {
     queryClient.invalidateQueries([
       "user",
@@ -99,12 +116,12 @@ const UserDetailScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.userInfoSection}>
           <View style={{ flexDirection: "row", marginTop: 15 }}>
             <Avatar.Image
               source={{
-                uri: `${BASEURI}/profile-pic/${data.profilePic}`,
+                uri: `${BASEURI}/profile-pic/${user.profilePic}`,
                 // uri: `${BASEURI}/profile-pic/${userContext.profilePic}`,
                 headers: {
                   Authorization: `Bearer ${BASETOKEN}`,
@@ -122,47 +139,69 @@ const UserDetailScreen = ({ navigation, route }) => {
                   },
                 ]}
               >
-                {data.firstName + " " + data.lastName}
+                {user.firstName + " " + user.lastName}
               </Title>
-              <Caption style={styles.caption}>{data.userName}</Caption>
+              <Caption style={styles.caption}>{user.userName}</Caption>
             </View>
           </View>
         </View>
 
         <View style={styles.userInfoSection}>
+          {user.city || user.region ? (
+            <View style={styles.row}>
+              <Icon name="map-marker-radius" color="#0244d0" size={20} />
+              <Text style={{ color: "#777777", marginLeft: 20 }}>
+                {user.city} {user.region}
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
           <View style={styles.row}>
-            <Icon name="map-marker-radius" color="#777777" size={20} />
+            <Icon name="phone" color="#0244d0" size={20} />
             <Text style={{ color: "#777777", marginLeft: 20 }}>
-              Addis Ababa, Ethiopia
+              {user.phoneNumber}
             </Text>
           </View>
           <View style={styles.row}>
-            <Icon name="phone" color="#777777" size={20} />
-            <Text style={{ color: "#777777", marginLeft: 20 }}>
-              {data.phoneNumber}
+            <Icon name="gender-male-female" color="#0244d0" size={20} />
+            <Text style={{ color: "rgba(0,0,0,0.6)", marginHorizontal: 20 }}>
+              {user.gender}
             </Text>
           </View>
           <View style={styles.row}>
-            <Icon name="email" color="#777777" size={20} />
+            <Icon name="email" color="#0244d0" size={20} />
             <Text style={{ color: "#777777", marginLeft: 20 }}>
-              {data.email}
+              {user.email}
             </Text>
           </View>
         </View>
-        <Divider style={{ borderWidth: 0.2 }} />
-        <View style={{ paddingHorizontal: "10%", marginTop: "2%" }}>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontSize: 18 }}>gender</Text>
-            <Text style={{ color: "rgba(0,0,0,0.6)", marginHorizontal: 20 }}>
-              {data.gender}
-            </Text>
-          </View>
 
-          {data.skills || (
-            <View style={{ alignItems: "flex-start", marginTop: "2%" }}>
-              <Text>Skills</Text>
+        <Divider />
+        <View
+          style={{
+            paddingHorizontal: "10%",
+            marginVertical: 10,
+            marginTop: "2%",
+          }}
+        >
+          {user.skills.length ? (
+            <View
+              style={{
+                marginTop: "2%",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                Skills
+              </Text>
+              <Divider />
 
-              {data.skills.map((item, index) => (
+              {user.skills.map((item, index) => (
                 <View
                   key={index + 1}
                   style={{
@@ -176,34 +215,24 @@ const UserDetailScreen = ({ navigation, route }) => {
                 >
                   <Text
                     style={{
-                      fontSize: 16,
                       marginHorizontal: "3%",
                     }}
                   >
                     {item}
                   </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSkills(
-                        skills.filter((i) => {
-                          return item != i;
-                        })
-                      );
-                    }}
-                  >
-                    <Icon name="close" color="red" size={20} />
-                  </TouchableOpacity>
                 </View>
               ))}
             </View>
+          ) : (
+            <></>
           )}
-          {data.education || (
+          {user.education.length ? (
             <View>
-              <Text>Education</Text>
-              {data.education.map((item, index) => {
+              <Text style={{ fontWeight: "bold" }}>Education</Text>
+              {user.education.map((item, index) => {
                 return (
                   <View key={index + 1}>
-                    <Divider style={{ borderWidth: 0.5 }} />
+                    <Divider style={{ borderWidth: 0.25 }} />
                     <Text>{item.institution}</Text>
                     <View
                       style={{
@@ -213,13 +242,15 @@ const UserDetailScreen = ({ navigation, route }) => {
                     >
                       <View style={{ flexDirection: "row" }}>
                         <Text>
-                          {item.start.getMonth() +
+                          {new Date(item.start).getMonth() +
                             "/" +
-                            item.start.getFullYear()}{" "}
+                            new Date(item.start).getFullYear()}
                           -
                         </Text>
                         <Text>
-                          {item.end.getMonth() + "/" + item.end.getFullYear()}
+                          {new Date(item.to).getMonth() +
+                            "/" +
+                            new Date(item.to).getFullYear()}
                         </Text>
                       </View>
                     </View>
@@ -233,36 +264,44 @@ const UserDetailScreen = ({ navigation, route }) => {
                 );
               })}
             </View>
+          ) : (
+            <></>
           )}
-          {data.languages || (
-            <View>
-              <Text>Languages</Text>
-              {data.languages.map((item, index) => {
-                return (
-                  <View
-                    key={index + 1}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-around",
-                    }}
-                  >
+          {user.languages.length ? (
+            <View style={{ marginVertical: 15 }}>
+              <Text style={{ fontWeight: "bold" }}>Languages</Text>
+              <Divider />
+              <View style={{ paddingVertical: 10 }}>
+                {user.languages.map((item, index) => {
+                  return (
                     <View
+                      key={index + 1}
                       style={{
-                        paddingRight: "10%",
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        paddingVertical: 5,
                         flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-around",
                       }}
                     >
-                      <Text>{item.language}</Text>
-                      <Text>{item.level}</Text>
+                      <View
+                        style={{
+                          paddingRight: "10%",
+                          flex: 1,
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <Text>{item.language}</Text>
+                        <Text>{item.level}</Text>
+                      </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
+              </View>
             </View>
+          ) : (
+            <></>
           )}
 
           <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
@@ -276,118 +315,184 @@ const UserDetailScreen = ({ navigation, route }) => {
               Bio
             </Text>
             <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
-              {data.description}
+              {user.description}
             </Text>
           </View>
+          {user.cv ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#0244d0",
+                paddingVertical: 5,
+                paddingHorizontal: 5,
+                borderRadius: 5,
+              }}
+              onPress={async () => {
+                if (cvExists) {
+                  FileViewer.open(localFile);
+                } else {
+                  const options = {
+                    fromUrl: `${BASEURI}/cv/${user.cv}`,
+                    toFile: localFile,
+                  };
+                  RNFS.downloadFile(options, {
+                    begin: (s) => console.log(s),
+                    progress: (s) => {
+                      console.log(s);
+                    },
+                  })
+                    .promise.then(() => FileViewer.open(localFile))
+                    .then(() => {
+                      // success
+                    })
+                    .catch((error) => {
+                      // error
+                    });
+                }
+              }}
+            >
+              {cvExists ? (
+                <Text
+                  style={{
+                    textAlign: "center",
+                    paddingVertical: 5,
+                    fontSize: 16,
+                    color: "#fff",
+                  }}
+                >
+                  Open cv
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    textAlign: "center",
+                    paddingVertical: 5,
+                    fontSize: 16,
+                    color: "#fff",
+                  }}
+                >
+                  Download and open cv
+                </Text>
+              )}
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
         </View>
+        {user.approved ? (
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderTopWidth: 2,
+              flexDirection: "row",
+              height: 60,
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                rejectMutation.mutate();
+              }}
+              style={{
+                backgroundColor: "red",
+                width: 100,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <></>
+        )}
+        {/* if user is rejected */}
+        {/* if user is rejected */}
+        {/* if user is rejected */}
+        {user.rejected ? (
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderTopWidth: 2,
+              flexDirection: "row",
+              height: 60,
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                approveMutation.mutate();
+              }}
+              style={{
+                backgroundColor: "#0244d0",
+                width: 100,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>
+                Approve
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <></>
+        )}
+        {/* if user is rejected */}
+        {/* if user is rejected */}
+        {/* if user is rejected */}
+        {user.applied ? (
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderTopWidth: 2,
+              flexDirection: "row",
+              height: 60,
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                rejectMutation.mutate();
+              }}
+              style={{
+                backgroundColor: "red",
+                width: 100,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                approveMutation.mutate();
+              }}
+              style={{
+                backgroundColor: "#0244d0",
+                width: 100,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>
+                Approve
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <></>
+        )}
       </ScrollView>
-      {/* if user is approved */}
-      {/* if user is approved */}
-      {/* if user is approved */}
-      {data.approved && (
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderTopWidth: 2,
-            flexDirection: "row",
-            height: 60,
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            borderColor: "rgba(0,0,0,0.3)",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              rejectMutation.mutate();
-            }}
-            style={{
-              backgroundColor: "red",
-              width: 100,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {/* if user is rejected */}
-      {/* if user is rejected */}
-      {/* if user is rejected */}
-      {data.rejected && (
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderTopWidth: 2,
-            flexDirection: "row",
-            height: 60,
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            borderColor: "rgba(0,0,0,0.3)",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              approveMutation.mutate();
-            }}
-            style={{
-              backgroundColor: "#0244d0",
-              width: 100,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {/* if user is rejected */}
-      {/* if user is rejected */}
-      {/* if user is rejected */}
-      {data.applied && (
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderTopWidth: 2,
-            flexDirection: "row",
-            height: 60,
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            borderColor: "rgba(0,0,0,0.3)",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              rejectMutation.mutate();
-            }}
-            style={{
-              backgroundColor: "red",
-              width: 100,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              approveMutation.mutate();
-            }}
-            style={{
-              backgroundColor: "#0244d0",
-              width: 100,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </SafeAreaView>
   );
 };

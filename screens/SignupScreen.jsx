@@ -10,12 +10,14 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
-
+import { List } from "react-native-paper";
 import DatePicker from "@react-native-community/datetimepicker";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { RadioButton } from "react-native-paper";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useMutation } from "react-query";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+
 import RegistrationSVG from "../assets/images/misc/RegistrationSvg";
 import * as yup from "yup";
 
@@ -97,6 +99,36 @@ const SignupScreen = ({ navigation }) => {
         justifyContent: "center",
       }}
     >
+      <View
+        style={{
+          alignItems: "flex-end",
+          // marginRight: 20,
+          top: -35,
+          right: 0,
+          zIndex: 999,
+          position: "absolute",
+        }}
+      >
+        <List.Accordion
+          style={{ width: 100, opacity: 1 }}
+          title="Uncontrolled Accordion"
+          right={(props) => (
+            <FontAwesome name="language" color="#0244d0" size={40} />
+          )}
+          // right={(props) => <></>}
+        >
+          <List.Item
+            title="አማርኛ"
+            style={{ margin: 0, padding: 0 }}
+            titleStyle={{ color: "#0244d0" }}
+          />
+          <List.Item
+            style={{ margin: 0, padding: 0 }}
+            title="English"
+            titleStyle={{ color: "#0244d0" }}
+          />
+        </List.Accordion>
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ paddingHorizontal: 25 }}

@@ -21,13 +21,17 @@ const LesserTopTabNavigator = createMaterialTopTabNavigator();
 const LesserStackNavigator = createStackNavigator();
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import { BASETOKEN, BASEURI } from "./../../urls";
+import * as SecureStore from "expo-secure-store";
+
 import ViewImagesScreen from "./ViewImagesScreen";
 import { useIsFocused } from "@react-navigation/native";
 import { UserContext } from "../../App.Navigator";
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/lesser/posts?page=${pageParam}`, {
     headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
+      Authorization: `Bearer ${
+        BASETOKEN || (await SecureStore.getItemAsync("token"))
+      }`,
     },
   });
   return await response.json();
@@ -111,6 +115,12 @@ const Home = ({ navigation }) => {
         {user?.left > 0 ? (
           <TouchableOpacity
             onPress={() => {
+              if (user.suspended) {
+                return ToastAndroid.show(
+                  "your Account Hasbeen suspened",
+                  ToastAndroid.LONG
+                );
+              }
               requestAnimationFrame(() => {
                 navigation.navigate("lesser/posthouse");
                 // navigation.navigate("lesser/payment");

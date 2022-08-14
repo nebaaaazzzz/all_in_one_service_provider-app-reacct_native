@@ -28,14 +28,12 @@ const SpacekindScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
-        marginTop: StatusBar.currentHeight,
+        backgroundColor: "rgba(0,0,0,0.05)",
       }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          backgroundColor: "#fff",
           flex: 1,
           paddingHorizontal: 10,
         }}

@@ -5,26 +5,37 @@ import {
   TouchableOpacity,
   Image,
   useWindowDimensions,
+  Pressable,
   Linking,
 } from "react-native";
-import React, { useEffect } from "react";
+// import "./i18n/i18n";
+import i18n from "./../i18n/";
+import React, { useEffect, useState } from "react";
 import Svg, { Path } from "react-native-svg";
 import styled from "styled-components/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 const DrawerNavigator = createDrawerNavigator();
+import { useQueryClient } from "react-query";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileScreen from "./Common/ProfileScreen";
 import SettingsScreen from "./Common/SettingsScreen";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import DatePicker from "@react-native-community/datetimepicker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AboutScreen from "./Common/AboutScreen";
 import FeedbackScreen from "./Common/FeedbackScreen";
 import Entypo from "@expo/vector-icons/Entypo";
 import CustomDrawer from "../components/CustomDrawer";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import ContactusScreen from "./Common/ContactusScreen";
-import { MAPBOXTOKEN, MAPBOXURI } from "../urls";
+import { List } from "react-native-paper";
+/*language translation */
+import "./../i18n";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
+
+/**/
 const STouchableOpacity = styled(TouchableOpacity)`
   overflow: hidden;
   border-radius: 10px;
@@ -40,6 +51,10 @@ const SText = styled(Text)`
 
 const Home = ({ navigation }) => {
   const dimen = useWindowDimensions();
+  const [expanded, setExpanded] = React.useState(true);
+  const { t } = useTranslation();
+
+  const handlePress = () => setExpanded(!expanded);
   return (
     <View
       style={{
@@ -49,35 +64,6 @@ const Home = ({ navigation }) => {
         backgroundColor: "#0244d0",
       }}
     >
-      {/* <View style={{ height: "5%" }}>
-        <Svg
-          xmlns="http://www.w3.org/2000/svg"
-          width={dimen.width}
-          // width={450}
-          // height={450}
-          height={dimen.height}
-          viewBox={`0 0 ${dimen.width} ${dimen.height}`}
-        >
-          <Path
-            id="Path_1"
-            data-name="Path 1"
-            d="M75.35-12.54H276.424C351.337-12.54,375-53.025,375-53.025V523.437H0V53.121C0,16.857,33.736-12.54,75.35-12.54Z"
-            transform="translate(0 53.025)"
-            fill="#fff"
-          />
-        </Svg>
-      </View> */}
-
-      {/* <View
-        style={{
-          position: "absolute",
-          width: 120,
-          height: 120,
-          backgroundColor: "red",
-          right: -40,
-          top: 180,
-        }}
-      ></View> */}
       <View
         style={{
           marginTop: dimen.height / 3.1,
@@ -112,7 +98,7 @@ const Home = ({ navigation }) => {
           }}
         ></View>
         <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 20 }}>
-          Continue as ...
+          {t("co")} ...
         </Text>
 
         <View
@@ -139,7 +125,7 @@ const Home = ({ navigation }) => {
               source={require("./../assets/homescreenicons/employee.png")}
             />
 
-            <SText>Employee</SText>
+            <SText>{t("em")}</SText>
           </STouchableOpacity>
           <STouchableOpacity
             style={{ alignItems: "center" }}
@@ -156,7 +142,7 @@ const Home = ({ navigation }) => {
               source={require("./../assets/homescreenicons/employer.png")}
             />
 
-            <SText>Employer</SText>
+            <SText>{t("emp")}</SText>
           </STouchableOpacity>
           <STouchableOpacity
             style={{ alignItems: "center" }}
@@ -173,7 +159,7 @@ const Home = ({ navigation }) => {
               source={require("./../assets/homescreenicons/lessee.png")}
             />
 
-            <SText>Lessee</SText>
+            <SText>{t("les")}</SText>
           </STouchableOpacity>
           <STouchableOpacity
             style={{ alignItems: "center" }}
@@ -190,7 +176,7 @@ const Home = ({ navigation }) => {
               source={require("./../assets/homescreenicons/lesser.png")}
             />
 
-            <SText>Lessor</SText>
+            <SText>{t("lessor")}</SText>
           </STouchableOpacity>
         </View>
       </View>
@@ -199,18 +185,17 @@ const Home = ({ navigation }) => {
 };
 
 const HomeScreen = () => {
-  const handleOpenURL = (url) => {
-    // if (isSucceedPayment(url)) {
-    //   console.log("hello");
-    //   // your condition
-    //   // handle success payment
-    // } else {
-    //   console.log("handle failure");
-    //   // handle failure
-    // }
-    return;
-  };
+  const [expanded, setExpanded] = React.useState(true);
+  const { t } = useTranslation();
+  const handlePress = () => setExpanded(!expanded);
+  const [currentLanguage, setLanguage] = useState("en");
 
+  const changeLanguage = (value) => {
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch((err) => console.log(err));
+  };
   return (
     <DrawerNavigator.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
@@ -242,10 +227,45 @@ const HomeScreen = () => {
             elevation: 0,
           },
           headerTitle: "",
-          title: "Home",
+          title: t("Home"),
           headerStyle: {
             backgroundColor: "#0244d0",
             elevation: 0,
+          },
+          headerRight: () => {
+            return (
+              <View
+                style={{
+                  alignItems: "flex-end",
+                  // marginRight: 20,
+                  top: "-5%",
+                  zIndex: 9999,
+                  right: 0,
+                  position: "absolute",
+                }}
+              >
+                <List.Accordion
+                  style={{ backgroundColor: "#0244d0", width: 100, opacity: 1 }}
+                  right={(props) => (
+                    <FontAwesome name="language" color="#fff" size={30} />
+                  )}
+                  // right={(props) => <></>}
+                >
+                  <List.Item
+                    onPress={() => changeLanguage("am")}
+                    title="አማርኛ"
+                    style={{ margin: 0, padding: 0 }}
+                    titleStyle={{ color: "#fff" }}
+                  />
+                  <List.Item
+                    onPress={() => changeLanguage("en")}
+                    style={{ margin: 0, padding: 0 }}
+                    title="English"
+                    titleStyle={{ color: "#fff" }}
+                  />
+                </List.Accordion>
+              </View>
+            );
           },
           headerTitleAlign: "center",
           headerTintColor: "#fff",
@@ -255,7 +275,7 @@ const HomeScreen = () => {
         }}
       />
       <DrawerNavigator.Screen
-        name="Profile"
+        name={t("profile")}
         component={ProfileScreen}
         options={({ route }) => {
           const bool = getFocusedRouteNameFromRoute(route) == "profile/edit";
@@ -272,7 +292,7 @@ const HomeScreen = () => {
       />
 
       <DrawerNavigator.Screen
-        name="About"
+        name={t("About")}
         component={AboutScreen}
         options={{
           headerStyle: {
@@ -284,7 +304,7 @@ const HomeScreen = () => {
         }}
       />
       <DrawerNavigator.Screen
-        name="Contact us"
+        name={t("contact")}
         component={ContactusScreen}
         options={{
           headerStyle: {
@@ -296,7 +316,7 @@ const HomeScreen = () => {
         }}
       />
       <DrawerNavigator.Screen
-        name="FeedBack"
+        name={t("Feed")}
         component={FeedbackScreen}
         options={{
           headerStyle: {

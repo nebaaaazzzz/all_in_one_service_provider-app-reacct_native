@@ -1,6 +1,8 @@
 import { View, Text, Image, ScrollView, StatusBar } from "react-native";
 import React from "react";
 import { BASEURI, BASETOKEN } from "../../urls";
+import * as SecureStore from "expo-secure-store";
+
 const ViewImagesScreen = ({ route }) => {
   return (
     <ScrollView
@@ -20,7 +22,6 @@ const ViewImagesScreen = ({ route }) => {
             }}
             style={{
               width: "100%",
-              resizeMode: "stretch",
               marginVertical: 10,
               aspectRatio: 1,
             }}

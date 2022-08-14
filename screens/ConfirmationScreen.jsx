@@ -11,7 +11,6 @@ const ConfirmationScreen = () => {
   return (
     <View
       style={{
-        backgroundColor: "rgba(0,0,0,.5)",
         flex: 1,
         marginTop: StatusBar.currentHeight,
         justifyContent: "flex-end",

@@ -72,7 +72,6 @@ const PlaceDescriptionScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
       }}
     >
       <ScrollView
@@ -81,6 +80,8 @@ const PlaceDescriptionScreen = ({ navigation, route }) => {
           // marginTop: "40%",
           backgroundColor: "#fff",
           flex: 1,
+          backgroundColor: "rgba(0,0,0,0.0.01)",
+
           // borderTopLeftRadius: 15,
           // borderTopRightRadius: 15,
           paddingHorizontal: 10,

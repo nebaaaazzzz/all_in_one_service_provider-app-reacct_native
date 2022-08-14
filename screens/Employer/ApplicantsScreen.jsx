@@ -16,6 +16,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import UserDetailScreen from "./UserDetailScreen";
 import { Divider } from "react-native-paper";
+import * as SecureStore from "expo-secure-store";
+
 const EmployerStackNavigator = createStackNavigator();
 
 const fetchApplicants = async ({ pageParam = 1, queryKey }) => {
@@ -23,7 +25,9 @@ const fetchApplicants = async ({ pageParam = 1, queryKey }) => {
     `${BASEURI}/employer/applicants/${queryKey[1]}?page=${pageParam}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );

@@ -14,7 +14,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Platform, StatusBar, useColorScheme } from "react-native";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { View, Text, SafeAreaView } from "react-native";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
 import { BASEURI } from "./urls";
 import ErrorScreen from "./screens/Common/ErrorScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
@@ -39,7 +39,7 @@ const AppNavigator = ({ navigation }) => {
     prefixes: [prefix],
   };
   // handle gateway callbacks
-
+  const queryClient = useQueryClient();
   const scheme = useColorScheme();
   (async () => await import("./urls"))();
   const [tokenG, setTokenG] = useState();
@@ -77,9 +77,8 @@ const AppNavigator = ({ navigation }) => {
   if (tokenG && error) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <TouchableOpacity>
-          <Text>{error.message}</Text>
-        </TouchableOpacity>
+        <Text>{error.message}</Text>
+        <TouchableOpacity onPress={() => {}}></TouchableOpacity>
       </View>
     );
   }

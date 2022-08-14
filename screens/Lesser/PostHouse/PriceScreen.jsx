@@ -22,13 +22,12 @@ const PriceScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
+        backgroundColor: "rgba(0,0,0,0.06)",
         marginTop: StatusBar.currentHeight,
       }}
     >
       <View
         style={{
-          backgroundColor: "#fff",
           flex: 1,
           alignItems: "center",
           paddingHorizontal: 10,

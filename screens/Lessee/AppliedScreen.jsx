@@ -19,13 +19,17 @@ import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import ViewImagesScreen from "./ViewImagesScreen";
 import fromNow from "../../utils/time";
+import * as SecureStore from "expo-secure-store";
+
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const LesseeStackNavigator = createStackNavigator();
 const AppliedTabNavigator = createMaterialTopTabNavigator();
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/lessee/applied/?page=${pageParam}`, {
     headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
+      Authorization: `Bearer ${
+        BASETOKEN || (await SecureStore.getItemAsync("token"))
+      }`,
     },
   });
   return await response.json();
@@ -125,7 +129,7 @@ const Lessee = ({ navigation }) => {
     //   index: 1,
     //   routes: [{ name: "error", params: { error } }],
     // });
-    ToastAndroid(error.message, ToastAndroid.LONG);
+    ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
 
   return (

@@ -128,7 +128,7 @@ const PaymentScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 85,
+          top: dimension.height - dimension.height / 6,
           alignItems: "center",
           justifyContent: "center",
           height: 85,

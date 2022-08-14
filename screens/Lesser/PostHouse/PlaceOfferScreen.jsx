@@ -20,6 +20,7 @@ const List = ({ question, arr, state, setState }) => {
         style={{
           marginTop: 10,
           flexDirection: "row",
+
           flexWrap: "wrap",
           justifyContent: "space-between",
         }}
@@ -168,13 +169,12 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
+        backgroundColor: "rgba(0,0,0,0.1)",
       }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          backgroundColor: "#fff",
           flex: 1,
           paddingHorizontal: 10,
         }}

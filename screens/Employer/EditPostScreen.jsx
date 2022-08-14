@@ -27,6 +27,7 @@ import {
 import { MAPBOXTOKEN, MAPBOXURI } from "../../urls";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesomeIcon from "@expo/vector-icons/FontAwesome";
+import * as SecureStore from "expo-secure-store";
 
 import * as DocumentPicker from "expo-document-picker";
 import DatePicker from "@react-native-community/datetimepicker";
@@ -230,7 +231,9 @@ const EditPostScreen = ({ navigation, route }) => {
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${BASETOKEN}`,
+            Authorization: `Bearer ${
+              BASETOKEN || (await SecureStore.getItemAsync("token"))
+            }`,
           },
           body: data,
         }
@@ -268,13 +271,13 @@ const EditPostScreen = ({ navigation, route }) => {
         ...(region ? { region } : {}),
         ...(paymentStyle == 0
           ? {
-              paymentStyle: exp[paymentStyle],
+              paymentStyle: pay[paymentStyle],
               budget: {
                 from: fromBudget,
                 to: toBudget,
               },
             }
-          : { paymentStyle: exp[paymentStyle] }),
+          : { paymentStyle: pay[paymentStyle] }),
       })
     );
     mutate(formData);

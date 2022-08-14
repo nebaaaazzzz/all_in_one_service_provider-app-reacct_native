@@ -49,8 +49,8 @@ const DescribePlaceScreen = ({ navigation, route }) => {
       horizontal={false}
       style={{
         flex: 1,
+
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.3)",
       }}
     >
       <ScrollView
@@ -58,6 +58,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
         style={{
           backgroundColor: "#fff",
           flex: 1,
+          backgroundColor: "rgba(0,0,0,0.02)",
         }}
       >
         <Text

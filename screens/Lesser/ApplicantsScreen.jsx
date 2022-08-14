@@ -15,6 +15,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useIsFocused } from "@react-navigation/native";
 import { Divider } from "react-native-paper";
 import { useQueryClient } from "react-query";
+import * as SecureStore from "expo-secure-store";
+
 import UserDetailScreen from "./UserDetailScreen";
 const LesserStackNavigator = createStackNavigator();
 const fetchApplicant = async ({ pageParam = 1, queryKey }) => {
@@ -22,7 +24,9 @@ const fetchApplicant = async ({ pageParam = 1, queryKey }) => {
     `${BASEURI}/lesser/applicants/${queryKey[1]}?page=${pageParam}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     }
   );
