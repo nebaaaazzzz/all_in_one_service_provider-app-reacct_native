@@ -41,6 +41,12 @@ const JobDetailScreen = ({ navigation, route }) => {
   const downloadPath =
     FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
   const applyMutuation = useMutation(async () => {
+    if (data.cvRequired) {
+      ToastAndroid.show(
+        "Please Compelte your profile first",
+        ToastAndroid.LONG
+      );
+    }
     const response = await fetch(`${BASEURI}/employee/apply/${data._id}`, {
       method: "POST",
       headers: {

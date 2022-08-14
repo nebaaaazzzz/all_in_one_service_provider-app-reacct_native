@@ -18,6 +18,7 @@ import { Avatar, Title, Caption, Text, Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Requests permissions for external directory
 import * as SecureStore from "expo-secure-store";
+import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 
 const fetchUser = async ({ queryKey }) => {
   const response = await fetch(
@@ -38,7 +39,11 @@ const fetchUser = async ({ queryKey }) => {
 };
 
 const UserDetailScreen = ({ navigation, route }) => {
+  const dimension = useWindowDimensions();
   const approveMutation = useMutation(async () => {
+    console.log(
+      `${BASEURI}/lesser/approve/${route.params.id}/${route.params.houseId}`
+    );
     const response = await fetch(
       `${BASEURI}/lesser/approve/${route.params.id}/${route.params.houseId}`,
       {
@@ -113,10 +118,9 @@ const UserDetailScreen = ({ navigation, route }) => {
     queryClient.invalidateQueries("houseapplicants");
     navigation.navigate("lesser/applicants/");
   }
-
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <View style={{ flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <View style={styles.userInfoSection}>
           <View style={{ flexDirection: "row", marginTop: 15 }}>
             <Avatar.Image
@@ -304,20 +308,25 @@ const UserDetailScreen = ({ navigation, route }) => {
             <></>
           )}
 
-          <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                textAlign: "center",
-                marginVertical: "5%",
-              }}
-            >
-              Bio
-            </Text>
-            <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
-              {user.description}
-            </Text>
-          </View>
+          {user.description ? (
+            <View style={{ paddingHorizontal: "5%", marginVertical: "5%" }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginVertical: "5%",
+                }}
+              >
+                Bio
+              </Text>
+              <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
+                {user.description}
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+
           {user.cv ? (
             <TouchableOpacity
               style={{
@@ -378,132 +387,134 @@ const UserDetailScreen = ({ navigation, route }) => {
             <></>
           )}
         </View>
-        {user.approved ? (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderTopWidth: 2,
-              flexDirection: "row",
-              height: 60,
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              borderColor: "rgba(0,0,0,0.3)",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                rejectMutation.mutate();
-              }}
-              style={{
-                backgroundColor: "red",
-                width: 100,
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <></>
-        )}
-        {/* if user is rejected */}
-        {/* if user is rejected */}
-        {/* if user is rejected */}
-        {user.rejected ? (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderTopWidth: 2,
-              flexDirection: "row",
-              height: 60,
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              borderColor: "rgba(0,0,0,0.3)",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                approveMutation.mutate();
-              }}
-              style={{
-                backgroundColor: "#0244d0",
-                width: 100,
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "#fff" }}>
-                Approve
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <></>
-        )}
-        {/* if user is rejected */}
-        {/* if user is rejected */}
-        {/* if user is rejected */}
-        {user.applied ? (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderTopWidth: 2,
-              flexDirection: "row",
-              height: 60,
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              borderColor: "rgba(0,0,0,0.3)",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                rejectMutation.mutate();
-              }}
-              style={{
-                backgroundColor: "red",
-                width: 100,
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                approveMutation.mutate();
-              }}
-              style={{
-                backgroundColor: "#0244d0",
-                width: 100,
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "#fff" }}>
-                Approve
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <></>
-        )}
       </ScrollView>
-    </SafeAreaView>
+      {user.approved ? (
+        <View
+          style={{
+            position: "absolute",
+            top: dimension.height - dimension.height / 10,
+            backgroundColor: "#fff",
+            borderTopWidth: 2,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            height: 60,
+            justifyContent: "space-around",
+            borderColor: "rgba(0,0,0,0.3)",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              rejectMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "red",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <></>
+      )}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {user.rejected ? (
+        <View
+          style={{
+            position: "absolute",
+            top: dimension.height - dimension.height / 6,
+            backgroundColor: "#fff",
+            borderTopWidth: 2,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            height: 60,
+            justifyContent: "space-around",
+            borderColor: "rgba(0,0,0,0.3)",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              approveMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <></>
+      )}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {/* if user is rejected */}
+      {user.applied ? (
+        <View
+          style={{
+            position: "absolute",
+            top: dimension.height - dimension.height / 4.5,
+            backgroundColor: "#f",
+            borderTopWidth: 2,
+            width: "100%",
+            zIndex: 999,
+            flexDirection: "row",
+            alignItems: "center",
+            height: 60,
+            justifyContent: "space-around",
+            borderColor: "rgba(0,0,0,0.3)",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              rejectMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "red",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              approveMutation.mutate();
+            }}
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <></>
+      )}
+    </View>
   );
 };
 
 export default UserDetailScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    flex: 1,
-  },
   userInfoSection: {
     paddingHorizontal: 30,
     marginBottom: 25,

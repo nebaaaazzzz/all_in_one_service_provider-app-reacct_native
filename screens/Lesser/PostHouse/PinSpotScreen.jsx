@@ -26,16 +26,25 @@ const PinSpotScreen = ({ navigation, route }) => {
   const [region, setRegion] = useState("");
   const [placeName, setPlaceName] = useState("");
   const { dispatch } = useContext(PostHouseContext);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     (async function () {
       const result =
         await fetch(`${MAPBOXURI}/geocode/reverse?lat=${cntr[1]}&lon=${cntr[0]}&format=json&apiKey=${MAPBOXTOKEN}
     `);
+      setIsLoading(false);
       const data = await result.json();
       setRegion(data.results[0].state);
       setPlaceName(data.results[0].formatted);
     })();
   }, []);
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
   return (
     <View
       style={{

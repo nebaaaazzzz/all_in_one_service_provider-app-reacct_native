@@ -192,8 +192,21 @@ function Home({ navigation }) {
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}> Post Job </Text>
+            <Text style={{ color: "#fff" }}>Post Job </Text>
           </TouchableOpacity>
+        ) : user.suspended ? (
+          <Text
+            style={{
+              color: "#fff",
+              backgroundColor: "red",
+              borderRadius: 10,
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            Suspended
+          </Text>
         ) : (
           <TouchableOpacity
             onPress={() => {
@@ -204,14 +217,14 @@ function Home({ navigation }) {
             }}
             style={{
               backgroundColor: "#fff",
-              borderRadius: 10,
               backgroundColor: "#0244d0",
+              borderRadius: 10,
               marginHorizontal: 10,
               paddingHorizontal: 10,
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}> pay</Text>
+            <Text style={{ color: "#fff" }}>Pay</Text>
           </TouchableOpacity>
         )}
       </View>

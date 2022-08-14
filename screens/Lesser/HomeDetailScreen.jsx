@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { Divider, Badge } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
@@ -27,6 +27,7 @@ const fetchHouse = async ({ queryKey }) => {
   return (await response.json()).data;
 };
 const HomeDetailScreen = ({ navigation, route }) => {
+  const queryClient = useQueryClient();
   const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching } = useQuery(
     ["house", route.params.id],
@@ -58,7 +59,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
   }
   if (delteMutuation.isSuccess) {
     ToastAndroid.show("successfully Deleted", ToastAndroid.LONG);
-    navigation.navigate("lesser");
+    queryClient.invalidateQueries("myhouses");
+    navigation.goBack();
   }
   if (delteMutuation.isError) {
     ToastAndroid.show(delteMutuation.error.message, ToastAndroid.LONG);
@@ -386,7 +388,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
       <View
         style={{
           position: "absolute",
-          top: dimension.height - 110,
+          top: dimension.height - dimension.height / 4.5,
           backgroundColor: "#fff",
           borderTopWidth: 2,
           width: "100%",

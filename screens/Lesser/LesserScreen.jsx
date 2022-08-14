@@ -137,6 +137,19 @@ const Home = ({ navigation }) => {
           >
             <Text style={{ color: "#fff" }}> Post House</Text>
           </TouchableOpacity>
+        ) : user.suspended ? (
+          <Text
+            style={{
+              color: "#fff",
+              backgroundColor: "red",
+              borderRadius: 10,
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            Suspended
+          </Text>
         ) : (
           <TouchableOpacity
             onPress={() => {
