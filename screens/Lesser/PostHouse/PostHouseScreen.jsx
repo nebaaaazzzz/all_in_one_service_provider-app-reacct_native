@@ -13,6 +13,7 @@ import PriceScreen from "./PriceScreen";
 import DetailPlaceDescriptionScreen from "./DetailPlaceDescriptionScreen";
 import ReviewListingScreen from "./ReviewListingScreen";
 import ViewImagesScreen from "./ViewImagesScreen";
+import { useTranslation } from "react-i18next";
 const PostHouseStackNavigator = createStackNavigator();
 export const PostHouseContext = React.createContext();
 const reducer = (state = {}, action) => {
@@ -24,6 +25,7 @@ const reducer = (state = {}, action) => {
   }
 };
 const PostHouseScreen = ({ route }) => {
+  const { t } = useTranslation();
   const [housePost, dispatch] = useReducer(reducer);
   const data = route.params?.data ? route.params?.data : undefined;
   return (

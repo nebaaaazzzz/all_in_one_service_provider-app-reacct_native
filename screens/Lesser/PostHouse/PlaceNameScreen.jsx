@@ -8,7 +8,9 @@ import {
 import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
 const PlaceNameScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostHouseContext);
   let title;
   if (route.params?.data) {
@@ -40,7 +42,7 @@ const PlaceNameScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Let's give your place a name
+          {t("name")}
         </Text>
         <TextInput
           onChangeText={setText}
@@ -48,10 +50,10 @@ const PlaceNameScreen = ({ navigation, route }) => {
           multiline
           value={text}
           numberOfLines={10}
-          placeholder="Cheerful 1-bedrrom villa in Addis Ababa"
+          placeholder={t("cheer")}
         />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>min 6 characters</Text>
+          <Text>{t("minn")}</Text>
           <Text style={{ textAlign: "right" }}>{text.length}/50</Text>
         </View>
       </ScrollView>
@@ -93,7 +95,7 @@ const PlaceNameScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

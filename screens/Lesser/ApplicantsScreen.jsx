@@ -18,6 +18,7 @@ import { useQueryClient } from "react-query";
 import * as SecureStore from "expo-secure-store";
 
 import UserDetailScreen from "./UserDetailScreen";
+import { useTranslation } from "react-i18next";
 const LesserStackNavigator = createStackNavigator();
 const fetchApplicant = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
@@ -75,6 +76,7 @@ const Users = ({ item, pressHandler }) => {
 };
 
 const Lessee = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
 
@@ -144,7 +146,7 @@ const Lessee = ({ navigation, route }) => {
           if (!hasNextPage) {
             return (
               <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
+                {t("no")}
               </Text>
             );
           }
@@ -164,14 +166,14 @@ const ApplicantsScreen = ({ route }) => {
       <LesserStackNavigator.Screen
         initialParams={{ id: route.params.id }}
         options={{
-          title: "Applicants",
+          title: t("Applicants"),
           headerTitleContainerStyle: { textAlign: "center" },
         }}
         name="lesser/applicants/"
         component={Lessee}
       />
       <LesserStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("det") }}
         name="lesser/applicants/userdetail"
         component={UserDetailScreen}
       />

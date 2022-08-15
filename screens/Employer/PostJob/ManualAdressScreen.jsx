@@ -12,6 +12,7 @@ import styled from "styled-components";
 import countryList from "../utils/countrylist";
 import { Picker, onOpen } from "react-native-actions-sheet-picker";
 import MapView from "react-native-maps";
+import {useTranslation} from "react-i18next";
 
 const STextInput = styled(TextInput)`
   border-width: 1px;
@@ -21,6 +22,8 @@ const STextInput = styled(TextInput)`
   font-size: 18px;
 `;
 const ManualAdressScreen = ({ route }) => {
+
+  const {t}=useTranslation();
   const { height, width } = useWindowDimensions();
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState(undefined);

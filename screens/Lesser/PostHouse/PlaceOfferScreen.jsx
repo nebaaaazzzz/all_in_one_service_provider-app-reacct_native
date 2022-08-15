@@ -11,6 +11,7 @@ import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import FontAwsome from "@expo/vector-icons/FontAwesome";
 import FontAwsome5 from "@expo/vector-icons/FontAwesome5";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
 
 const List = ({ question, arr, state, setState }) => {
   return (
@@ -57,79 +58,80 @@ const List = ({ question, arr, state, setState }) => {
 };
 
 const PlaceOfferScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const amenities = [
     {
-      name: "pool",
+      name: t("pool"),
       icon: <Icon name={"pool"} />,
       // icon: "pool",
     },
 
     {
-      name: "Fire pit",
+      name: t("fire"),
       icon: <Icon name={"campfire"} />,
     },
     {
-      name: "Pool table",
+      name: t("table"),
       icon: <Icon name={"table-tennis"} />,
     },
     {
-      name: "Indoor fireplace",
+      name: t("Indoor"),
       icon: <Icon name={"fireplace"} />,
     },
     {
-      name: "Out door dininig area",
+      name: t("out"),
       icon: <MaterialIcon name={"dinner-dining"} />,
     },
     {
-      name: "Exercise equipment",
+      name: t("exercise"),
       icon: <MaterialIcon name="sports-cricket" size={24} color="black" />,
     },
   ];
   const guestFav = [
     {
-      name: "Wifi",
+      name: t("Wifi"),
       icon: <Icon name={"wifi"} />,
     },
     {
-      name: "Tv",
+      name: t("Tv"),
       icon: <FontAwsome name="tv" />,
     },
     {
-      name: "Kitchen",
+      name: t("kitchen"),
       icon: <MaterialIcon name={"kitchen"} />,
     },
     {
-      name: "Wahser",
+      name: t("Wash"),
       icon: <Icon name={"dishwasher"} />,
     },
     {
-      name: "Free parking on premises",
+      name: t("Free"),
       icon: <Icon name={"parking"} />,
     },
     {
-      name: "Paid parking on premises",
+      name: t("paid"),
       icon: <Icon name={"car-parking-lights"} />,
     },
     {
-      name: "Air conditioning",
+      name: t("Air"),
       icon: <Icon name={"air-conditioner"} />,
     },
     {
-      name: "Dedicated workspace",
+      name: t("Dedicated"),
       icon: <MaterialIcon name={"workspaces-filled"} />,
     },
   ];
   const saftyItems = [
     {
-      name: "Smoke alarm",
+      name: t("Smoke"),
       icon: <Icon name={"smoke-detector-variant"} />,
     },
     {
-      name: "First aid kit",
+      name: t("First"),
       icon: <FontAwsome5 name={"first-aid"} />,
     },
 
-    { name: "Fire extinguisher", icon: <Icon name="fire-extinguisher" /> },
+    { name: t("extinguisher"), icon: <Icon name="fire-extinguisher" /> },
   ];
   let amenIndex, guefavIndex, saftyIndex;
   if (route.params?.data) {
@@ -187,12 +189,12 @@ const PlaceOfferScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Let us know what your place has to offer!
+          {t("letus")}
         </Text>
         {[
-          { question: "Do you have any standout amenities?", arr: amenities },
-          { question: "What about these guest favorites?", arr: guestFav },
-          { question: "Have any of these saftey items ?", arr: saftyItems },
+          { question: t("standout"), arr: amenities },
+          { question: t("fav"), arr: guestFav },
+          { question: t("have"), arr: saftyItems },
         ].map((item, index) => {
           return (
             <List
@@ -252,7 +254,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

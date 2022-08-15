@@ -8,7 +8,10 @@ import {
 import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
+
 const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostHouseContext);
   let desc;
   if (route.params?.data) {
@@ -40,7 +43,7 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Now, let's describe your place
+          {t("describee")}
         </Text>
         <TextInput
           onChangeText={setText}
@@ -48,10 +51,10 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
           value={text}
           multiline
           numberOfLines={10}
-          placeholder="You'll have a great time at this comfortable place to stay"
+          placeholder={t("comfort")}
         />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>min 50 characters</Text>
+          <Text>{t("minn1")}</Text>
           <Text>{text.length}/500</Text>
         </View>
       </ScrollView>
@@ -90,7 +93,7 @@ const DetailPlaceDescriptionScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

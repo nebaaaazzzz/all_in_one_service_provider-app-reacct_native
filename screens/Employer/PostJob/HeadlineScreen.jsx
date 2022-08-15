@@ -11,7 +11,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { TextInput, ProgressBar, MD3Colors } from "react-native-paper";
 import Icon from "@expo/vector-icons/Entypo";
 import { PostJobContext } from "./PostJobScreen";
+import {useTranslation} from "react-i18next";
 const HeadlineScreen = ({ navigation }) => {
+  const {t}=useTranslation();
   const { dispatch } = useContext(PostJobContext);
   const [headline, setHeadline] = useState("");
   const dimension = useWindowDimensions();
@@ -32,7 +34,7 @@ const HeadlineScreen = ({ navigation }) => {
       >
         <ProgressBar progress={0} />
         <Text style={{ fontSize: 22, textAlign: "center", fontWeight: "bold" }}>
-          Let's start with a strong headline
+        {t("lets")}
         </Text>
         <TextInput
           style={{
@@ -40,30 +42,28 @@ const HeadlineScreen = ({ navigation }) => {
             width: "90%",
             alignSelf: "center",
           }}
-          placeholder="Write a headline for your job post"
+          placeholder={t("writeheadline")}
           onChangeText={setHeadline}
         />
         <View>
           <Text style={{ fontSize: 18, margin: 10, fontWeight: "bold" }}>
-            Example titles
+          {t("example")}
           </Text>
           <View style={{ flexDirection: "row", marginVertical: 5 }}>
             <Icon name="dot-single" size={20} />
             <Text>
-              Build responsive WordPress site with booking/ payment
-              functionality
+            {t("example1")}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginVertical: 5 }}>
             <Icon name="dot-single" size={20} />
             <Text>
-              Graphic designer needed to design ad creative for multiple
-              campaigns
+            {t("example2")}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginVertical: 5 }}>
             <Icon name="dot-single" size={20} />
-            <Text>Facebook ad specialist needed for product launch </Text>
+            <Text>{t("example3")}</Text>
           </View>
         </View>
         <View
@@ -94,7 +94,7 @@ const HeadlineScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: active ? "#fff" : "rgba(0,0,0,0.5)" }}>
-              Next: Category
+            {t("next")}
             </Text>
           </TouchableOpacity>
         </View>

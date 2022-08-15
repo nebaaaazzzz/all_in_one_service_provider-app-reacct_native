@@ -13,6 +13,7 @@ import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
 
 import { useIsFocused } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 const fetchJobs = async ({ pageParam = 1 }) => {
   const response = await fetch(
     `${BASEURI}/employee/approved/?page=${pageParam}`,
@@ -72,6 +73,7 @@ const Jobs = ({ pressHandler, item }) => {
 };
 
 const ApprovedScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = React.useState(false);
   const onPressHandler = (id) => {
     requestAnimationFrame(() => {
@@ -136,7 +138,7 @@ const ApprovedScreen = ({ navigation }) => {
           if (!hasNextPage) {
             return (
               <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
+                {t("no")}
               </Text>
             );
           }

@@ -14,6 +14,7 @@ import { UserContext } from "./../../App.Navigator";
 import React, { useContext } from "react";
 import { Divider } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
 
 const fetchHouse = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/lessee/house/${queryKey[1]}`, {
@@ -31,6 +32,7 @@ const fetchHouse = async ({ queryKey }) => {
 };
 
 const HomeDetailScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const user = useContext(UserContext);
   const clientQuery = useQueryClient();
   const { isLoading, isError, error, data, isFetching, isSuccess } = useQuery(
@@ -141,14 +143,14 @@ const HomeDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}>View All Images</Text>
+            <Text style={{ color: "#fff" }}>{t("view")}</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             place {data.placeName}
           </Text>
           {data.region ? (
             <Text>
-              Region :{" "}
+              {t("region")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>{data.region}</Text>
             </Text>
           ) : (
@@ -159,7 +161,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.guestFav?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                guest favourite
+                {t("guesttt")}
               </Text>
               {data?.guestFav?.map((item, index) => {
                 return (
@@ -186,7 +188,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.saftyItems?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                amenities
+                {t("Safty")}
               </Text>
               {data?.saftyItems?.map((item, index) => {
                 return (
@@ -213,7 +215,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.amenities?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                amenities
+                {t("Amenities")}
               </Text>
               {data?.amenities?.map((item, index) => {
                 return (
@@ -280,7 +282,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Property Type :{" "}
+              {t("prop")}:{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>
                 {data.propertyType}
               </Text>
@@ -297,7 +299,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Price :{" "}
+              {t("price")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>
                 {data.price} birr
               </Text>
@@ -312,7 +314,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Place Kind :{" "}
+              {t("Kind")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>{data.placeKind}</Text>
             </Text>
           </View>
@@ -328,17 +330,17 @@ const HomeDetailScreen = ({ navigation, route }) => {
             <Text
               style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}
             >
-              Place Description
+              {t("ped")}
             </Text>
             <View>
               <Text style={{ fontSize: 16 }}>
-                Type :{"  "}
+                {t("Typee")} :{"  "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {data.placeDescription.title}
                 </Text>
               </Text>
               <Text style={{ fontSize: 16 }}>
-                Description :{" "}
+                {t("des")} :{" "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {data.placeDescription.description}
                 </Text>
@@ -356,15 +358,15 @@ const HomeDetailScreen = ({ navigation, route }) => {
             <Text
               style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}
             >
-              Detail Description
+              {t("detail")}
             </Text>
             <Text style={{ fontSize: 16 }}>{data.detailDescription}</Text>
           </View>
         </View>
-        {data.approved || (
+        {data.isUserApproved ? (
           <View style={{ paddingHorizontal: "5%", marginTop: "5%" }}>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 18 }}>phone Number</Text>
+              <Text style={{ fontSize: 18 }}>{t("phoneno")}</Text>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                 {data?.user?.phoneNumber}
               </Text>
@@ -390,12 +392,14 @@ const HomeDetailScreen = ({ navigation, route }) => {
               />
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 18 }}>Email</Text>
+              <Text style={{ fontSize: 18 }}>{t("Email")}</Text>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                 {data?.user?.email}
               </Text>
             </View>
           </View>
+        ) : (
+          <></>
         )}
       </ScrollView>
       <View
@@ -422,8 +426,12 @@ const HomeDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("rem")}
+            </Text>
           </TouchableOpacity>
+        ) : data.isUserApproved || data.isUserRejected ? (
+          <></>
         ) : user?.left > 0 ? (
           <TouchableOpacity
             onPress={() => {
@@ -454,7 +462,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Pay</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("pay")}
+            </Text>
           </TouchableOpacity>
         )}
       </View>

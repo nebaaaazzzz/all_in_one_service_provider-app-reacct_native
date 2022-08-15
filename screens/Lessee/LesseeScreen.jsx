@@ -34,7 +34,7 @@ import ViewImagesScreen from "./ViewImagesScreen";
 import fromNow from "../../utils/time";
 import AppliedScreen from "./AppliedScreen";
 import PaymentScreen from "../Common/PaymentScreen";
-
+import { useTranslation } from "react-i18next";
 const LesseeStackNavigator = createStackNavigator();
 const fetchHouses = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
@@ -107,6 +107,8 @@ const Home = ({ item, pressHandler }) => {
 };
 
 const Lessee = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [searchQuery, setSearchQuery] = React.useState("");
   const [nearBy, setNearBy] = useState(false);
   const [location, setLocation] = useState("");
@@ -150,7 +152,7 @@ const Lessee = ({ navigation }) => {
 
   const list = [
     {
-      title: "All Homes",
+      title: t("Allh"),
       name: "home",
     },
     {
@@ -251,7 +253,7 @@ const Lessee = ({ navigation }) => {
                 fontSize: 15,
                 color: "rgba(0,0,0,0.8)",
               }}
-              data={["Any", ...regionsList]}
+              data={[t("any"), ...regionsList]}
               onSelect={(selectedItem, index) => {
                 if (index == 0) {
                   setRegion("");
@@ -264,7 +266,7 @@ const Lessee = ({ navigation }) => {
                 // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem;
               }}
-              defaultButtonText={region || "Select Region"}
+              defaultButtonText={region || t("reg")}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
                 // if data array is an array of objects then return item.property to represent item in dropdown
@@ -289,7 +291,7 @@ const Lessee = ({ navigation }) => {
                 height: 30,
                 borderRadius: 5,
               }}
-              data={["Any", ...propertyType]}
+              data={[t("any"), ...propertyType]}
               onSelect={(selectedItem, index) => {
                 if (index == 0) {
                   setPlaceType("");
@@ -302,7 +304,7 @@ const Lessee = ({ navigation }) => {
                 // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem;
               }}
-              defaultButtonText={placeType || "Select PlaceType"}
+              defaultButtonText={placeType || t("place")}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
                 // if data array is an array of objects then return item.property to represent item in dropdown
@@ -318,7 +320,7 @@ const Lessee = ({ navigation }) => {
               }}
             >
               <Text style={{ fontWeight: "bold", marginHorizontal: "2%" }}>
-                Starting Price
+                {t("start")}{" "}
               </Text>
               <TextInput
                 value={price}
@@ -341,7 +343,9 @@ const Lessee = ({ navigation }) => {
                 }}
                 onPress={() => setOpenModal(false)}
               >
-                <Text style={{ fontSize: 18, color: "#fff" }}>close</Text>
+                <Text style={{ fontSize: 18, color: "#fff" }}>
+                  {t("close")}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -453,11 +457,7 @@ const Lessee = ({ navigation }) => {
               );
             }
             if (!hasNextPage) {
-              return (
-                <Text style={{ textAlign: "center" }}>
-                  Nothing more to load ....
-                </Text>
-              );
+              return <Text style={{ textAlign: "center" }}>{t("no")} </Text>;
             }
             return null;
           }}
@@ -471,6 +471,7 @@ const Lessee = ({ navigation }) => {
 };
 
 const LesseeScreen = () => {
+  const { t } = useTranslation();
   return (
     <LesseeStackNavigator.Navigator>
       <LesseeStackNavigator.Screen
@@ -479,7 +480,7 @@ const LesseeScreen = () => {
         component={Lessee}
       />
       <LesseeStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("det") }}
         name="lessee/housedetail"
         component={HomeDetailScreen}
       />
@@ -496,7 +497,7 @@ const LesseeScreen = () => {
         component={AppliedScreen}
       />
       <LesseeStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("Det") }}
         name="lessee/viewimages"
         component={ViewImagesScreen}
       />

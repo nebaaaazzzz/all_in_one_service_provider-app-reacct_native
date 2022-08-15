@@ -4,10 +4,10 @@ import {
   ActivityIndicator,
   ScrollView,
   ToastAndroid,
+  Image,
   TouchableOpacity,
-  useWindowDimensions,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useTransition } from "react";
 import { Divider } from "react-native-paper";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN, MAPBOXURI, MAPBOXTOKEN } from "../../urls";
@@ -16,6 +16,8 @@ import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
 import { useIsFocused } from "@react-navigation/native";
 import { UserContext } from "../../App.Navigator";
+import RNFS from "react-native-fs";
+import { useTranslation } from "react-i18next";
 
 const fetchJob = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/employee/job/${queryKey[1]}`, {
@@ -30,16 +32,28 @@ const fetchJob = async ({ queryKey }) => {
 };
 
 const JobDetailScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const user = useContext(UserContext);
-  const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching, isSuccess } = useQuery(
     ["job", route.params.id],
     fetchJob
   );
+  const [documentExists, setDocumentExists] = React.useState(false);
+  const localFile = `${RNFS.DocumentDirectoryPath}/${
+    data ? data?.document : ""
+  }`;
+  useEffect(() => {
+    async function check() {
+      if (!isLoading) {
+        setDocumentExists(
+          await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${data.document}`)
+        );
+      }
+    }
+    check();
+  }, [documentExists, isLoading]);
   const clientQuery = useQueryClient();
-  const [downloadProgress, setDownloadProgress] = React.useState();
-  const downloadPath =
-    FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
+
   const applyMutuation = useMutation(async () => {
     if (data.cvRequired) {
       ToastAndroid.show(
@@ -128,7 +142,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         <Divider />
         <View>
           <Text style={{ margin: 10, fontSize: 18, fontWeight: "bold" }}>
-            Skills Required
+            {t("sk")}
           </Text>
           <View
             style={{
@@ -158,7 +172,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         </View>
         <View>
           <Text style={{ margin: 10, fontSize: 18, fontWeight: "bold" }}>
-            Others
+            {t("oth")}
           </Text>
           <View
             style={{
@@ -167,28 +181,34 @@ const JobDetailScreen = ({ navigation, route }) => {
             }}
           >
             <View>
-              <Text>Category : {data.Category}</Text>
+              <Text>
+                {t("cat")} : {data.category}
+              </Text>
             </View>
             <View>
-              <Text>Experience : {data?.experience?.title}</Text>
+              <Text>
+                {t("experience")} : {data?.experience?.title}
+              </Text>
             </View>
             {data.cvRequired ? (
               <View>
-                <Text>Cv required</Text>
+                <Text>{t("cv1")}</Text>
               </View>
             ) : (
               <></>
             )}
             {data.permanent ? (
               <View>
-                <Text>Permanent Job</Text>
+                <Text>{t("permanent1")}</Text>
               </View>
             ) : (
               <></>
             )}
             {data.deadline ? (
               <View>
-                <Text>deadline {new Date(data.deadline).toDateString()}</Text>
+                <Text>
+                  {t("deaddate")} {new Date(data.deadline).toDateString()}
+                </Text>
               </View>
             ) : (
               <></>
@@ -196,139 +216,107 @@ const JobDetailScreen = ({ navigation, route }) => {
             {data.budget ? (
               <View>
                 <Text>
-                  Salary : {data.budget.from} - {data.budget.to}
+                  {t("salary")} : {data.budget.from} - {data.budget.to}
                 </Text>
               </View>
             ) : (
               <View>
-                <Text>Salary : Negotiable</Text>
+                <Text>
+                  {t("salary")} : {t("")}
+                </Text>
               </View>
             )}
             {data.englishLevel ? (
               <View>
-                <Text>English Level : data.englishLevel</Text>
+                <Text>
+                  {t("engl")}: {data.englishLevel}
+                </Text>
               </View>
             ) : (
               <></>
             )}
             {data.hourPerWeek ? (
               <View>
-                <Text>Hours Per Week : data.hourPerWeek</Text>
+                <Text>
+                  {t("hours")} : {data.hourPerWeek}
+                </Text>
               </View>
             ) : (
               <></>
             )}
             {data.gender ? (
               <View>
-                <Text>Gender: data.gender</Text>
+                <Text>
+                  {t("gende")}: {data.gender}
+                </Text>
               </View>
             ) : (
               <></>
             )}
             <View>
-              <Text>Place Name : {data.placeName}</Text>
+              <Text>
+                {t("plac")}: {data.placeName}
+              </Text>
             </View>
 
             {data.document ? (
               <TouchableOpacity
                 style={{
                   backgroundColor: "#0244d0",
+                  paddingVertical: 5,
+                  paddingHorizontal: 5,
                   borderRadius: 5,
-                  marginTop: "10%",
-                  elevation: 5,
                 }}
                 onPress={async () => {
-                  const { StorageAccessFramework } = FileSystem;
-                  const ensureDirAsync = async (dir, intermediates = true) => {
-                    const props = await FileSystem.getInfoAsync(dir);
-                    if (props.exist && props.isDirectory) {
-                      return props;
-                    }
-                    let _ = await FileSystem.makeDirectoryAsync(dir, {
-                      intermediates,
-                    });
-                    return await ensureDirAsync(dir, intermediates);
-                  };
-                  const downloadCallback = (downloadProgress) => {
-                    const progress =
-                      downloadProgress.totalBytesWritten /
-                      downloadProgress.totalBytesExpectedToWrite;
-                    setDownloadProgress(progress);
-                  };
-                  const saveAndroidFile = async (
-                    fileUri,
-                    fileName = "File"
-                  ) => {
-                    try {
-                      const fileString = await FileSystem.readAsStringAsync(
-                        fileUri,
-                        { encoding: FileSystem.EncodingType.Base64 }
-                      );
-
-                      const permissions =
-                        await StorageAccessFramework.requestDirectoryPermissionsAsync();
-                      if (!permissions.granted) {
-                        return;
-                      }
-
-                      try {
-                        await StorageAccessFramework.createFileAsync(
-                          permissions.directoryUri,
-                          fileName,
-                          "application/pdf"
-                        )
-                          .then(async (uri) => {
-                            await FileSystem.writeAsStringAsync(
-                              uri,
-                              fileString,
-                              { encoding: FileSystem.EncodingType.Base64 }
-                            );
-                            alert("Report Downloaded Successfully");
-                          })
-                          .catch((e) => {});
-                      } catch (e) {
-                        throw new Error(e);
-                      }
-                    } catch (err) {}
-                  };
-                  const downloadFile = async (fileUrl) => {
-                    if (Platform.OS == "android") {
-                      const dir = ensureDirAsync(downloadPath);
-                    }
-
-                    let fileName = fileUrl.split("Reports/")[1];
-                    //alert(fileName)
-                    const downloadResumable =
-                      FileSystem.createDownloadResumable(
-                        fileUrl,
-                        downloadPath + fileName,
-                        {},
-                        downloadCallback
-                      );
-
-                    try {
-                      const { uri } = await downloadResumable.downloadAsync();
-                      if (Platform.OS == "android")
-                        saveAndroidFile(uri, fileName);
-                      else saveIosFile(uri);
-                    } catch (e) {
-                      console.error("download error:", e);
-                    }
-                  };
-                  downloadFile(
-                    "https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3560/software/release/12-2_25_see/configuration/guide/scg.pdf"
-                  );
+                  if (cvExists) {
+                    FileViewer.open(localFile);
+                  } else {
+                    const options = {
+                      fromUrl: `${BASEURI}/cv/${user.document}`,
+                      toFile: localFile,
+                    };
+                    RNFS.downloadFile(options, {
+                      begin: (s) => console.log(s),
+                      progress: (s) => {
+                        console.log(s);
+                      },
+                    })
+                      .promise.then(() => {
+                        setDocumentExists(true);
+                        FileViewer.open(localFile);
+                      })
+                      .then(() => {
+                        // success
+                      })
+                      .catch((error) => {
+                        // error
+                      });
+                  }
                 }}
               >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    paddingVertical: "3%",
-                    color: "#fff",
-                  }}
-                >
-                  Download Full Description
-                </Text>
+                {documentExists ? (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      paddingVertical: 5,
+                      fontSize: 16,
+                      color: "#fff",
+                    }}
+                  >
+                    Open cv
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      paddingVertical: 5,
+                      fontSize: 16,
+                      color: "#fff",
+                    }}
+                  >
+                    Download and open
+                  </Text>
+                )}
               </TouchableOpacity>
             ) : (
               <></>
@@ -336,10 +324,10 @@ const JobDetailScreen = ({ navigation, route }) => {
           </View>
           <Divider />
         </View>
-        {data.approved || (
+        {data.isUserApproved ? (
           <View style={{ paddingHorizontal: "5%", marginTop: "5%" }}>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 18 }}>phone Number</Text>
+              <Text style={{ fontSize: 18 }}>{t("phoneno")}</Text>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                 {data?.user?.phoneNumber}
               </Text>
@@ -354,7 +342,7 @@ const JobDetailScreen = ({ navigation, route }) => {
               <Image
                 style={{ flex: 1 }}
                 source={{
-                  uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${200}&height=${200}&center=lonlat:${
+                  uri: `${MAPBOXURI}/staticmap?stylecons=osm-carto&width=${200}&height=${200}&center=lonlat:${
                     data.location.coordinates[0]
                   },${data.location.coordinates[1]}&zoom=14&marker=lonlat:${
                     data.location.coordinates[0]
@@ -365,12 +353,14 @@ const JobDetailScreen = ({ navigation, route }) => {
               />
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 18 }}>Email</Text>
+              <Text style={{ fontSize: 18 }}>{t("Email")}</Text>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                 {data?.user?.email}
               </Text>
             </View>
           </View>
+        ) : (
+          <></>
         )}
       </ScrollView>
       <View
@@ -399,6 +389,8 @@ const JobDetailScreen = ({ navigation, route }) => {
           >
             <Text style={{ textAlign: "center", color: "#fff" }}>remove</Text>
           </TouchableOpacity>
+        ) : data.isUserApproved || data.isUserRejected ? (
+          <></>
         ) : user?.left > 0 ? (
           <TouchableOpacity
             onPress={() => {

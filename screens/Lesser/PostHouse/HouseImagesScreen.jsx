@@ -13,8 +13,10 @@ import * as ImagePicker from "expo-image-picker";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { PostHouseContext } from "./PostHouseScreen";
 import { BASETOKEN, BASEURI } from "../../../urls";
+import { useTranslation } from "react-i18next";
 
 const HouseImagesScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostHouseContext);
   let imgList = [];
   if (route.params?.data) {
@@ -65,7 +67,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Let us know what the place looks like
+          {t("know")}
         </Text>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -126,7 +128,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
                         fontWeight: "700",
                       }}
                     >
-                      Cover Photo
+                      {t("cover")}
                     </Text>
                   ) : (
                     <></>
@@ -177,7 +179,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
                         onPress={() => {
                           setCoverPhotoIndex(index);
                         }}
-                        title="Make Cover photo"
+                        title={t("Make")}
                       />
                     ) : (
                       <></>
@@ -195,7 +197,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
                           setCoverPhotoIndex(0);
                         }
                       }}
-                      title="Delete"
+                      title={t("delete")}
                     />
                   </Menu>
                 </View>
@@ -247,12 +249,12 @@ const HouseImagesScreen = ({ navigation, route }) => {
           >
             <Icon name={"file-image-plus"} size={30} color="#0244d0" />
             {5 - (imgUri.length + imgList.length) > 0 ? (
-              <Text>Add atleast {5 - imgUri.length} photos</Text>
+              <Text>{t("one")} {5 - imgUri.length} {t("one1")} </Text>
             ) : (
-              <Text>Add photos</Text>
+              <Text>{t("addd")}</Text>
             )}
 
-            <Text>Upload from your device</Text>
+            <Text>{t("your")}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -295,7 +297,7 @@ const HouseImagesScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -14,7 +14,9 @@ import { PostHouseContext } from "./PostHouseScreen";
 import { useMutation } from "react-query";
 import { useQueryClient } from "react-query";
 import { BASETOKEN, BASEURI } from "../../../urls";
+import { useTranslation } from "react-i18next";
 const ReviewListingScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const clientQuery = useQueryClient();
   const { housePost } = useContext(PostHouseContext);
   const { isSuccess, isLoading, isError, error, data, mutate } = useMutation(
@@ -104,7 +106,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             fontSize: 18,
           }}
         >
-          Check out your post!
+          {t("check")}
         </Text>
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {housePost.placeTitle}
@@ -153,7 +155,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}>View All Images</Text>
+            <Text style={{ color: "#fff" }}>{t("View")}</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             Fun place {housePost.placeName}
@@ -200,7 +202,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
           {housePost?.saftyItems?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Safty Items
+                {t("Safty")}
               </Text>
               {housePost?.saftyItems?.map((item, index) => {
                 return (
@@ -227,7 +229,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
           {housePost?.amenities?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Amenities
+                {t("Amenities")}
               </Text>
               {housePost?.amenities?.map((item, index) => {
                 return (
@@ -254,7 +256,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
           {housePost?.bestDescribe?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Best Describe
+                {t("best")}
               </Text>
               {housePost?.bestDescribe?.map((item, index) => {
                 return (
@@ -351,7 +353,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Price :{" "}
+            {t("price")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>
                 {housePost.price}
               </Text>
@@ -366,7 +368,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Place Kind :{" "}
+            {t("Kind")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>
                 {housePost.placeKind}
               </Text>
@@ -384,17 +386,17 @@ const ReviewListingScreen = ({ navigation, route }) => {
             <Text
               style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}
             >
-              Type of place
+              {t("type")}
             </Text>
             <View>
               <Text style={{ fontSize: 16 }}>
-                Type :{"  "}
+              {t("typee")} :{"  "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {housePost?.placeDescription?.title}
                 </Text>
               </Text>
               <Text style={{ fontSize: 16 }}>
-                Description :{" "}
+              {t("des")} :{" "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {housePost?.placeDescription?.description}
                 </Text>
@@ -412,7 +414,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             <Text
               style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}
             >
-              Detail Description
+              {t("detail")}
             </Text>
             <Text style={{ fontSize: 16 }}>{housePost.detailDescription}</Text>
           </View>
@@ -442,7 +444,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Save</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>{t("save")}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -458,7 +460,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Post</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>{t("postt")}</Text>
           </TouchableOpacity>
         )}
       </View>

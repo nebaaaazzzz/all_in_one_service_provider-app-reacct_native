@@ -27,6 +27,7 @@ import { UserContext } from "../../App.Navigator";
 import * as SecureStore from "expo-secure-store";
 
 import PaymentScreen from "../Common/PaymentScreen";
+import { useTranslation } from "react-i18next";
 const Tab = createMaterialTopTabNavigator();
 const EmployerStackNavigator = createStackNavigator();
 const fetchJobs = async ({ pageParam = 1, nearBy }) => {
@@ -91,6 +92,7 @@ const Post = ({ pressHandler, item }) => {
 };
 
 const MyPosts = ({ navigation }) => {
+  const { t } = useTranslation();
   const {
     data,
     error,
@@ -151,11 +153,7 @@ const MyPosts = ({ navigation }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}
@@ -165,6 +163,7 @@ const MyPosts = ({ navigation }) => {
 };
 
 function Home({ navigation }) {
+  const { t } = useTranslation();
   const user = useContext(UserContext);
   return (
     <View style={{ flex: 1 }}>
@@ -192,7 +191,7 @@ function Home({ navigation }) {
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}>Post Job </Text>
+            <Text style={{ color: "#fff" }}>{t("post")} </Text>
           </TouchableOpacity>
         ) : user.suspended ? (
           <Text
@@ -224,7 +223,7 @@ function Home({ navigation }) {
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}>Pay</Text>
+            <Text style={{ color: "#fff" }}>{t("pay")}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -240,6 +239,7 @@ function Home({ navigation }) {
   );
 }
 const EmployerScreen = () => {
+  const { t } = useTranslation();
   return (
     <View style={{ flex: 1 }}>
       <EmployerStackNavigator.Navigator>
@@ -251,7 +251,7 @@ const EmployerScreen = () => {
         <EmployerStackNavigator.Screen
           name="employer/jobdetail"
           options={{
-            title: "Job Detail",
+            title: t("job"),
           }}
           component={JobDetailScreen}
         />
@@ -261,7 +261,7 @@ const EmployerScreen = () => {
           component={PostJobScreen}
         />
         <EmployerStackNavigator.Screen
-          options={{ title: "Edit Post" }}
+          options={{ title: t("editpost") }}
           name="employer/review"
           component={ReviewScreen}
         />

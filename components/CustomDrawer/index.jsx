@@ -17,10 +17,12 @@ import { QueryCache } from "react-query";
 import * as SecureStore from "expo-secure-store";
 
 import { useQuery, useQueryClient } from "react-query";
+import { useTranslation } from "react-i18next";
 
 // Get QueryClient from the context
 
 const CustomDrawer = (props) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   const user = useContext(UserContext);
@@ -86,7 +88,7 @@ const CustomDrawer = (props) => {
                 marginLeft: 5,
               }}
             >
-              Share
+              {t("share")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -106,7 +108,7 @@ const CustomDrawer = (props) => {
                 marginLeft: 5,
               }}
             >
-              Sign Out
+              {t("signout")}
             </Text>
           </View>
         </TouchableOpacity>

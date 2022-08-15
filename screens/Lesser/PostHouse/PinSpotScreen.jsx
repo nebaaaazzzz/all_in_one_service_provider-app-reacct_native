@@ -12,8 +12,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { PostHouseContext } from "./PostHouseScreen";
 
 import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
+import { useTranslation } from "react-i18next";
 
 const PinSpotScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const dimen = useWindowDimensions();
   let cntr;
   if (route.params?.center) {
@@ -82,7 +84,7 @@ const PinSpotScreen = ({ navigation, route }) => {
               });
             }}
           >
-            <Text>Go to Map</Text>
+            <Text>{t("goto")}</Text>
           </TouchableOpacity>
         )}
 
@@ -115,7 +117,7 @@ const PinSpotScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")} </Text>
         </TouchableOpacity>
       </View>
     </View>

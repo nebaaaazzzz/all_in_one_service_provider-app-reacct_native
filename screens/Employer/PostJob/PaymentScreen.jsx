@@ -12,8 +12,10 @@ import { ProgressBar } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import { PostJobContext } from "./PostJobScreen";
 import { RadioButton } from "react-native-paper";
+import {useTranslation} from "react-i18next";
 
 const PaymentScreen = ({ navigation, route }) => {
+  const {t}=useTranslation();
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const [fromBudget, setFromBudget] = useState();
@@ -59,7 +61,7 @@ const PaymentScreen = ({ navigation, route }) => {
             fontWeight: "bold",
           }}
         >
-          Choose Payment Style
+          {t("choose")}
         </Text>
         <View style={{ marginVertical: 14 }}>
           {exp.map((item, index) => {
@@ -189,7 +191,7 @@ const PaymentScreen = ({ navigation, route }) => {
             exp[0]
 
              */}
-            Next: Review
+            {t("review")}
           </Text>
         </TouchableOpacity>
       </View>

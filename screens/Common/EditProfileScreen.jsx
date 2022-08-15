@@ -33,9 +33,11 @@ import * as ImagePicker from "expo-image-picker";
 import { BASEURI, BASETOKEN } from "../../urls";
 import Animated from "react-native-reanimated";
 import { RadioButton } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 // import ImagePicker from "react-native-image-crop-picker";
 
 const EditProfileScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const user = useContext(UserContext);
   const { colors } = useTheme();
   const [image, setImage] = useState(null);
@@ -80,19 +82,20 @@ const EditProfileScreen = ({ navigation }) => {
   /* */
 
   const regionsList = [
-    "Addis Ababa",
-    "Afar",
-    "Amhara",
-    "Benishangul-gumuz",
-    "Dire Dawa",
-    "Gambela",
-    "Harari",
-    "Oromia",
-    "Sidama",
-    "Somali",
-    "South West Ethiopia Peoples' Region",
-    "Tigray",
-    "Southern",
+    t("addis"),
+    t("afar"),
+    t("amhara"),
+    t("bengu"),
+    t("dire"),
+    t("gambela"),
+    t("harer"),
+    t("oro"),
+    t("sida"),
+    t("soma"),
+    t("south"),
+    t("tigray"),
+    t("southern")
+
   ];
   const [file, setFile] = useState();
 
@@ -320,7 +323,7 @@ const EditProfileScreen = ({ navigation }) => {
                   }
                   setFirstName(text);
                 }}
-                placeholder="First Name"
+                placeholder={t("fnam")}
                 placeholderTextColor="#666666"
                 autoCorrect={false}
                 style={[
@@ -356,7 +359,7 @@ const EditProfileScreen = ({ navigation }) => {
                   }
                   setLastName(text);
                 }}
-                placeholder="Last Name"
+                placeholder={t("lnam")}
                 placeholderTextColor="#666666"
                 autoCorrect={false}
                 style={[
@@ -393,7 +396,7 @@ const EditProfileScreen = ({ navigation }) => {
                   }
                   setEmail(text);
                 }}
-                placeholder="Email"
+                placeholder={t("Email")}
                 placeholderTextColor="#666666"
                 style={[
                   styles.textInput,
@@ -417,17 +420,17 @@ const EditProfileScreen = ({ navigation }) => {
             }}
           >
             <View style={{ marginRight: "10%" }}>
-              <Text style={{ color: "rgba(0,0,0,0.8)" }}>Gender</Text>
+              <Text style={{ color: "rgba(0,0,0,0.8)" }}>{t("gende")}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ color: "rgba(0,0,0,.6)" }}>Male</Text>
+              <Text style={{ color: "rgba(0,0,0,.6)" }}>{t("male")}</Text>
               <RadioButton
                 value="male"
                 color="#0244d0"
                 status={gender === "male" ? "checked" : "unchecked"}
                 onPress={() => setGender("male")}
               />
-              <Text style={{ color: "rgba(0,0,0,.6)" }}>Female</Text>
+              <Text style={{ color: "rgba(0,0,0,.6)" }}>{t("female")}</Text>
 
               <RadioButton
                 value="female"
@@ -503,7 +506,7 @@ const EditProfileScreen = ({ navigation }) => {
                 // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem;
               }}
-              defaultButtonText="Select Region"
+              defaultButtonText={t("reg")}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
                 // if data array is an array of objects then return item.property to represent item in dropdown
@@ -518,7 +521,7 @@ const EditProfileScreen = ({ navigation }) => {
               value={city}
               onChangeText={(text) => setCity(text)}
               selectionColor={"black"}
-              placeholder="City"
+              placeholder={t("city")}
               placeholderTextColor="#666666"
               autoCorrect={false}
               style={[
@@ -535,7 +538,7 @@ const EditProfileScreen = ({ navigation }) => {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 16 }}>Skills</Text>
+            <Text style={{ fontSize: 16 }}>{t("skill")}</Text>
             <View style={{ flexDirection: "row" }}>
               <TextInput
                 value={skill}
@@ -562,7 +565,7 @@ const EditProfileScreen = ({ navigation }) => {
                     borderRadius: 5,
                   }}
                 >
-                  Add
+                  {t("add")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -604,7 +607,7 @@ const EditProfileScreen = ({ navigation }) => {
           </View>
 
           <View style={{ marginTop: "5%" }}>
-            <Text style={{ marginBottom: "5%", fontSize: 16 }}>Languages</Text>
+            <Text style={{ marginBottom: "5%", fontSize: 16 }}>{t("language")}</Text>
             <TouchableOpacity
               onPress={() => {
                 setIsEducation(false);
@@ -629,7 +632,7 @@ const EditProfileScreen = ({ navigation }) => {
                     paddingHorizontal: 10,
                   }}
                 >
-                  Add
+                  {t("add")}
                 </Text>
                 <Icon size={16} color="#fff" name="plus" />
               </View>
@@ -684,7 +687,7 @@ const EditProfileScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={{ marginTop: "5%" }}>
-            <Text style={{ marginBottom: "5%", fontSize: 16 }}>Education</Text>
+            <Text style={{ marginBottom: "5%", fontSize: 16 }}>{t("edu")}</Text>
             <TouchableOpacity
               onPress={() => {
                 setIsEducation(true);
@@ -709,7 +712,7 @@ const EditProfileScreen = ({ navigation }) => {
                     paddingHorizontal: 10,
                   }}
                 >
-                  Add
+                  {t("add")}
                 </Text>
                 <Icon size={16} color="#fff" name="plus" />
               </View>
@@ -762,7 +765,7 @@ const EditProfileScreen = ({ navigation }) => {
               })}
             </View>
             <View style={{ marginVertical: "5%" }}>
-              <Text>Bio</Text>
+              <Text>{t("bio")}</Text>
               <TextInput
                 value={description}
                 onChangeText={(text) => setDescription(text)}
@@ -798,7 +801,7 @@ const EditProfileScreen = ({ navigation }) => {
           >
             <Icon size={16} name="attachment" color={"#fff"} />
             <Text style={{ marginHorizontal: 5, color: "#fff" }}>
-              upload Cv
+            {t("uploadc")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -807,7 +810,7 @@ const EditProfileScreen = ({ navigation }) => {
               mutation.mutate();
             }}
           >
-            <Text style={styles.panelButtonTitle}>Submit</Text>
+            <Text style={styles.panelButtonTitle}>{t("sub")}</Text>
           </TouchableOpacity>
         </Animated.View>
       </ScrollView>

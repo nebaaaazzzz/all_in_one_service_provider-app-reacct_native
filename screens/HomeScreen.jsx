@@ -185,7 +185,7 @@ const Home = ({ navigation }) => {
 };
 
 const HomeScreen = () => {
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
   const { t } = useTranslation();
   const handlePress = () => setExpanded(!expanded);
   const [currentLanguage, setLanguage] = useState("en");
@@ -196,6 +196,7 @@ const HomeScreen = () => {
       .then(() => setLanguage(value))
       .catch((err) => console.log(err));
   };
+
   return (
     <DrawerNavigator.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
@@ -245,6 +246,10 @@ const HomeScreen = () => {
                 }}
               >
                 <List.Accordion
+                  expanded={expanded}
+                  onPress={() => {
+                    setExpanded(!expanded);
+                  }}
                   style={{ backgroundColor: "#0244d0", width: 100, opacity: 1 }}
                   right={(props) => (
                     <FontAwesome name="language" color="#fff" size={30} />
@@ -252,13 +257,19 @@ const HomeScreen = () => {
                   // right={(props) => <></>}
                 >
                   <List.Item
-                    onPress={() => changeLanguage("am")}
+                    onPress={() => {
+                      setExpanded(false);
+                      changeLanguage("am");
+                    }}
                     title="አማርኛ"
                     style={{ margin: 0, padding: 0 }}
                     titleStyle={{ color: "#fff" }}
                   />
                   <List.Item
-                    onPress={() => changeLanguage("en")}
+                    onPress={() => {
+                      setExpanded(false);
+                      changeLanguage("en");
+                    }}
                     style={{ margin: 0, padding: 0 }}
                     title="English"
                     titleStyle={{ color: "#fff" }}

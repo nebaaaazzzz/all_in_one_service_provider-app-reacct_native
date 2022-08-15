@@ -19,8 +19,10 @@ import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { MAPBOXTOKEN, MAPBOXURI } from "./../../../urls.js";
+import { useTranslation } from "react-i18next";
 
 const LocationScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
@@ -32,7 +34,7 @@ const LocationScreen = ({ navigation, route }) => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       ToastAndroid.show(
-        "Permission to access location was denied",
+        t("permission"),
         ToastAndroid.LONG
       );
       return;
@@ -52,7 +54,7 @@ const LocationScreen = ({ navigation, route }) => {
           });
         } catch (err) {
           ToastAndroid.show(
-            "check your internet connection",
+            t("check1"),
             ToastAndroid.LONG
           );
           setIsGettingLocation(false);
@@ -134,7 +136,7 @@ const LocationScreen = ({ navigation, route }) => {
           >
             <View>
               <ActivityIndicator color={"#0244d0"} size="large" />
-              <Text style={{ marginTop: "10%" }}>Getting Current Location</Text>
+              <Text style={{ marginTop: "10%" }}>{t("getting")} </Text>
             </View>
           </View>
         </Modal>
@@ -165,7 +167,7 @@ const LocationScreen = ({ navigation, route }) => {
                 <Icon size={20} name="arrow-left" />
               </TouchableOpacity>
               <Text style={{ fontWeight: "600", fontSize: 20 }}>
-                Enter your address
+                {t("enter")}
               </Text>
               <Text></Text>
             </View>
@@ -245,7 +247,7 @@ const LocationScreen = ({ navigation, route }) => {
               >
                 <FIcon name="location-arrow" color={"#0244d0"} size={20} />
                 <Text style={{ marginLeft: "5%", fontSize: 18 }}>
-                  Use my current location
+                  {t("current")}
                 </Text>
               </TouchableOpacity>
               {/* add this feature to add address manually */}

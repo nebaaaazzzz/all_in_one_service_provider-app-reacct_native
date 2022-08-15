@@ -430,9 +430,9 @@ const SignupScreen = ({ navigation }) => {
           ) : (
             <Text style={{ color: "#666", marginLeft: 5, marginTop: 5 }}>
               {date
-                ? date.getDay() +
+                ? date.getDate() +
                   "/" +
-                  date.getMonth() +
+                  (date.getMonth() + 1) +
                   "/" +
                   date.getFullYear()
                 : "date of birth"}

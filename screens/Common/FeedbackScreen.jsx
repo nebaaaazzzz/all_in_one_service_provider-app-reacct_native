@@ -12,7 +12,9 @@ import { RadioButton } from "react-native-paper";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useMutation } from "react-query";
 import { BASETOKEN, BASEURI } from "../../urls";
+import { useTranslation } from "react-i18next";
 const FeedbackScreen = () => {
+  const { t } = useTranslation();
   const mutation = useMutation(async (data) => {
     const response = await fetch(`${BASEURI}/feedback`, {
       method: "POST",
@@ -53,7 +55,7 @@ const FeedbackScreen = () => {
       >
         <FontAwesome name="comments-o" size={60} color="#0244d0" />
         <Text style={{ marginHorizontal: 20, fontSize: 25, color: "#0244d0" }}>
-          FeedBack
+        {t("Feed")}
         </Text>
       </View>
       <View style={{ marginTop: "5%" }}>
@@ -67,7 +69,7 @@ const FeedbackScreen = () => {
             status={checked === "first" ? "checked" : "unchecked"}
             onPress={() => setChecked("first")}
           />
-          <Text>Payment complain</Text>
+          <Text>{t("paymentc")}</Text>
         </Pressable>
         {checked == "first" ? (
           <>
@@ -77,7 +79,7 @@ const FeedbackScreen = () => {
               numberOfLines={10}
               maxLength={50}
               value={paymentComplain}
-              placeholder="Enter your complain about payment"
+              placeholder={t("enterc")}
               style={{
                 borderColor: "gray",
                 padding: 10,
@@ -115,7 +117,7 @@ const FeedbackScreen = () => {
                 elevation: 5,
               }}
             >
-              <Text style={{ color: "#fff" }}>Send</Text>
+              <Text style={{ color: "#fff" }}>{t("send")}</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -131,7 +133,7 @@ const FeedbackScreen = () => {
             status={checked === "second" ? "checked" : "unchecked"}
             onPress={() => setChecked("second")}
           />
-          <Text>Comment about the application</Text>
+          <Text>{t("comment")}</Text>
         </Pressable>
         {checked == "second" ? (
           <>
@@ -141,7 +143,7 @@ const FeedbackScreen = () => {
               value={complain}
               onChangeText={(text) => setComplain(text)}
               numberOfLines={10}
-              placeholder="Enter any comment you have"
+              placeholder={t("commab")}
               style={{
                 borderColor: "gray",
                 padding: 10,
@@ -178,7 +180,7 @@ const FeedbackScreen = () => {
                 elevation: 5,
               }}
             >
-              <Text style={{ color: "#fff" }}>Send</Text>
+              <Text style={{ color: "#fff" }}>{t("send")}</Text>
             </TouchableOpacity>
           </>
         ) : (

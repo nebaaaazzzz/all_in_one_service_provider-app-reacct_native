@@ -12,8 +12,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { PostJobContext } from "./PostJobScreen";
 
 import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
+import {useTranslation} from "react-i18next";
 
 const PinSpotScreen = ({ navigation, route }) => {
+  const {t}=useTranslation();
   const dimen = useWindowDimensions();
   let cntr;
   cntr = route.params.center;

@@ -17,6 +17,7 @@ import { useQueryClient } from "react-query";
 import UserDetailScreen from "./UserDetailScreen";
 import { Divider } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
 
 const EmployerStackNavigator = createStackNavigator();
 
@@ -143,11 +144,7 @@ const Employer = ({ navigation, route }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}
@@ -160,19 +157,20 @@ const Employer = ({ navigation, route }) => {
 };
 
 const ApplicantsScreen = ({ route }) => {
+  const { t } = useTranslation();
   return (
     <EmployerStackNavigator.Navigator>
       <EmployerStackNavigator.Screen
         initialParams={{ id: route.params.id }}
         options={{
-          title: "Applicants",
+          title: t("Applicants"),
           headerTitleContainerStyle: { textAlign: "center" },
         }}
         name="employer/applicants/"
         component={Employer}
       />
       <EmployerStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("det") }}
         name="employer/applicants/userdetail"
         component={UserDetailScreen}
       />

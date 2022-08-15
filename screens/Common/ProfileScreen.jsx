@@ -23,8 +23,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { createStackNavigator } from "@react-navigation/stack";
 import EditProfileScreen from "./EditProfileScreen";
+import { useTranslation } from "react-i18next";
 const ProfileStackNavigator = createStackNavigator();
 const Profile = ({ navigation }) => {
+  const { t } = useTranslation();
   const user = useContext(UserContext);
   const [cvExists, setCvExists] = React.useState(false);
   const localFile = `${RNFS.DocumentDirectoryPath}/${user.cv}`;
@@ -119,7 +121,7 @@ const Profile = ({ navigation }) => {
                   fontWeight: "bold",
                 }}
               >
-                Skills
+                {t("skill")}
               </Text>
               <Divider />
 
@@ -150,7 +152,7 @@ const Profile = ({ navigation }) => {
           )}
           {user.education.length ? (
             <View>
-              <Text style={{ fontWeight: "bold" }}>Education</Text>
+              <Text style={{ fontWeight: "bold" }}>{t("edu")}</Text>
               {user.education.map((item, index) => {
                 return (
                   <View key={index + 1}>
@@ -191,7 +193,7 @@ const Profile = ({ navigation }) => {
           )}
           {user.languages.length ? (
             <View style={{ marginVertical: 15 }}>
-              <Text style={{ fontWeight: "bold" }}>Languages</Text>
+              <Text style={{ fontWeight: "bold" }}>{t("language")}</Text>
               <Divider />
               <View style={{ paddingVertical: 10 }}>
                 {user.languages.map((item, index) => {
@@ -281,7 +283,7 @@ const Profile = ({ navigation }) => {
                     color: "#fff",
                   }}
                 >
-                  Open cv
+                  {t("open")}
                 </Text>
               ) : (
                 <Text
@@ -292,7 +294,7 @@ const Profile = ({ navigation }) => {
                     color: "#fff",
                   }}
                 >
-                  Download and open cv
+                  {t("down")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -305,11 +307,12 @@ const Profile = ({ navigation }) => {
   );
 };
 const ProfileScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   return (
     <ProfileStackNavigator.Navigator>
       <ProfileStackNavigator.Screen
         options={{
-          title: "profile",
+          title: t("profile"),
           headerTitle: "",
           headerStyle: {
             elevation: 0,
@@ -331,7 +334,7 @@ const ProfileScreen = ({ navigation }) => {
       <ProfileStackNavigator.Screen
         name="profile/edit"
         options={{
-          title: "Edit profile",
+          title: t("editp"),
         }}
         component={EditProfileScreen}
       />

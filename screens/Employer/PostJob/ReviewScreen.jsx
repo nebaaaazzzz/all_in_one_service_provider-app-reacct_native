@@ -25,7 +25,9 @@ import DatePicker from "@react-native-community/datetimepicker";
 import { useQueryClient } from "react-query";
 import { useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../../urls";
+import { useTranslation } from "react-i18next";
 const ReviewScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -122,13 +124,15 @@ const ReviewScreen = ({ navigation }) => {
               fontWeight: "bold",
             }}
           >
-            Now finish and review your job post
+            {t("finish")}
           </Text>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Headline</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              {t("head")}
+            </Text>
             <Text>{jobPost.title}</Text>
           </View>
           <Divider
@@ -136,24 +140,19 @@ const ReviewScreen = ({ navigation }) => {
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              Describe your job
+              {t("describe")}
             </Text>
             <View style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 16 }}>
-                This is how employees figures out what you need and why you’re
-                great to work with!
-              </Text>
+              <Text style={{ fontSize: 16 }}>{t("discription")}</Text>
               <Text style={{ fontSize: 16, marginVertical: 10 }}>
-                Include your expectations about the task or deliverable, what
-                you’re looking for in a work environment, and anything unique
-                about your project, team, or company.Minumun 50 characters.
+                {t("dis")}
               </Text>
             </View>
             <TextInput
               multiline
               numberOfLines={5}
               value={description}
-              placeholder="Already have a job description?Paste it here!"
+              placeholder={t("already")}
               onChangeText={(text) => setDescription(text)}
             />
             <Text style={{ textAlign: "right" }}>{description.length}</Text>
@@ -172,7 +171,7 @@ const ReviewScreen = ({ navigation }) => {
               }}
             >
               <Icon size={16} name="attachment" />
-              <Text style={{ marginHorizontal: 5 }}>Attach file</Text>
+              <Text style={{ marginHorizontal: 5 }}> {t("attach")}</Text>
             </TouchableOpacity>
             <Text
               style={{
@@ -180,7 +179,7 @@ const ReviewScreen = ({ navigation }) => {
                 color: "rgba(0,0,0,0.6)",
               }}
             >
-              Max file size: 100MB
+              {t("max")}
             </Text>
           </View>
           <Divider
@@ -191,7 +190,7 @@ const ReviewScreen = ({ navigation }) => {
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
-                Category
+                {t("cat")}
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text>{jobPost?.category}</Text>
@@ -201,7 +200,7 @@ const ReviewScreen = ({ navigation }) => {
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
-                skills
+                {t("skill")}
               </Text>
               <View style={{ flexDirection: "row" }}>
                 {jobPost?.skills?.map((item, index) => {
@@ -232,11 +231,11 @@ const ReviewScreen = ({ navigation }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Salary
+                    {t("salary")}
                   </Text>
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16, marginLeft: "5%" }}>
-                      {jobPost.budget.from} birr- {jobPost.budget.to} birr
+                      {jobPost.budget.from} birr- {jobPost.budget.to} {t("bir")}
                     </Text>
                   </View>
                 </View>
@@ -249,7 +248,7 @@ const ReviewScreen = ({ navigation }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Salary
+                    {t("salary")}
                   </Text>
                   <View style={{ flexDirection: "row" }}>
                     <Text style={{ fontSize: 16, marginLeft: "5%" }}>
@@ -269,7 +268,7 @@ const ReviewScreen = ({ navigation }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Work place
+                    {t("work")}
                   </Text>
                   <View style={{ flexDirection: "row", marginLeft: "5%" }}>
                     <Text style={{ fontSize: 16 }}>{jobPost.placeName}</Text>
@@ -289,7 +288,7 @@ const ReviewScreen = ({ navigation }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Experience
+                    {t("experience")}
                   </Text>
                   <View style={{ marginLeft: "5%" }}>
                     <Text style={{ fontSize: 15, fontWeight: "bold" }}>
@@ -316,7 +315,7 @@ const ReviewScreen = ({ navigation }) => {
               marginHorizontal: "5%",
             }}
           >
-            <Text>DeadLine</Text>
+            <Text>{t("deadline")}</Text>
             <TouchableOpacity
               // style={{ alignItems: "center" }}
               onPress={() => setOpen(true)}
@@ -345,7 +344,7 @@ const ReviewScreen = ({ navigation }) => {
                       (date.getMonth() + 1) +
                       "/" +
                       date.getFullYear()
-                    : "set deadline date"}
+                    : t("deaddate")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -373,7 +372,7 @@ const ReviewScreen = ({ navigation }) => {
                 <Text style={{ color: "#666", marginLeft: 5 }}>
                   {datetime
                     ? datetime.getHours() + " : " + datetime.getMinutes()
-                    : "set date linetime"}
+                    : t("deadtime")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -385,7 +384,7 @@ const ReviewScreen = ({ navigation }) => {
               marginLeft: "5%",
             }}
           >
-            <Text>permanent</Text>
+            <Text>{t("permanent1")}</Text>
             <Checkbox
               color="#0244d0"
               status={permanent ? "checked" : "unchecked"}
@@ -401,7 +400,7 @@ const ReviewScreen = ({ navigation }) => {
               marginLeft: "5%",
             }}
           >
-            <Text>Cv Required</Text>
+            <Text>{t("cv1")}</Text>
             <Checkbox
               color="#0244d0"
               status={cvRequired ? "checked" : "unchecked"}
@@ -671,34 +670,29 @@ function AdvancedPred({
   checkHour,
   setHour,
 }) {
+  const { t } = useTranslation();
   const englishLevels = [
-    "Any level",
-    "Conversational or better",
-    "Fluent or better",
-    "Native or bilingual only",
+    t("anylevel"),
+    t("conversational"),
+    t("fluent"),
+    t("natie"),
   ];
-  const hourPerWeeks = [
-    "More than 30 hrs.week",
-    "Less than 30hrs/week",
-    "I'm not sure",
-  ];
+  const hourPerWeeks = [t("more"), t("lessthan"), t("notsure")];
   return (
     <List.Accordion
       left={(props) => (
         <View {...props}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            Advanced preferences(optional)
+            {t("advanced")}
           </Text>
-          <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-            Hours per week ,and more
-          </Text>
+          <Text style={{ color: "rgba(0,0,0,0.6)" }}>{t("hour")}</Text>
         </View>
       )}
       expanded={expanded}
       onPress={handlePress}
     >
       <View>
-        <Text style={{ fontWeight: "bold" }}>English level</Text>
+        <Text style={{ fontWeight: "bold" }}>{t("engl")}</Text>
         <View>
           {englishLevels.map((item, index) => {
             return (
@@ -720,7 +714,7 @@ function AdvancedPred({
         </View>
       </View>
       <View>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{t("hours")}</Text>
         {hourPerWeeks.map((item, index) => {
           return (
             <TouchableOpacity
@@ -740,9 +734,7 @@ function AdvancedPred({
         })}
       </View>
       <View>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          Gender required
-        </Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{t("genderr")}</Text>
         {["male", "female", "both"].map((item, index) => {
           return (
             <TouchableOpacity

@@ -36,29 +36,27 @@ import { useMutation } from "react-query";
 import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
 import { BASEURI, BASETOKEN } from "./../../urls";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 const englishLevels = [
-  "Any level",
-  "Conversational or better",
-  "Fluent or better",
-  "Native or bilingual only",
+  t("anylevel"),
+  t("conversational"),
+  t("fluent"),
+  t("natie"),
 ];
-const hourPerWeeks = [
-  "More than 30 hrs.week",
-  "Less than 30hrs/week",
-  "I'm not sure",
-];
+const hourPerWeeks = [t("more"), t("lessthan"), t("notsure")];
 const exp = [
   {
-    title: "Entry",
-    description: "Looking for someone relatively new to this field",
+    title: t("Entry"),
+    description: t("look"),
   },
   {
-    title: "Intermediate",
-    description: "Looking for substantial experience in this field",
+    title: t("intermediate"),
+    description: t("look1"),
   },
   {
-    title: "Expert",
-    description: "Looking for comprehensive and deep expertise in this filed",
+    title: t("expert"),
+    description: t("look3"),
   },
 ];
 const pay = ["Fixed", "By Negotiation", "By The Organization Scale"];
@@ -73,6 +71,7 @@ const EditPostScreen = ({ navigation, route }) => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const inputRef = useRef();
   const pressHandler = async () => {
+    const { t } = useTranslation();
     await Location.enableNetworkProviderAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -90,10 +89,7 @@ const EditPostScreen = ({ navigation, route }) => {
             center: [location.coords.longitude, location.coords.latitude],
           });
         } catch (err) {
-          ToastAndroid.show(
-            "check your internet connection",
-            ToastAndroid.LONG
-          );
+          ToastAndroid.show(t("check1"), ToastAndroid.LONG);
           setIsGettingLocation(false);
           throw err;
         }
@@ -317,6 +313,7 @@ const EditPostScreen = ({ navigation, route }) => {
       </View>
     );
   }
+  const { t } = useTranslation();
   return (
     <View style={{ flex: 1 }}>
       <Modal visible={locationModal}>
@@ -344,9 +341,7 @@ const EditPostScreen = ({ navigation, route }) => {
               >
                 <View>
                   <ActivityIndicator color={"#0244d0"} size="large" />
-                  <Text style={{ marginTop: "10%" }}>
-                    Getting Current Location
-                  </Text>
+                  <Text style={{ marginTop: "10%" }}>{t("getting")}</Text>
                 </View>
               </View>
             </Modal>
@@ -377,7 +372,7 @@ const EditPostScreen = ({ navigation, route }) => {
                     <Icon size={20} name="arrow-left" />
                   </TouchableOpacity>
                   <Text style={{ fontWeight: "600", fontSize: 20 }}>
-                    Enter your address
+                    {t("enter")}
                   </Text>
                   <Text></Text>
                 </View>
@@ -461,7 +456,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       size={20}
                     />
                     <Text style={{ marginLeft: "5%", fontSize: 18 }}>
-                      Use my current location
+                      {t("current")}
                     </Text>
                   </TouchableOpacity>
                   {/* add this feature to add address manually */}
@@ -496,7 +491,9 @@ const EditPostScreen = ({ navigation, route }) => {
           }}
           style={{ backgroundColor: "#0244d0", paddingVertical: 10 }}
         >
-          <Text style={{ color: "#fff", textAlign: "center" }}>Close</Text>
+          <Text style={{ color: "#fff", textAlign: "center" }}>
+            {t("close")}
+          </Text>
         </Pressable>
       </Modal>
       <Modal
@@ -551,7 +548,9 @@ const EditPostScreen = ({ navigation, route }) => {
                 borderRadius: 5,
               }}
             >
-              <Text style={{ textAlign: "center", color: "#fff" }}>Close</Text>
+              <Text style={{ textAlign: "center", color: "#fff" }}>
+                {t("close")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -577,13 +576,15 @@ const EditPostScreen = ({ navigation, route }) => {
               fontWeight: "bold",
             }}
           >
-            Edit Your Post and Update
+            {t("edit")}
           </Text>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Headline</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              {t("headline")}
+            </Text>
             <TextInput
               value={headline}
               onChangeText={setHeadline}
@@ -595,24 +596,19 @@ const EditPostScreen = ({ navigation, route }) => {
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              Describe your job
+              {t("describe")}
             </Text>
             <View style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 16 }}>
-                This is how employees figures out what you need and why you’re
-                great to work with!
-              </Text>
+              <Text style={{ fontSize: 16 }}>{t("discription")}</Text>
               <Text style={{ fontSize: 16, marginVertical: 10 }}>
-                Include your expectations about the task or deliverable, what
-                you’re looking for in a work environment, and anything unique
-                about your project, team, or company.Minumun 50 characters.
+                {t("dis")}
               </Text>
             </View>
             <TextInput
               multiline
               numberOfLines={5}
               value={description}
-              placeholder="Already have a job description?Paste it here!"
+              placeholder={t("already")}
               onChangeText={(text) => setDescription(text)}
             />
             <Text style={{ textAlign: "right" }}>{description.length}</Text>
@@ -631,7 +627,7 @@ const EditPostScreen = ({ navigation, route }) => {
               }}
             >
               <Icon size={16} name="attachment" />
-              <Text style={{ marginHorizontal: 5 }}>Attach file</Text>
+              <Text style={{ marginHorizontal: 5 }}> {t("attach")}</Text>
             </TouchableOpacity>
             <Text
               style={{
@@ -639,7 +635,7 @@ const EditPostScreen = ({ navigation, route }) => {
                 color: "rgba(0,0,0,0.6)",
               }}
             >
-              Max file size: 10MB
+              {t("max")}
             </Text>
             {jobPost.document ? (
               <TouchableOpacity
@@ -675,9 +671,9 @@ const EditPostScreen = ({ navigation, route }) => {
                 }}
               >
                 {cvExists ? (
-                  <Text style={{ color: "#fff" }}>Open cv</Text>
+                  <Text style={{ color: "#fff" }}>{t("open")}</Text>
                 ) : (
-                  <Text style={{ color: "#fff" }}>Download and open cv</Text>
+                  <Text style={{ color: "#fff" }}>{t("down")}</Text>
                 )}
               </TouchableOpacity>
             ) : (
@@ -692,7 +688,7 @@ const EditPostScreen = ({ navigation, route }) => {
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
-                Category
+                {t("cat")}
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <SelectDropdown
@@ -758,14 +754,14 @@ const EditPostScreen = ({ navigation, route }) => {
                       borderRadius: 5,
                     }}
                   >
-                    Add
+                    {t("add")}
                   </Text>
                 </TouchableOpacity>
               </View>
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
-                skills
+                {t("skill")}
               </Text>
               <View style={{ flexDirection: "row" }}>
                 {skills?.map((item, index) => {
@@ -802,7 +798,9 @@ const EditPostScreen = ({ navigation, route }) => {
             </View>
 
             <View>
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Salary</Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {t("salary")}
+              </Text>
               <View style={{ marginVertical: 14 }}>
                 {pay.map((item, index) => {
                   return (
@@ -840,7 +838,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Start and End Price
+                    {t("salary")}
                   </Text>
                   <View style={{ flexDirection: "row" }}>
                     <TextInput
@@ -872,7 +870,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Work place
+                    {t("work")}
                   </Text>
                   <View
                     style={{
@@ -895,7 +893,7 @@ const EditPostScreen = ({ navigation, route }) => {
                         setLocationModal(true);
                       }}
                     >
-                      <Text style={{ color: "#fff" }}>Change Place</Text>
+                      <Text style={{ color: "#fff" }}>{t("change")}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -911,7 +909,7 @@ const EditPostScreen = ({ navigation, route }) => {
                   marginVertical: 10,
                 }}
               >
-                Experience
+                {t("experience")}
               </Text>
               <View style={{ marginVertical: 14 }}>
                 {exp.map((item, index) => {
@@ -956,7 +954,7 @@ const EditPostScreen = ({ navigation, route }) => {
               marginHorizontal: "5%",
             }}
           >
-            <Text>DeadLine</Text>
+            <Text>{t("deadline")}</Text>
             <TouchableOpacity
               // style={{ alignItems: "center" }}
               onPress={() => setOpen(true)}
@@ -985,7 +983,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       (date.getMonth() + 1) +
                       "/" +
                       date.getFullYear()
-                    : "set deadline date"}
+                    : t("deaddate")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -1013,7 +1011,7 @@ const EditPostScreen = ({ navigation, route }) => {
                 <Text style={{ color: "#666", marginLeft: 5 }}>
                   {datetime
                     ? datetime.getHours() + " : " + datetime.getMinutes()
-                    : "set date linetime"}
+                    : t("deadtime")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -1025,7 +1023,7 @@ const EditPostScreen = ({ navigation, route }) => {
               marginLeft: "5%",
             }}
           >
-            <Text>permanent</Text>
+            <Text>t("permanent1")</Text>
             <Checkbox
               color="#0244d0"
               status={permanent ? "checked" : "unchecked"}
@@ -1041,7 +1039,7 @@ const EditPostScreen = ({ navigation, route }) => {
               marginLeft: "5%",
             }}
           >
-            <Text>Cv Required</Text>
+            <Text>{t("cv1")}</Text>
             <Checkbox
               color="#0244d0"
               status={cvRequired ? "checked" : "unchecked"}
@@ -1120,7 +1118,7 @@ const EditPostScreen = ({ navigation, route }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>Update Job</Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>{t("update")}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -1137,23 +1135,22 @@ function AdvancedPred({
   checkHour,
   setHour,
 }) {
+  const { t } = useTranslation();
   return (
     <List.Accordion
       left={(props) => (
         <View {...props}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            Advanced preferences(optional)
+            {t("advanced")}
           </Text>
-          <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-            Hours per week ,and more
-          </Text>
+          <Text style={{ color: "rgba(0,0,0,0.6)" }}>{t("hour")}</Text>
         </View>
       )}
       expanded={expanded}
       onPress={handlePress}
     >
       <View>
-        <Text style={{ fontWeight: "bold" }}>English level</Text>
+        <Text style={{ fontWeight: "bold" }}>{t("engl")}</Text>
         <View>
           {englishLevels.map((item, index) => {
             return (
@@ -1175,7 +1172,7 @@ function AdvancedPred({
         </View>
       </View>
       <View>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hours per week</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{t("hours")}</Text>
         {hourPerWeeks.map((item, index) => {
           return (
             <TouchableOpacity
@@ -1195,9 +1192,7 @@ function AdvancedPred({
         })}
       </View>
       <View>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          Gender required
-        </Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>{t("genderr")}</Text>
         {genderList.map((item, index) => {
           return (
             <TouchableOpacity

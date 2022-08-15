@@ -19,7 +19,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 // Requests permissions for external directory
 import * as SecureStore from "expo-secure-store";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
-
+import { useTranslation } from "react-i18next";
 const fetchUser = async ({ queryKey }) => {
   const response = await fetch(
     `${BASEURI}/lesser/${queryKey[1]}/${queryKey[2]}`,
@@ -39,6 +39,7 @@ const fetchUser = async ({ queryKey }) => {
 };
 
 const UserDetailScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const dimension = useWindowDimensions();
   const approveMutation = useMutation(async () => {
     console.log(
@@ -201,7 +202,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                   fontWeight: "bold",
                 }}
               >
-                Skills
+                {t("skill")}
               </Text>
               <Divider />
 
@@ -232,7 +233,7 @@ const UserDetailScreen = ({ navigation, route }) => {
           )}
           {user.education.length ? (
             <View>
-              <Text style={{ fontWeight: "bold" }}>Education</Text>
+              <Text style={{ fontWeight: "bold" }}>{t("edu")}</Text>
               {user.education.map((item, index) => {
                 return (
                   <View key={index + 1}>
@@ -273,7 +274,7 @@ const UserDetailScreen = ({ navigation, route }) => {
           )}
           {user.languages.length ? (
             <View style={{ marginVertical: 15 }}>
-              <Text style={{ fontWeight: "bold" }}>Languages</Text>
+              <Text style={{ fontWeight: "bold" }}>{t("language")}</Text>
               <Divider />
               <View style={{ paddingVertical: 10 }}>
                 {user.languages.map((item, index) => {
@@ -317,7 +318,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                   marginVertical: "5%",
                 }}
               >
-                Bio
+                {t("bio")}
               </Text>
               <Text style={{ borderWidth: 0.6, borderRadius: 5, padding: 15 }}>
                 {user.description}
@@ -368,7 +369,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                     color: "#fff",
                   }}
                 >
-                  Open cv
+                  {t("open")}
                 </Text>
               ) : (
                 <Text
@@ -379,7 +380,7 @@ const UserDetailScreen = ({ navigation, route }) => {
                     color: "#fff",
                   }}
                 >
-                  Download and open cv
+                  {t("down")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -415,7 +416,7 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>{t("rej")}</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -451,7 +452,7 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>{t("Approve")}</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -488,7 +489,7 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Reject</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>{t("rej")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -502,7 +503,7 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Approve</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>{t("Approve")}</Text>
           </TouchableOpacity>
         </View>
       ) : (

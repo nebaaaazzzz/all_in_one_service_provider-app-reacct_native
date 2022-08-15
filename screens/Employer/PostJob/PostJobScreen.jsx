@@ -8,6 +8,7 @@ import PaymentScreen from "./PaymentScreen";
 import ReviewScreen from "./ReviewScreen";
 import LocationScreen from "./LocationScreen";
 import PinSpotScreen from "./PinSpotScreen";
+import {useTranslation} from "react-i18next";
 const PostJobStackNavigation = createStackNavigator();
 export const PostJobContext = createContext();
 const reducer = (state = {}, action) => {
@@ -19,6 +20,7 @@ const reducer = (state = {}, action) => {
   }
 };
 const PostJobScreen = () => {
+  const {t}=useTranslation();
   const [jobPost, dispatch] = useReducer(reducer);
   return (
     <PostJobContext.Provider value={{ jobPost, dispatch }}>
@@ -30,36 +32,36 @@ const PostJobScreen = () => {
         />
         <PostJobStackNavigation.Screen
           name="employer/postjob/category"
-          options={{ title: "Category" }}
+          options={{ title: t("cat") }}
           component={CategoryScreen}
         />
         <PostJobStackNavigation.Screen
-          options={{ title: "Skills" }}
+          options={{ title: t("skill") }}
           name="employer/postjob/skills"
           component={SkillsRequiredScreen}
         />
         <PostJobStackNavigation.Screen
-          options={{ title: "Scope" }}
+          options={{ title: t("scop") }}
           name="employer/postjob/scope"
           component={ScopeScreen}
         />
         <PostJobStackNavigation.Screen
-          options={{ title: "Scope" }}
+          options={{ title: t("scop")}}
           name="employer/postjob/location"
           component={LocationScreen}
         />
         <PostJobStackNavigation.Screen
-          options={{ title: "Scope" }}
+          options={{ title: t("scop") }}
           name="employer/postjob/pinspot"
           component={PinSpotScreen}
         />
         <PostJobStackNavigation.Screen
-          options={{ title: "Payment" }}
+          options={{ title: t("pa") }}
           name="employer/postjob/payment"
           component={PaymentScreen}
         />
         <PostJobStackNavigation.Screen
-          options={{ title: "Review" }}
+          options={{ title: t("rev") }}
           name="employer/postjob/review"
           component={ReviewScreen}
         />

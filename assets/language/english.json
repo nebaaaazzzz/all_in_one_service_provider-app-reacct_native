@@ -1,28 +1,55 @@
 {
   "translation": {
     "lo": "Login",
+
     "phoneno": "Phone number",
+
     "pass": "Password",
+
     "forg": "Forgot password?",
-    "New": "New to the app",
+
+    "New": "New to the app?",
+
     "signup": "Signup",
+
     "fnam": "First Name",
+
     "lnam": "Last Name",
+
     "gende": "Gender",
+
     "confir": "Confirm password",
+
     "date": "date of birth",
+
+    "al": "Already registered?",
+
+    "si": "SignIn",
+
     "co": "Continue as",
     "em": "Employee",
     "emp": "Employer",
     "les": "Lessee",
     "lessor": "Lessor",
     "Home": "Home",
+
     "profile": "Profile",
     "share": "Share",
     "signout": "Sign Out",
+
     "Bio": "Bio",
     "open": "Open cv",
+    "down": "Download and open cv",
+
     "editp": "Edit profile",
+    "city": "City",
+    "ad": "Add Languages",
+    "sel": "Select Language",
+    "beg": "Beginner",
+    "conv": "Conversational",
+    "flue": "Fluent",
+    "nat": "Native",
+
     "uploadc": "upload Cv",
     "sub": "Submit",
     "About": "About",
@@ -35,16 +62,24 @@
     "vis": "Vision",
     "viss": "Our visions are to eliminate any complication to find jobs and places to rent, to avoid brokers who demand uneccessary profit and to find qualified employees without going to tiring proccess by providing a trusted communication path",
     "contact": "Contact Us",
+
     "contactw": "Contact us with",
     "Email": "Email",
     "Phone": "Phone",
     "socialn": "Social Networks",
+
     "Feed": "FeedBack",
+
     "paymentc": "Payment complain",
+
     "enterc": "Enter your complain about payment",
+
     "send": "Send",
+
     "comment": "Comment about the application",
+
     "commab": "Enter any comment you have",
+
     "reg": "Select Region",
     "any": "Any",
     "addis": "Addis Ababa",
@@ -60,7 +95,8 @@
     "south": "South West Ethiopia People's Region",
     "tigray": "Tigray",
     "southern": "Southern",
-    "catagori": "Select Catagory",
+    "catagori": "Select Category",
+
     "accounting": "Accounting and Finance",
     "admin": "Admin, Secretarial and clerk",
     "advert": "Advertising and Media",
@@ -97,8 +133,10 @@
     "stategic": "Strategic Planning",
     "tele": "telecommunications",
     "gender": "Select Gender",
+
     "male": "Male",
     "female": "Female",
+
     "permanent": "Select permamency",
     "yes": "yes",
     "noo": "no",
@@ -107,6 +145,8 @@
     "close": "Close",
     "search": "Search",
     "all": "all",
+    "near": "NearBy",
+
     "eco": "Economics and Finance",
     "edu": "Education",
     "eng": "Engineering",
@@ -116,9 +156,11 @@
     "security": "Security and Protection",
     "no": "Nothing more to load",
     "applied": "Applied",
-    "pending": "PENDING",
-    "approved": "APPROVED",
-    "rejected": "REJECTED",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "job": "Job Detail",
+
     "post": "Post job",
     "lets": "Let's start with a strong headline",
     "writeheadline": "Write a headline for your job post",
@@ -129,12 +171,12 @@
     "next": "Next: Category",
     "set": "Now Set Category",
     "next1": "Next: Skills",
-    "what": "What are the main skills required for you work?",
+    "what": "What are the main skills required for your work?",
     "add": "Add",
     "add1": "Added skills",
     "next2": "Next: Experience",
     "tell": "Next, Tell us What experience Needed",
-    "level": "What level ofexperience will it need?",
+    "level": "What level of experience will it need?",
     "entry": "Entry",
     "look": "Looking for someone relatively new to this field",
     "intermediate": "Intermediate",
@@ -152,15 +194,19 @@
     "negotiation": "By Negotiation",
     "byorganization": "By The Organization Scale",
     "review": "Next: Review",
+    "rev": "Review",
     "finish": "Now finish and review your job post",
     "headline": "Headline",
     "describe": "Descibe your job",
-    "discription": "This is how employees figures out what you need and why you're great to work with! include your expectations about the task or deliverable, what you're looking for in a work environment, and anything unique about your project, team, or company. Minimum 50 characters.",
+    "discription": "This is how employees figures out what you need and why you're great to work with! ",
+    "dis": "include your expectations about the task or deliverable, what you're looking for in a work environment, and anything unique about your project, team, or company. Minimum 50 characters.",
     "already": "Already have a job description?Paste ithere!",
     "attach": "Attach file",
-    "max": "Max file size:",
+    "max": "Max file size: 10MB",
     "cat": "Category",
-    "skill": "skills",
+    "skill": "Skills",
+    "sk": "Skills required",
+    "scop": "Scope",
     "salary": "Salary",
     "work": "Work place",
     "experience": "Experience",
@@ -187,6 +233,7 @@
     "genderr": "Gender required",
 
     "pay": "Pay",
+    "pa": "Payment",
     "payment": "Payment is required",
     "yene": "pay using yenepay",
     "oth": "Others",
@@ -210,6 +257,14 @@
     "office": "Office space",
 
     "myp": "MY POSTS",
+    "best": "Best Descibe",
+    "plac": "Place",
+    "bir": "Birr",
+    "apply": "Apply",
+    "permission": "Permission to access location was denied",
+
+    "check1": "check your internet connection",
+
     "posth": "Post house",
     "which": "What of these best describes you place?",
     "homm": "A home that may stand-alone or have shared walls",

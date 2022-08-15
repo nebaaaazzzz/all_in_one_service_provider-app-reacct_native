@@ -17,6 +17,7 @@ import { Divider } from "react-native-paper";
 import { useQueryClient } from "react-query";
 import UserDetailScreen from "./UserDetailScreen";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
 
 const LesserStackNavigator = createStackNavigator();
 const fetchApplicant = async ({ pageParam = 1, queryKey }) => {
@@ -75,6 +76,7 @@ const Users = ({ item, pressHandler }) => {
 };
 
 const Lessee = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
 
@@ -144,7 +146,7 @@ const Lessee = ({ navigation, route }) => {
           if (!hasNextPage) {
             return (
               <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
+                {t("no")}
               </Text>
             );
           }
@@ -159,19 +161,20 @@ const Lessee = ({ navigation, route }) => {
 };
 
 const RejectedScreen = ({ route }) => {
+  const { t } = useTranslation();
   return (
     <LesserStackNavigator.Navigator>
       <LesserStackNavigator.Screen
         initialParams={{ id: route.params.id }}
         options={{
-          title: "Rejected",
+          title: t("rejected"),
           headerTitleContainerStyle: { textAlign: "center" },
         }}
         name="lesser/rejected/"
         component={Lessee}
       />
       <LesserStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("det") }}
         name="lesser/rejected/userdetail"
         component={UserDetailScreen}
       />

@@ -9,7 +9,9 @@ import React, { useContext, useState } from "react";
 import { TextInput } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
 const PriceScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   let p;
   if (route.params?.data) {
     p = route.params.data.price;
@@ -43,7 +45,7 @@ const PriceScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Now for the fun part--set Your price
+          {t("fun")}
         </Text>
         <View>
           <View
@@ -87,7 +89,7 @@ const PriceScreen = ({ navigation, route }) => {
               <Icon name="plus" size={20} />
             </TouchableOpacity>
           </View>
-          <Text style={{ textAlign: "center" }}>ETB per month</Text>
+          <Text style={{ textAlign: "center" }}>{t("et")}</Text>
         </View>
       </View>
       <View
@@ -124,7 +126,7 @@ const PriceScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

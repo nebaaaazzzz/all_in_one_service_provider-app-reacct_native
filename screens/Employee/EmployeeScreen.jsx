@@ -32,6 +32,7 @@ import fromNow from "../../utils/time";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useIsFocused } from "@react-navigation/native";
 import AppliedScreen from "./AppliedScreen";
+import { useTranslation } from "react-i18next";
 const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
     `${BASEURI}/employee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&category=${queryKey[4]}&gender=${queryKey[5]}&permanent=${queryKey[6]}&cvRequired=${queryKey[7]}`,
@@ -95,6 +96,7 @@ const Jobs = ({ pressHandler, item }) => {
 };
 
 const Home = ({ navigation }) => {
+  const { t } = useTranslation();
   /*Modal states */
   const [openModal, setOpenModal] = useState(false);
   const [region, setRegion] = useState("");
@@ -188,15 +190,15 @@ const Home = ({ navigation }) => {
     ]);
   }
   const list = [
-    "All",
-    "NearBy",
-    "Economics and Finance",
-    "Education",
-    "Engineering",
-    "Manufacturing",
-    "Media and Journalism",
-    "Science and Technology",
-    "Security and Protection",
+    t("all"),
+    t("near"),
+    t("eco"),
+    t("edu"),
+    t("eng"),
+    t("manu"),
+    t("media"),
+    t("science"),
+    t("security"),
   ];
 
   if (status === "error") {
@@ -249,7 +251,7 @@ const Home = ({ navigation }) => {
                 fontSize: 15,
                 color: "rgba(0,0,0,0.8)",
               }}
-              data={["Any", ...regionsList]}
+              data={[t("any"), ...regionsList]}
               onSelect={(selectedItem, index) => {
                 if (index == 0) {
                   setRegion("");
@@ -262,7 +264,7 @@ const Home = ({ navigation }) => {
                 // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem;
               }}
-              defaultButtonText="Select Region"
+              defaultButtonText={region || t("reg")}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
                 // if data array is an array of objects then return item.property to represent item in dropdown
@@ -287,7 +289,7 @@ const Home = ({ navigation }) => {
                 height: 30,
                 borderRadius: 5,
               }}
-              data={["Any", ...categoryList]}
+              data={[t("any"), ...categoryList]}
               onSelect={(selectedItem, index) => {
                 if (index == 0) {
                   setCategory("");
@@ -299,7 +301,7 @@ const Home = ({ navigation }) => {
                 // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem;
               }}
-              defaultButtonText="Select Category"
+              defaultButtonText={category || t("catagori")}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
                 // if data array is an array of objects then return item.property to represent item in dropdown
@@ -329,10 +331,10 @@ const Home = ({ navigation }) => {
                   fontSize: 15,
                   color: "rgba(0,0,0,0.8)",
                 }}
-                data={["Any", "male", "female"]}
+                data={[t("any"), t("male"), t("female")]}
                 onSelect={(selectedItem, index) => {
                   if (index == 0) {
-                    setRegion("");
+                    setGender("");
                   } else {
                     setGender(selectedItem);
                   }
@@ -342,7 +344,7 @@ const Home = ({ navigation }) => {
                   // if data array is an array of objects then return selectedItem.property to render after item is selected
                   return selectedItem;
                 }}
-                defaultButtonText={gender || "Select Gender"}
+                defaultButtonText={gender || t("gender")}
                 rowTextForSelection={(item, index) => {
                   // text represented for each item in dropdown
                   // if data array is an array of objects then return item.property to represent item in dropdown
@@ -373,14 +375,14 @@ const Home = ({ navigation }) => {
                   fontSize: 15,
                   color: "rgba(0,0,0,0.8)",
                 }}
-                data={["Any", "yes", "no"]}
+                data={[t("any"), t("yes"), t("noo")]}
                 onSelect={(selectedItem, index) => {
                   if (index == 0) {
                     setPermanent("");
                   } else {
-                    if (selectedItem === "yes") {
+                    if (selectedItem === t("yes")) {
                       setPermanent(true);
-                    } else if (selectedItem === "no") {
+                    } else if (selectedItem === t("noo")) {
                       setPermanent(false);
                     }
                   }
@@ -390,7 +392,7 @@ const Home = ({ navigation }) => {
                   // if data array is an array of objects then return selectedItem.property to render after item is selected
                   return selectedItem;
                 }}
-                defaultButtonText={permanent || "Select Permanent"}
+                defaultButtonText={permanent || t("permanent")}
                 rowTextForSelection={(item, index) => {
                   // text represented for each item in dropdown
                   // if data array is an array of objects then return item.property to represent item in dropdown
@@ -438,7 +440,7 @@ const Home = ({ navigation }) => {
                   // if data array is an array of objects then return selectedItem.property to render after item is selected
                   return selectedItem;
                 }}
-                defaultButtonText={gender || "Select cv required"}
+                defaultButtonText={cvRequired || t("cv")}
                 rowTextForSelection={(item, index) => {
                   // text represented for each item in dropdown
                   // if data array is an array of objects then return item.property to represent item in dropdown
@@ -503,7 +505,7 @@ const Home = ({ navigation }) => {
         <Searchbar
           iconColor="#0244d0"
           style={{ marginHorizontal: 10, marginTop: "4%", borderRadius: 20 }}
-          placeholder="Search"
+          placeholder={t("search")}
           onChangeText={setSearchQuery}
           value={searchQuery}
         />
@@ -563,11 +565,7 @@ const Home = ({ navigation }) => {
                 );
               }
               if (!hasNextPage) {
-                return (
-                  <Text style={{ textAlign: "center" }}>
-                    Nothing more to load ....
-                  </Text>
-                );
+                return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
               }
               return null;
             }}
@@ -581,6 +579,7 @@ const Home = ({ navigation }) => {
   );
 };
 function EmployeeScreen() {
+  const { t } = useTranslation();
   return (
     <EmployeeStackNavigator.Navigator>
       <EmployeeStackNavigator.Screen
@@ -590,12 +589,12 @@ function EmployeeScreen() {
       />
       <EmployeeStackNavigator.Screen
         name="employee/jobdetail"
-        options={{ title: "Job Detail" }}
+        options={{ title: t("job") }}
         component={JobDetailScreen}
       />
       <EmployeeStackNavigator.Screen
         name="employee/payment"
-        options={{ title: "Payment" }}
+        options={{ title: t("yes") }}
         component={PaymentScreen}
       />
 

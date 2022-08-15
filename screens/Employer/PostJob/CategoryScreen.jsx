@@ -14,7 +14,9 @@ import { Divider } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import { PostJobContext } from "./PostJobScreen";
 import { categoryList } from "../../../constants/data";
+import {useTranslation} from "react-i18next";
 const CategoryScreen = ({ navigation, route }) => {
+  const {t}=useTranslation();
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
 
@@ -38,7 +40,7 @@ const CategoryScreen = ({ navigation, route }) => {
               marginTop: "15%",
             }}
           >
-            Now Set Category
+            {t("set")}
           </Text>
           <Divider />
           <View style={{ alignItems: "center", marginTop: "20%" }}>
@@ -63,7 +65,7 @@ const CategoryScreen = ({ navigation, route }) => {
                 // if data array is an array of objects then return selectedItem.property to render after item is selected
                 return selectedItem;
               }}
-              defaultButtonText="Select Category"
+              defaultButtonText={t("catagori")}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
                 // if data array is an array of objects then return item.property to represent item in dropdown
@@ -107,7 +109,7 @@ const CategoryScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ color: categorySelect ? "#fff" : "rgba(0,0,0,0.5)" }}>
-            Next: Skills
+            {t("next1")}
           </Text>
         </TouchableOpacity>
       </View>

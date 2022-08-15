@@ -20,7 +20,7 @@ import { useQueryClient } from "react-query";
 import ViewImagesScreen from "./ViewImagesScreen";
 import fromNow from "../../utils/time";
 import * as SecureStore from "expo-secure-store";
-
+import { useTranslation } from "react-i18next";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const LesseeStackNavigator = createStackNavigator();
 const AppliedTabNavigator = createMaterialTopTabNavigator();
@@ -36,6 +36,7 @@ const fetchHouses = async ({ pageParam = 1 }) => {
 };
 
 const Home = ({ item, pressHandler }) => {
+  const { t } = useTranslation();
   const [bgColor, setBgColor] = useState(false);
   return (
     <View>
@@ -83,6 +84,7 @@ const Home = ({ item, pressHandler }) => {
 };
 
 const Lessee = ({ navigation }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
   navigation.setOptions({
@@ -148,11 +150,7 @@ const Lessee = ({ navigation }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}
@@ -165,20 +163,21 @@ const Lessee = ({ navigation }) => {
 };
 
 const AppiedNavigation = () => {
+  const { t } = useTranslation();
   return (
     <AppliedTabNavigator.Navigator>
       <AppliedTabNavigator.Screen
-        options={{ title: "Pending" }}
+        options={{ title: t("pending") }}
         name="lessee/applied/home"
         component={Lessee}
       />
       <AppliedTabNavigator.Screen
-        options={{ title: "Approved" }}
+        options={{ title: t("approved") }}
         name="lessee/approved"
         component={ApprovedScreen}
       />
       <AppliedTabNavigator.Screen
-        options={{ title: "Rejected" }}
+        options={{ title: t("rejected") }}
         name="lessee/rejected"
         component={RejectedScreen}
       />
@@ -186,23 +185,24 @@ const AppiedNavigation = () => {
   );
 };
 const AppliedScreen = () => {
+  const { t } = useTranslation();
   return (
     <LesseeStackNavigator.Navigator>
       <LesseeStackNavigator.Screen
         options={{
-          title: "Applied",
+          title: t("applied"),
           headerTitleContainerStyle: { textAlign: "center" },
         }}
         name="lessee/applied/"
         component={AppiedNavigation}
       />
       <LesseeStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("det") }}
         name="lessee/applied/housedetail"
         component={HomeDetailScreen}
       />
       <LesseeStackNavigator.Screen
-        options={{ title: "detail" }}
+        options={{ title: t("det") }}
         name="lessee/applied/viewimages"
         component={ViewImagesScreen}
       />

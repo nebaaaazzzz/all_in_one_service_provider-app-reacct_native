@@ -6,7 +6,9 @@ import Zocial from "@expo/vector-icons/Zocial";
 
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { List } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 const ContactusScreen = () => {
+  const { t } = useTranslation();
   return (
     <View style={{ paddingHorizontal: "5%" }}>
       <Text
@@ -19,12 +21,12 @@ const ContactusScreen = () => {
           //   color: "#0244d0",
         }}
       >
-        Contact us with
+        {t("contactw")}
       </Text>
       <View>
         <List.Accordion
           titleStyle={{ color: "#0244d0" }}
-          title="Email"
+          title={t("Email")}
           left={() => {
             return (
               <MaterialCommunityIcons name="email" size={25} color="#0244d0" />
@@ -40,7 +42,7 @@ const ContactusScreen = () => {
       <View>
         <List.Accordion
           titleStyle={{ color: "#0244d0" }}
-          title="Phone"
+          title={t("Phone")}
           left={() => {
             return (
               <MaterialCommunityIcons name="phone" size={25} color="#0244d0" />
@@ -61,7 +63,7 @@ const ContactusScreen = () => {
             color: "rgba(0,0,0,0.7)",
           }}
         >
-          Social Networks
+          {t("socialn")}
         </Text>
         <View
           style={{

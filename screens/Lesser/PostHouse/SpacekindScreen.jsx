@@ -8,8 +8,10 @@ import {
 import React, { useContext, useState } from "react";
 import PlaceDescription from "./../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
 
 const SpacekindScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostHouseContext);
   const placeKinds = ["An entire place", "A private room"];
   let index;
@@ -46,7 +48,7 @@ const SpacekindScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          What kind of space will lesse have?
+          {t("space")}
         </Text>
         {placeKinds.map((place, index) => {
           return (
@@ -96,7 +98,7 @@ const SpacekindScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -13,6 +13,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { Divider, Badge } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
+
 
 const fetchHouse = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/lesser/house/${queryKey[1]}`, {
@@ -27,6 +29,7 @@ const fetchHouse = async ({ queryKey }) => {
   return (await response.json()).data;
 };
 const HomeDetailScreen = ({ navigation, route }) => {
+  
   const queryClient = useQueryClient();
   const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching } = useQuery(
@@ -97,7 +100,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Badge>{data?.applicants?.length || 0} </Badge>
-          <Text style={{ color: "#fff" }}>Applicants</Text>
+          <Text style={{ color: "#fff" }}>{t("Applicants")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -117,7 +120,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Badge>{data?.approved?.length || 0} </Badge>
-          <Text style={{ color: "#fff" }}>Approved</Text>
+          <Text style={{ color: "#fff" }}>{t("approved")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -137,7 +140,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Badge>{data?.rejected?.length || 0} </Badge>
-          <Text style={{ color: "#fff" }}>Rejected</Text>
+          <Text style={{ color: "#fff" }}>{t("rejected")}</Text>
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -187,14 +190,14 @@ const HomeDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}>View All Images</Text>
+            <Text style={{ color: "#fff" }}>{t("View")}</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
             {data.placeName}
           </Text>
           {data.region ? (
             <Text>
-              Region :{" "}
+              {t("region")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>{data.region}</Text>
             </Text>
           ) : (
@@ -204,7 +207,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.guestFavourite?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Guest Favourite
+              {t("Guest")}
               </Text>
               {data?.guestFavourite?.map((item, index) => {
                 return (
@@ -231,7 +234,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.saftyItems?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Safty Items
+              {t("Safty")}
               </Text>
               {data?.saftyItems?.map((item, index) => {
                 return (
@@ -258,7 +261,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.amenities?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Amenities
+                {t("Amenities")}
               </Text>
               {data?.amenities?.map((item, index) => {
                 return (
@@ -285,7 +288,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.bestDescribe?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Best Describe
+              {t("best")}
               </Text>
               {data?.bestDescribe?.map((item, index) => {
                 return (
@@ -322,7 +325,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Price :{" "}
+            {t("price")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>{data.price}</Text>
             </Text>
           </View>
@@ -335,7 +338,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-              Place Kind :{" "}
+            {t("Kind")}:{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>{data.placeKind}</Text>
             </Text>
           </View>
@@ -351,17 +354,17 @@ const HomeDetailScreen = ({ navigation, route }) => {
             <Text
               style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}
             >
-              Place Description
+              {t("ped")}
             </Text>
             <View>
               <Text style={{ fontSize: 16 }}>
-                Type :{"  "}
+              {t("Typee")} :{"  "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {data.placeDescription.title}
                 </Text>
               </Text>
               <Text style={{ fontSize: 16 }}>
-                Description :{" "}
+              {t("des")} :{" "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {data.placeDescription.description}
                 </Text>
@@ -379,7 +382,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             <Text
               style={{ textAlign: "center", fontSize: 18, fontWeight: "bold" }}
             >
-              Detail Description
+              {t("detail")}
             </Text>
             <Text style={{ fontSize: 16 }}>{data.detailDescription}</Text>
           </View>
@@ -413,7 +416,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>
-            Delete Post
+          {t("delpost")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -431,7 +434,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Edit Post</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("editpost")}</Text>
         </TouchableOpacity>
       </View>
     </View>

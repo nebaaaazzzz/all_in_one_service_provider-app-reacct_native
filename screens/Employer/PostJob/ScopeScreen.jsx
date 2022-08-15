@@ -10,30 +10,32 @@ import { ProgressBar } from "react-native-paper";
 import { RadioButton, Divider } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { PostJobContext } from "./PostJobScreen";
+import { useTranslation } from "react-i18next";
 const ScopeScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const [experience, setExperience] = React.useState();
 
   const exp = [
     {
-      title: "Entry",
-      description: "Looking for someone relatively new to this field",
+      title: t("entry"),
+      description: t("look"),
     },
     {
-      title: "Intermediate",
-      description: "Looking for substantial experience in this field",
+      title: t("intermediate"),
+      description: t("look1"),
     },
     {
-      title: "Expert",
-      description: "Looking for comprehensive and deep expertise in this filed",
+      title: t("expert"),
+      description: t("look2"),
     },
   ];
   return (
     <View style={{ marginTop: StatusBar.currentHeight }}>
       <ProgressBar progress={0.75} />
       <Text style={{ fontSize: 22, textAlign: "center", fontWeight: "bold" }}>
-        Next, Tell us What experience Needed.
+        {t("tell")}
       </Text>
       <View
         style={{
@@ -45,9 +47,7 @@ const ScopeScreen = ({ navigation }) => {
 
       <Divider style={{ marginVertical: "5%" }} />
       <View style={{ paddingHorizontal: 15 }}>
-        <Text style={{ fontSize: 18 }}>
-          What level of experience will it need?
-        </Text>
+        <Text style={{ fontSize: 18 }}>{t("level")}</Text>
         <View style={{ marginVertical: 14 }}>
           {exp.map((item, index) => {
             return (
@@ -115,7 +115,7 @@ const ScopeScreen = ({ navigation }) => {
               color: experience !== undefined ? "#fff" : "rgba(0,0,0,0.5)",
             }}
           >
-            Next: Location
+            {t("next3")}
           </Text>
         </TouchableOpacity>
       </View>

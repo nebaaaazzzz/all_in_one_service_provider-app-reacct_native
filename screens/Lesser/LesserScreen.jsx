@@ -26,6 +26,7 @@ import * as SecureStore from "expo-secure-store";
 import ViewImagesScreen from "./ViewImagesScreen";
 import { useIsFocused } from "@react-navigation/native";
 import { UserContext } from "../../App.Navigator";
+import { useTranslation } from "react-i18next";
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(`${BASEURI}/lesser/posts?page=${pageParam}`, {
     headers: {
@@ -38,6 +39,7 @@ const fetchHouses = async ({ pageParam = 1 }) => {
 };
 
 const MyPosts = ({ navigation }) => {
+  const { t } = useTranslation();
   const {
     data,
     error,
@@ -96,7 +98,7 @@ const MyPosts = ({ navigation }) => {
           if (!hasNextPage) {
             return (
               <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
+                {t("no")}
               </Text>
             );
           }
@@ -108,6 +110,8 @@ const MyPosts = ({ navigation }) => {
 };
 
 const Home = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const user = useContext(UserContext);
   return (
     <View style={{ flex: 1 }}>
@@ -135,7 +139,7 @@ const Home = ({ navigation }) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}> Post House</Text>
+            <Text style={{ color: "#fff" }}> {t("posth")}</Text>
           </TouchableOpacity>
         ) : user.suspended ? (
           <Text
@@ -167,7 +171,7 @@ const Home = ({ navigation }) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={{ color: "#fff" }}> pay</Text>
+            <Text style={{ color: "#fff" }}> {t("pay")}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -197,12 +201,12 @@ const LesserScreen = () => {
         />
 
         <LesserStackNavigator.Screen
-          options={{ title: "House Detail" }}
+          options={{ title: t("houss") }}
           name="lesser/housedetail"
           component={HomeDetailScreen}
         />
         <LesserStackNavigator.Screen
-          options={{ title: "House Detail" }}
+          options={{ title: t("houss")  }}
           name="lesser/viewimages"
           component={ViewImagesScreen}
         />
@@ -223,7 +227,7 @@ const LesserScreen = () => {
         />
         <LesserStackNavigator.Screen
           options={{ headerShown: false }}
-          option={{ title: "detail" }}
+          option={{ title: t("det")  }}
           name="lesser/payment"
           component={PaymentScreen}
         />
@@ -239,6 +243,7 @@ const LesserScreen = () => {
 //   "https://source.unsplash.com/1024x768/?tree", // Network image
 // ];
 const Post = ({ item, pressHandler }) => {
+  const { t } = useTranslation();
   const [bgColor, setBgColor] = useState(false);
   return (
     <View>
@@ -276,7 +281,7 @@ const Post = ({ item, pressHandler }) => {
                 </Text>
               </View>
 
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.price} birr</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.price} {t("bir")}</Text>
             </View>
           </TouchableOpacity>
         );

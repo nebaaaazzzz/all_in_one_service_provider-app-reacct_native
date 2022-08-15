@@ -14,7 +14,7 @@ import { useInfiniteQuery } from "react-query";
 import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "react-query";
 import * as SecureStore from "expo-secure-store";
-
+import { useTranslation } from "react-i18next";
 import fromNow from "../../utils/time";
 const fetchHouses = async ({ pageParam = 1 }) => {
   const response = await fetch(
@@ -78,6 +78,8 @@ const Home = ({ item, pressHandler }) => {
 };
 
 const ApprovedScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
   navigation.setOptions({
@@ -143,11 +145,7 @@ const ApprovedScreen = ({ navigation }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                Nothing more to load ....
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}

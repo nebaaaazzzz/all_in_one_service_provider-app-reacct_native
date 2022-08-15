@@ -8,48 +8,45 @@ import {
 import React, { useContext, useState } from "react";
 import PlaceDescription from "../../../components/PlaceDescription";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
 const PlaceDescriptionScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const placeDescriptions = [
     {
-      title: "Home",
-      description: "A home that may stand-alone or have shared walls",
+      title: t("ho"),
+      description: t("homm"),
     },
 
     {
-      title: "Villa",
-      description:
-        "A luxury home that may have indoor-outdoor spaces, gardens , and pools",
+      title: t("vil"),
+      description:t("vill"),
     },
     {
-      title: "Apartment",
-      description:
-        "A room or set of rooms fitted especially with housekeeping facilities and usually leased as a dwelling",
+      title: t("Apa"),
+      description:t("Apaa"),
     },
 
     {
-      title: "Cottage",
-      description: "A cozy house built in a rural area or near a lake or beach",
+      title: t("Cota"),
+      description: t("Cotaa"),
     },
     {
-      title: "Hut",
-      description:
-        "A home made of wood or mud that may have a thatched staw roof",
-    },
-
-    {
-      title: "Tiny home",
-      description:
-        "A stand-alone house that's usually less than 400 square feet.",
+      title: t("Hut"),
+      description:t("Hutt"),
     },
 
     {
-      title: "Guest house",
-      description:
-        "A furnished rental propery that may includes a kitchen and bathroom and may offer some guest services,like a reception desk.",
+      title: t("Tiny"),
+      description:t("Tinyy"),
+    },
+
+    {
+      title: t("Guest"),
+      description:t("Guestt"),
     },
     {
-      title: "Office space",
-      description: "Suitable for a business and work related activity.",
+      title: t("office"),
+      description: t("officee"),
     },
   ];
   let index;
@@ -95,7 +92,7 @@ const PlaceDescriptionScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          What of these best describes your place ?
+        {t("which")}
         </Text>
         {placeDescriptions.map((place, index) => {
           return (
@@ -145,7 +142,7 @@ const PlaceDescriptionScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

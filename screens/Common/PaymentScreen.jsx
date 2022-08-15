@@ -2,8 +2,10 @@ import { View, Text, StatusBar, TouchableOpacity, Linking } from "react-native";
 import React, { useContext } from "react";
 import { BASEURI } from "../../urls";
 import { UserContext } from "../../App.Navigator";
+import { useTranslation } from "react-i18next";
 
 const PaymentScreen = () => {
+  const { t } = useTranslation();
   const user = useContext(UserContext);
   return (
     <View style={{ marginTop: StatusBar.currentHeight, paddingHorizontal: 50 }}>
@@ -16,7 +18,7 @@ const PaymentScreen = () => {
           color: "red",
         }}
       >
-        Payment required
+        {t("payment")}
       </Text>
       <TouchableOpacity
         style={{ backgroundColor: "blue", padding: 10, borderRadius: 10 }}
@@ -26,7 +28,7 @@ const PaymentScreen = () => {
         }}
       >
         <Text style={{ color: "#fff", textAlign: "center" }}>
-          Pay with yenePay
+        {t("yene")}
         </Text>
       </TouchableOpacity>
     </View>

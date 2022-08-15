@@ -15,6 +15,8 @@ import fromNow from "../../utils/time";
 import * as FileSystem from "expo-file-system";
 import { BASEURI, BASETOKEN } from "../../urls";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
+import RNFS from "react-native-fs";
 
 // Requests permissions for external directory
 
@@ -34,6 +36,7 @@ const fetchJob = async ({ queryKey }) => {
 };
 
 const JobDetailScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   // navigation.setOptions({
   const queryClient = useQueryClient();
   //   headerRight: () => (
@@ -45,9 +48,20 @@ const JobDetailScreen = ({ navigation, route }) => {
     ["job", route.params.id],
     fetchJob
   );
-  const [downloadProgress, setDownloadProgress] = React.useState();
-  const downloadPath =
-    FileSystem.documentDirectory + (Platform.OS == "android" ? "" : "");
+  const [documentExists, setDocumentExists] = React.useState(false);
+  const localFile = `${RNFS.DocumentDirectoryPath}/${
+    data ? data?.document : ""
+  }`;
+  useEffect(() => {
+    async function check() {
+      if (!isLoading) {
+        setDocumentExists(
+          await RNFS.exists(`${RNFS.DocumentDirectoryPath}/${data.document}`)
+        );
+      }
+    }
+    check();
+  }, [documentExists, isLoading]);
   const delteMutuation = useMutation(async () => {
     const response = await fetch(`${BASEURI}/employer/job/${data._id}`, {
       method: "DELETE",
@@ -105,7 +119,7 @@ const JobDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Badge>{data?.applicants?.length || 0} </Badge>
-          <Text style={{ color: "#fff" }}>Applicants</Text>
+          <Text style={{ color: "#fff" }}>{t("Applicants")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -125,7 +139,7 @@ const JobDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Badge>{data?.approved?.length || 0} </Badge>
-          <Text style={{ color: "#fff" }}>Approved</Text>
+          <Text style={{ color: "#fff" }}>{t("approved")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -145,7 +159,7 @@ const JobDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Badge>{data?.rejected?.length || 0} </Badge>
-          <Text style={{ color: "#fff" }}>Rejected</Text>
+          <Text style={{ color: "#fff" }}>{t("rejected")}</Text>
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -169,7 +183,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         <Divider />
         <View>
           <Text style={{ margin: 10, fontSize: 18, fontWeight: "bold" }}>
-            Skills Required
+            {t("sk")}
           </Text>
           <View
             style={{
@@ -199,7 +213,7 @@ const JobDetailScreen = ({ navigation, route }) => {
         </View>
         <View>
           <Text style={{ margin: 10, fontSize: 18, fontWeight: "bold" }}>
-            Others
+            {t("oth")}
           </Text>
           <View
             style={{
@@ -208,21 +222,25 @@ const JobDetailScreen = ({ navigation, route }) => {
             }}
           >
             <View>
-              <Text>Category : {data.category}</Text>
+              <Text>
+                {t("cat")} : {data.category}
+              </Text>
             </View>
             <View>
-              <Text>Experience : {data.experience.title}</Text>
+              <Text>
+                {t("experience")} : {data.experience.title}
+              </Text>
             </View>
             {data.cvRequired ? (
               <View>
-                <Text>Cv required</Text>
+                <Text>{t("cv1")} </Text>
               </View>
             ) : (
               <></>
             )}
             {data.permanent ? (
               <View>
-                <Text>Permanent Job</Text>
+                <Text>{t("permanent1")} </Text>
               </View>
             ) : (
               <></>
@@ -231,37 +249,49 @@ const JobDetailScreen = ({ navigation, route }) => {
             {data.budget ? (
               <View>
                 <Text>
-                  Salary : {data.budget.from} - {data.budget.to}
+                  {t("salary")} : {data.budget.from} - {data.budget.to}
                 </Text>
               </View>
             ) : (
               <View>
-                <Text>Salary : {data.paymentStyle}</Text>
+                <Text>
+                  {t("salary")} : {data.paymentStyle}
+                </Text>
               </View>
             )}
             {data.englishLevel ? (
               <View>
-                <Text>English Level : {data.englishLevel}</Text>
+                <Text>
+                  {t("engl")} : {data.englishLevel}
+                </Text>
               </View>
             ) : (
               <></>
             )}
             <View>
-              <Text>CV : {data?.cvRequired ? "Required" : "Not Required"}</Text>
+              <Text>
+                {t("cv1")} : {data?.cvRequired ? "Required" : "Not Required"}
+              </Text>
             </View>
             <View>
-              <Text>permanent : {data?.permanent ? "Yes" : "No"}</Text>
+              <Text>
+                {t("permanent1")} : {data?.permanent ? "Yes" : "No"}
+              </Text>
             </View>
             {data.hourPerWeek ? (
               <View>
-                <Text>Hours Per Week : data.hourPerWeek</Text>
+                <Text>
+                  {t("hours")}: {data.hourPerWeek}
+                </Text>
               </View>
             ) : (
               <></>
             )}
             {data.gender ? (
               <View>
-                <Text>Gender: {data.gender}</Text>
+                <Text>
+                  {t("gende")}: {data.gender}
+                </Text>
               </View>
             ) : (
               <></>
@@ -269,7 +299,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             {data.deadline ? (
               <View>
                 <Text>
-                  Deadline:{" "}
+                  {t("deadline")}:{" "}
                   {new Date(data.deadline).getDate() +
                     "/" +
                     (new Date(data.deadline).getMonth() +
@@ -290,109 +320,68 @@ const JobDetailScreen = ({ navigation, route }) => {
               <></>
             )}
             <View>
-              <Text>Place Name : {data.placeName}</Text>
+              <Text>
+                {t("place")}: {data.placeName}
+              </Text>
             </View>
-
             {data.document ? (
               <TouchableOpacity
                 style={{
                   backgroundColor: "#0244d0",
+                  paddingVertical: 5,
+                  paddingHorizontal: 5,
                   borderRadius: 5,
-                  marginTop: "10%",
-                  elevation: 5,
                 }}
                 onPress={async () => {
-                  const { StorageAccessFramework } = FileSystem;
-                  const ensureDirAsync = async (dir, intermediates = true) => {
-                    const props = await FileSystem.getInfoAsync(dir);
-                    if (props.exist && props.isDirectory) {
-                      return props;
-                    }
-                    let _ = await FileSystem.makeDirectoryAsync(dir, {
-                      intermediates,
-                    });
-                    return await ensureDirAsync(dir, intermediates);
-                  };
-                  const downloadCallback = (downloadProgress) => {
-                    const progress =
-                      downloadProgress.totalBytesWritten /
-                      downloadProgress.totalBytesExpectedToWrite;
-                    setDownloadProgress(progress);
-                  };
-                  const saveAndroidFile = async (
-                    fileUri,
-                    fileName = "File"
-                  ) => {
-                    try {
-                      const fileString = await FileSystem.readAsStringAsync(
-                        fileUri,
-                        { encoding: FileSystem.EncodingType.Base64 }
-                      );
-
-                      const permissions =
-                        await StorageAccessFramework.requestDirectoryPermissionsAsync();
-                      if (!permissions.granted) {
-                        return;
-                      }
-
-                      try {
-                        await StorageAccessFramework.createFileAsync(
-                          permissions.directoryUri,
-                          fileName,
-                          "application/pdf"
-                        )
-                          .then(async (uri) => {
-                            await FileSystem.writeAsStringAsync(
-                              uri,
-                              fileString,
-                              { encoding: FileSystem.EncodingType.Base64 }
-                            );
-                            alert("Report Downloaded Successfully");
-                          })
-                          .catch((e) => {});
-                      } catch (e) {
-                        throw new Error(e);
-                      }
-                    } catch (err) {}
-                  };
-                  const downloadFile = async (fileUrl) => {
-                    if (Platform.OS == "android") {
-                      const dir = ensureDirAsync(downloadPath);
-                    }
-
-                    let fileName = fileUrl.split("Reports/")[1];
-                    //alert(fileName)
-                    const downloadResumable =
-                      FileSystem.createDownloadResumable(
-                        fileUrl,
-                        downloadPath + fileName,
-                        {},
-                        downloadCallback
-                      );
-
-                    try {
-                      const { uri } = await downloadResumable.downloadAsync();
-                      if (Platform.OS == "android")
-                        saveAndroidFile(uri, fileName);
-                      else saveIosFile(uri);
-                    } catch (e) {
-                      console.error("download error:", e);
-                    }
-                  };
-                  downloadFile(
-                    "https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3560/software/release/12-2_25_see/configuration/guide/scg.pdf"
-                  );
+                  if (cvExists) {
+                    FileViewer.open(localFile);
+                  } else {
+                    const options = {
+                      fromUrl: `${BASEURI}/cv/${user.document}`,
+                      toFile: localFile,
+                    };
+                    RNFS.downloadFile(options, {
+                      begin: (s) => console.log(s),
+                      progress: (s) => {
+                        console.log(s);
+                      },
+                    })
+                      .promise.then(() => {
+                        setDocumentExists(true);
+                        FileViewer.open(localFile);
+                      })
+                      .then(() => {
+                        // success
+                      })
+                      .catch((error) => {
+                        // error
+                      });
+                  }
                 }}
               >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    paddingVertical: "3%",
-                    color: "#fff",
-                  }}
-                >
-                  Download Full Description
-                </Text>
+                {documentExists ? (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      paddingVertical: 5,
+                      fontSize: 16,
+                      color: "#fff",
+                    }}
+                  >
+                    Open cv
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      paddingVertical: 5,
+                      fontSize: 16,
+                      color: "#fff",
+                    }}
+                  >
+                    Download and open
+                  </Text>
+                )}
               </TouchableOpacity>
             ) : (
               <></>
@@ -429,7 +418,7 @@ const JobDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>
-            Delete Post
+            {t("delpost")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -447,7 +436,9 @@ const JobDetailScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Edit Post</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("editpost")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

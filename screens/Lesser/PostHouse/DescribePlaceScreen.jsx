@@ -10,29 +10,31 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { PostHouseContext } from "./PostHouseScreen";
+import { useTranslation } from "react-i18next";
 const DescribePlaceScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   //limit active
   const [limit, setLimit] = useState([]);
   const highLight = [
     {
-      name: "Peaceful",
+      name: t("peace"),
       icon: <Icon name="peace" />,
     },
     {
-      name: "Unique",
+      name: t("Uni"),
       icon: <Entypo name="dot-single" />,
     },
     {
-      name: "Family-friendly",
+      name: t("Family-friendly"),
       icon: <Icon name="horse-human" />,
     },
     {
-      name: "Stylish",
+      name: t("Sty"),
       icon: <MaterialIcons name="style" />,
     },
-    { name: "Central", icon: <MaterialIcons name="center-focus-strong" /> },
+    { name: t("cent"), icon: <MaterialIcons name="center-focus-strong" /> },
     {
-      name: "Spacious",
+      name: t("Spa"),
       icon: <Icon name="account-multiple-outline" />,
     },
   ];
@@ -69,10 +71,10 @@ const DescribePlaceScreen = ({ navigation, route }) => {
             fontSize: 20,
           }}
         >
-          Is your place?
+          {t("is")}
         </Text>
         <Text style={{ marginLeft: 10, fontSize: 16 }}>
-          Choose up to 2 highLights
+          {t("chosee")}
         </Text>
         <View
           style={{
@@ -158,7 +160,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
         </TouchableOpacity>
       </View>
     </View>

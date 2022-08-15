@@ -13,7 +13,9 @@ import { ProgressBar } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { TextInput } from "react-native-paper";
 import { PostJobContext } from "./PostJobScreen";
+import { useTranslation } from "react-i18next";
 const SkillsRequiredScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const [skills, setSkills] = useState([]);
@@ -37,7 +39,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
               fontWeight: "bold",
             }}
           >
-            What are the main skills required for your work?
+            {t("what")}
           </Text>
           <View
             style={{
@@ -70,13 +72,13 @@ const SkillsRequiredScreen = ({ navigation }) => {
                   borderRadius: 5,
                 }}
               >
-                Add
+                {t("add")}
               </Text>
             </TouchableOpacity>
           </View>
           {skills.length > 0 ? (
             <View style={{ marginTop: "5%" }}>
-              <Text style={{ color: "rgba(0,0,0,0.5)" }}> Added skills</Text>
+              <Text style={{ color: "rgba(0,0,0,0.5)" }}> {t("add1")}</Text>
               <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                 {skills.map((item, index) => {
                   return (
@@ -145,7 +147,7 @@ const SkillsRequiredScreen = ({ navigation }) => {
           }}
         >
           <Text style={{ color: skills.length ? "#fff" : "rgba(0,0,0,0.5)" }}>
-            Next: Experience
+            {t("next2")}
           </Text>
         </TouchableOpacity>
       </View>
