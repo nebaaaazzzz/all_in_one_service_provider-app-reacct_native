@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   StatusBar,
   ToastAndroid,
+  Pressable,
   Keyboard,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
@@ -24,17 +25,22 @@ const ValidateScreen = ({ route, navigation }) => {
   const [randStrError, setRandStrError] = useState();
   const { isSuccess, isLoading, isError, error, data, mutate } = useMutation(
     async () => {
-      const reponse = await fetch(`${BASEURI}/auth/validate`, {
+      const response = await fetch(`${BASEURI}/auth/validate`, {
         method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
         body: JSON.stringify({
-          randString: randStr,
           id: user._id,
+          randString: randStr,
         }),
       });
-      if (!reponse.ok) {
-        throw new Error(reponse.statusText);
+      if (!response.ok) {
+        console.log("not success ful");
+        throw new Error("not success ful");
+        // throw new Error(await response.json());
       }
-      return await reponse.json();
+      return await response.json();
     }
   );
   if (isSuccess) {
