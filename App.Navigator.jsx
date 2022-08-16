@@ -24,6 +24,7 @@ import * as Linking from "expo-linking";
 
 const prefix = Linking.createURL("/");
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
+import ForgotChangePassword from "./screens/ForgotChangePassword";
 /*
 
 check  react-native-debugger
@@ -124,6 +125,10 @@ const AppNavigator = ({ navigation }) => {
                 <StackNavigator.Screen
                   name="validate"
                   component={ValidateScreen}
+                />
+                <StackNavigator.Screen
+                  name="forgotchangepasssword"
+                  component={ForgotChangePassword}
                 />
               </StackNavigator.Group>
             )}

@@ -160,6 +160,7 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "job": "Job Detail",
+    "houss":"House Detail",
 
     "post": "Post job",
     "lets": "Let's start with a strong headline",
@@ -266,7 +267,7 @@
     "check1": "check your internet connection",
 
     "posth": "Post house",
-    "which": "What of these best describes you place?",
+    "which": "Which these best describes you place?",
     "homm": "A home that may stand-alone or have shared walls",
     "vill": "A luxury home that may have indoor-outdoor spaces,gardens, and pools.",
     "Apaa": "A room or set of rooms fitted especially with housekeeping facilities and usually leased as a dwelling",
@@ -283,6 +284,7 @@
     "goto": "Go to Map",
     "letus": "Let us know what your place has to offer!",
     "standout": "Do you have any standout amenities?",
+    "fav":"What about these guest favorites?",
     "pool": "pool",
     "fire": "Fire pit",
     "table": "pool table",
@@ -307,7 +309,8 @@
     "cover": "Cover Photo",
     "Make": "Make Cover photo",
     "delete": "Delete",
-    "one": "Add atleast  photos",
+    "one": "Add atleast",  
+    "one1":"photos",
     "your": "Upload from you device",
     "addd": "Add photos",
     "name": "Let's give your place a name",
@@ -324,7 +327,7 @@
     "sty": "Stylish",
     "cent": "Central",
     "Spa": "Spacious",
-    "fun": "NOw for the fun part--set your price",
+    "fun": "Now for the fun part--set your price",
     "et": "ETB per month",
     "check": "Check out your post!",
     "View": "View all images",
@@ -350,6 +353,18 @@
     "Applicants": "Applicants",
     "rej": "Reject",
     "downcv": "Download and upload cv",
-    "Approve": "Approve"
+    "Approve": "Approve",
+
+
+
+    "confirmation":"Confirmation",
+    "please":"Please enter 6 digit code sent you via SMS",
+    "resend":"Resend Code",
+    "confirm":"Confirm",
+    "forgot":"Forgot Password",
+    "reset":"Reset"
+
+
+
   }
 }

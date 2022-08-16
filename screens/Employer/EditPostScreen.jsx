@@ -37,32 +37,26 @@ import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
 import { BASEURI, BASETOKEN } from "./../../urls";
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
-const englishLevels = [
-  t("anylevel"),
-  t("conversational"),
-  t("fluent"),
-  t("natie"),
-];
-const hourPerWeeks = [t("more"), t("lessthan"), t("notsure")];
-const exp = [
-  {
-    title: t("Entry"),
-    description: t("look"),
-  },
-  {
-    title: t("intermediate"),
-    description: t("look1"),
-  },
-  {
-    title: t("expert"),
-    description: t("look3"),
-  },
-];
-const pay = ["Fixed", "By Negotiation", "By The Organization Scale"];
-const genderList = ["Male", "Female", "Both"];
+import * as Location from "expo-location";
 const EditPostScreen = ({ navigation, route }) => {
-  const dimen = useWindowDimensions();
+  const { t: tr } = useTranslation();
+  const pay = [tr("fixed"), tr("negotiation"), tr("byorganization")];
+
+  const hourPerWeeks = [tr("more"), tr("lessthan"), tr("notsure")];
+  const exp = [
+    {
+      title: tr("entry"),
+      description: tr("look"),
+    },
+    {
+      title: tr("intermediate"),
+      description: tr("look1"),
+    },
+    {
+      title: tr("expert"),
+      description: tr("look2"),
+    },
+  ];
   /*LOCATION SCREEN STATES */
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
@@ -71,7 +65,6 @@ const EditPostScreen = ({ navigation, route }) => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const inputRef = useRef();
   const pressHandler = async () => {
-    const { t } = useTranslation();
     await Location.enableNetworkProviderAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -85,9 +78,7 @@ const EditPostScreen = ({ navigation, route }) => {
       const getLocation = async (location) => {
         try {
           setIsGettingLocation(false);
-          navigation.navigate("employer/postjob/pinspot", {
-            center: [location.coords.longitude, location.coords.latitude],
-          });
+          setCenter(location.coords.longitude, location.coords.latitude);
         } catch (err) {
           ToastAndroid.show(t("check1"), ToastAndroid.LONG);
           setIsGettingLocation(false);
@@ -123,6 +114,7 @@ const EditPostScreen = ({ navigation, route }) => {
   const searchListPressHandler = (index) => {
     setCenter([searchResult[index].lon, searchResult[index].lat]);
     setLocationModal(false);
+    console.log(center);
     setSearchResut([]);
     setPinSpotModal(true);
   };
@@ -313,7 +305,6 @@ const EditPostScreen = ({ navigation, route }) => {
       </View>
     );
   }
-  const { t } = useTranslation();
   return (
     <View style={{ flex: 1 }}>
       <Modal visible={locationModal}>
@@ -341,7 +332,7 @@ const EditPostScreen = ({ navigation, route }) => {
               >
                 <View>
                   <ActivityIndicator color={"#0244d0"} size="large" />
-                  <Text style={{ marginTop: "10%" }}>{t("getting")}</Text>
+                  <Text style={{ marginTop: "10%" }}>{tr("getting")}</Text>
                 </View>
               </View>
             </Modal>
@@ -372,7 +363,7 @@ const EditPostScreen = ({ navigation, route }) => {
                     <Icon size={20} name="arrow-left" />
                   </TouchableOpacity>
                   <Text style={{ fontWeight: "600", fontSize: 20 }}>
-                    {t("enter")}
+                    {tr("enter")}
                   </Text>
                   <Text></Text>
                 </View>
@@ -456,7 +447,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       size={20}
                     />
                     <Text style={{ marginLeft: "5%", fontSize: 18 }}>
-                      {t("current")}
+                      {tr("current")}
                     </Text>
                   </TouchableOpacity>
                   {/* add this feature to add address manually */}
@@ -492,17 +483,18 @@ const EditPostScreen = ({ navigation, route }) => {
           style={{ backgroundColor: "#0244d0", paddingVertical: 10 }}
         >
           <Text style={{ color: "#fff", textAlign: "center" }}>
-            {t("close")}
+            {tr("close")}
           </Text>
         </Pressable>
       </Modal>
       <Modal
         visible={pinSpotModal}
         onShow={() => {
+          console.log("this is fsa");
           (async function () {
             const result =
               await fetch(`${MAPBOXURI}/geocode/reverse?lat=${center[1]}&lon=${center[0]}&format=json&apiKey=${MAPBOXTOKEN}
-            `)();
+            `);
             const data = await result.json();
             setRegion(data.results[0].state);
             setPlaceName(data.results[0].formatted);
@@ -520,7 +512,11 @@ const EditPostScreen = ({ navigation, route }) => {
               onLayout={() => <ActivityIndicator />}
               style={{ flex: 1 }}
               source={{
-                uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${dimen.width}&height=${dimen.height}&center=lonlat:${center[0]},${center[1]}&zoom=14&marker=lonlat:${center[0]},${center[1]};color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
+                uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${600}&height=${500}&center=lonlat:${
+                  center[0]
+                },${center[1]}&zoom=14&marker=lonlat:${center[0]},${
+                  center[1]
+                };color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
               }}
             />
           </View>
@@ -549,7 +545,7 @@ const EditPostScreen = ({ navigation, route }) => {
               }}
             >
               <Text style={{ textAlign: "center", color: "#fff" }}>
-                {t("close")}
+                {tr("close")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -576,14 +572,14 @@ const EditPostScreen = ({ navigation, route }) => {
               fontWeight: "bold",
             }}
           >
-            {t("edit")}
+            {tr("edit")}
           </Text>
           <Divider
             style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {t("headline")}
+              {tr("headline")}
             </Text>
             <TextInput
               value={headline}
@@ -596,19 +592,19 @@ const EditPostScreen = ({ navigation, route }) => {
           />
           <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {t("describe")}
+              {tr("describe")}
             </Text>
             <View style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 16 }}>{t("discription")}</Text>
+              <Text style={{ fontSize: 16 }}>{tr("discription")}</Text>
               <Text style={{ fontSize: 16, marginVertical: 10 }}>
-                {t("dis")}
+                {tr("dis")}
               </Text>
             </View>
             <TextInput
               multiline
               numberOfLines={5}
               value={description}
-              placeholder={t("already")}
+              placeholder={tr("already")}
               onChangeText={(text) => setDescription(text)}
             />
             <Text style={{ textAlign: "right" }}>{description.length}</Text>
@@ -627,7 +623,7 @@ const EditPostScreen = ({ navigation, route }) => {
               }}
             >
               <Icon size={16} name="attachment" />
-              <Text style={{ marginHorizontal: 5 }}> {t("attach")}</Text>
+              <Text style={{ marginHorizontal: 5 }}> {tr("attach")}</Text>
             </TouchableOpacity>
             <Text
               style={{
@@ -635,7 +631,7 @@ const EditPostScreen = ({ navigation, route }) => {
                 color: "rgba(0,0,0,0.6)",
               }}
             >
-              {t("max")}
+              {tr("max")}
             </Text>
             {jobPost.document ? (
               <TouchableOpacity
@@ -671,9 +667,9 @@ const EditPostScreen = ({ navigation, route }) => {
                 }}
               >
                 {cvExists ? (
-                  <Text style={{ color: "#fff" }}>{t("open")}</Text>
+                  <Text style={{ color: "#fff" }}>{tr("open")}</Text>
                 ) : (
-                  <Text style={{ color: "#fff" }}>{t("down")}</Text>
+                  <Text style={{ color: "#fff" }}>{tr("down")}</Text>
                 )}
               </TouchableOpacity>
             ) : (
@@ -688,7 +684,7 @@ const EditPostScreen = ({ navigation, route }) => {
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
-                {t("cat")}
+                {tr("cat")}
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <SelectDropdown
@@ -754,14 +750,14 @@ const EditPostScreen = ({ navigation, route }) => {
                       borderRadius: 5,
                     }}
                   >
-                    {t("add")}
+                    {tr("add")}
                   </Text>
                 </TouchableOpacity>
               </View>
               <Text
                 style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
               >
-                {t("skill")}
+                {tr("skill")}
               </Text>
               <View style={{ flexDirection: "row" }}>
                 {skills?.map((item, index) => {
@@ -799,7 +795,7 @@ const EditPostScreen = ({ navigation, route }) => {
 
             <View>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                {t("salary")}
+                {tr("salary")}
               </Text>
               <View style={{ marginVertical: 14 }}>
                 {pay.map((item, index) => {
@@ -838,7 +834,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    {t("salary")}
+                    {tr("salary")}
                   </Text>
                   <View style={{ flexDirection: "row" }}>
                     <TextInput
@@ -870,7 +866,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    {t("work")}
+                    {tr("work")}
                   </Text>
                   <View
                     style={{
@@ -893,7 +889,7 @@ const EditPostScreen = ({ navigation, route }) => {
                         setLocationModal(true);
                       }}
                     >
-                      <Text style={{ color: "#fff" }}>{t("change")}</Text>
+                      <Text style={{ color: "#fff" }}>{tr("change")}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -909,7 +905,7 @@ const EditPostScreen = ({ navigation, route }) => {
                   marginVertical: 10,
                 }}
               >
-                {t("experience")}
+                {tr("experience")}
               </Text>
               <View style={{ marginVertical: 14 }}>
                 {exp.map((item, index) => {
@@ -954,7 +950,7 @@ const EditPostScreen = ({ navigation, route }) => {
               marginHorizontal: "5%",
             }}
           >
-            <Text>{t("deadline")}</Text>
+            <Text>{tr("deadline")}</Text>
             <TouchableOpacity
               // style={{ alignItems: "center" }}
               onPress={() => setOpen(true)}
@@ -983,7 +979,7 @@ const EditPostScreen = ({ navigation, route }) => {
                       (date.getMonth() + 1) +
                       "/" +
                       date.getFullYear()
-                    : t("deaddate")}
+                    : tr("deaddate")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -1011,7 +1007,7 @@ const EditPostScreen = ({ navigation, route }) => {
                 <Text style={{ color: "#666", marginLeft: 5 }}>
                   {datetime
                     ? datetime.getHours() + " : " + datetime.getMinutes()
-                    : t("deadtime")}
+                    : tr("deadtime")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -1023,7 +1019,7 @@ const EditPostScreen = ({ navigation, route }) => {
               marginLeft: "5%",
             }}
           >
-            <Text>t("permanent1")</Text>
+            <Text>{tr("permanent1")}</Text>
             <Checkbox
               color="#0244d0"
               status={permanent ? "checked" : "unchecked"}
@@ -1039,7 +1035,7 @@ const EditPostScreen = ({ navigation, route }) => {
               marginLeft: "5%",
             }}
           >
-            <Text>{t("cv1")}</Text>
+            <Text>{tr("cv1")}</Text>
             <Checkbox
               color="#0244d0"
               status={cvRequired ? "checked" : "unchecked"}
@@ -1118,7 +1114,7 @@ const EditPostScreen = ({ navigation, route }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>{t("update")}</Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>{tr("update")}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -1136,6 +1132,15 @@ function AdvancedPred({
   setHour,
 }) {
   const { t } = useTranslation();
+  const englishLevels = [
+    t("anylevel"),
+    t("conversational"),
+    t("fluent"),
+    t("natie"),
+  ];
+  const genderList = [t("male"), t("female"), t("any")];
+  const hourPerWeeks = [t("more"), t("lessthan"), t("notsure")];
+
   return (
     <List.Accordion
       left={(props) => (

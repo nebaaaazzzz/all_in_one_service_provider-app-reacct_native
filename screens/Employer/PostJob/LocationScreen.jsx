@@ -12,17 +12,16 @@ import {
   ToastAndroid,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import Icon from "@expo/vector-icons/SimpleLineIcons";
 import FIcon from "@expo/vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 import { MAPBOXTOKEN, MAPBOXURI } from "./../../../urls.js";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const LocationScreen = ({ navigation }) => {
-  const {t}=useTranslation();
+  const { t } = useTranslation();
   const [isFull, setIsFull] = useState(false);
   const [locationQuery, setLocationQuery] = useState("");
   const [search, setSearch] = useState(false);
@@ -33,10 +32,7 @@ const LocationScreen = ({ navigation }) => {
     await Location.enableNetworkProviderAsync();
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      ToastAndroid.show(
-        t("permission"),
-        ToastAndroid.LONG
-      );
+      ToastAndroid.show(t("permission"), ToastAndroid.LONG);
       return;
     }
     try {
@@ -47,10 +43,7 @@ const LocationScreen = ({ navigation }) => {
             center: [location.coords.longitude, location.coords.latitude],
           });
         } catch (err) {
-          ToastAndroid.show(
-            t("check1"),
-            ToastAndroid.LONG
-          );
+          ToastAndroid.show(t("check1"), ToastAndroid.LONG);
           setIsGettingLocation(false);
           throw err;
         }
@@ -156,7 +149,7 @@ const LocationScreen = ({ navigation }) => {
                 <Icon size={20} name="arrow-left" />
               </TouchableOpacity>
               <Text style={{ fontWeight: "600", fontSize: 20 }}>
-              {t("enter")}
+                {t("enter")}
               </Text>
               <Text></Text>
             </View>
@@ -236,7 +229,7 @@ const LocationScreen = ({ navigation }) => {
               >
                 <FIcon name="location-arrow" color="#0244d0" size={20} />
                 <Text style={{ marginLeft: "5%", fontSize: 18 }}>
-                {t("current")}
+                  {t("current")}
                 </Text>
               </TouchableOpacity>
               {/* add this feature to add address manually */}

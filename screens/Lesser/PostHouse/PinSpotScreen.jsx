@@ -59,7 +59,11 @@ const PinSpotScreen = ({ navigation, route }) => {
         <Image
           style={{ flex: 1 }}
           source={{
-            uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${dimen.width}&height=${dimen.height}&center=lonlat:${cntr[0]},${cntr[1]}&zoom=14&marker=lonlat:${cntr[0]},${cntr[1]};color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
+            uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${600}&height=${400}&center=lonlat:${
+              cntr[0]
+            },${cntr[1]}&zoom=14&marker=lonlat:${cntr[0]},${
+              cntr[1]
+            };color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
           }}
         />
       </View>
@@ -72,11 +76,12 @@ const PinSpotScreen = ({ navigation, route }) => {
           justifyContent: "space-between",
           height: 60,
           flexDirection: "row",
-          justifyContent: "center",
+          marginHorizontal: 10,
+          justifyContent: "flex-end",
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        {route.params?.data?.center || (
+        {route.params?.data?.center ? (
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("lesser/posthouse/location", {
@@ -86,6 +91,8 @@ const PinSpotScreen = ({ navigation, route }) => {
           >
             <Text>{t("goto")}</Text>
           </TouchableOpacity>
+        ) : (
+          <></>
         )}
 
         <TouchableOpacity
@@ -117,7 +124,9 @@ const PinSpotScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")} </Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("next4")}{" "}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

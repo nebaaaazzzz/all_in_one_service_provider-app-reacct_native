@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   StatusBar,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { ProgressBar } from "react-native-paper";
@@ -33,50 +34,55 @@ const ScopeScreen = ({ navigation }) => {
   ];
   return (
     <View style={{ marginTop: StatusBar.currentHeight }}>
-      <ProgressBar progress={0.75} />
-      <Text style={{ fontSize: 22, textAlign: "center", fontWeight: "bold" }}>
-        {t("tell")}
-      </Text>
-      <View
-        style={{
-          flexDirection: "row",
-          paddingHorizontal: 15,
-          marginVertical: 15,
-        }}
-      ></View>
+      <ScrollView>
+        <ProgressBar progress={0.75} />
+        <Text style={{ fontSize: 22, textAlign: "center", fontWeight: "bold" }}>
+          {t("tell")}
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 15,
+            marginVertical: 15,
+          }}
+        ></View>
 
-      <Divider style={{ marginVertical: "5%" }} />
-      <View style={{ paddingHorizontal: 15 }}>
-        <Text style={{ fontSize: 18 }}>{t("level")}</Text>
-        <View style={{ marginVertical: 14 }}>
-          {exp.map((item, index) => {
-            return (
-              <TouchableOpacity
-                key={index + 1}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginVertical: 5,
-                }}
-                onPress={() => setExperience(index)}
-              >
-                <RadioButton
-                  value={index}
-                  color="#0244d0"
+        <Divider style={{ marginVertical: "5%" }} />
+        <View style={{ paddingHorizontal: 15 }}>
+          <Text style={{ fontSize: 18 }}>{t("level")}</Text>
+          <View style={{ marginVertical: 14 }}>
+            {exp.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index + 1}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginVertical: 5,
+                  }}
                   onPress={() => setExperience(index)}
-                  status={experience === index ? "checked" : "unchecked"}
-                />
-                <View>
-                  <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                    {item.title}
-                  </Text>
-                  <Text style={{ marginRight: "10%" }}>{item.description}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                >
+                  <RadioButton
+                    value={index}
+                    color="#0244d0"
+                    onPress={() => setExperience(index)}
+                    status={experience === index ? "checked" : "unchecked"}
+                  />
+                  <View>
+                    <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                      {item.title}
+                    </Text>
+                    <Text style={{ marginRight: "10%" }}>
+                      {item.description}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
-      </View>
+      </ScrollView>
+
       <View
         style={{
           position: "absolute",

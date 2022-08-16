@@ -85,8 +85,8 @@ const ReviewScreen = ({ navigation }) => {
   };
 
   if (isSuccess) {
+    queryClient.invalidateQueries("myjobs");
     navigation.navigate("employer/");
-    queryClient.invalidateQueries("myhouses");
   }
 
   if (isError) {
@@ -103,347 +103,354 @@ const ReviewScreen = ({ navigation }) => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Pressable
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{
-            marginBottom: 80,
-            flex: 1,
+      <ScrollView>
+        <Pressable
+          onPress={() => {
+            Keyboard.dismiss();
           }}
+          style={{ flex: 1 }}
         >
-          <Text
+          <ScrollView
+            showsVerticalScrollIndicator={false}
             style={{
-              fontSize: 22,
-              textAlign: "center",
-              marginVertical: 15,
-              fontWeight: "bold",
+              marginBottom: 80,
+              flex: 1,
             }}
           >
-            {t("finish")}
-          </Text>
-          <Divider
-            style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
-          />
-          <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {t("head")}
+            <Text
+              style={{
+                fontSize: 22,
+                textAlign: "center",
+                marginVertical: 15,
+                fontWeight: "bold",
+              }}
+            >
+              {t("finish")}
             </Text>
-            <Text>{jobPost.title}</Text>
-          </View>
-          <Divider
-            style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
-          />
-          <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {t("describe")}
-            </Text>
-            <View style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 16 }}>{t("discription")}</Text>
-              <Text style={{ fontSize: 16, marginVertical: 10 }}>
-                {t("dis")}
+            <Divider
+              style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
+            />
+            <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {t("head")}
+              </Text>
+              <Text>{jobPost.title}</Text>
+            </View>
+            <Divider
+              style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
+            />
+            <View style={{ marginVertical: 20, paddingHorizontal: 20 }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {t("describe")}
+              </Text>
+              <View style={{ marginTop: 10 }}>
+                <Text style={{ fontSize: 16 }}>{t("discription")}</Text>
+                <Text style={{ fontSize: 16, marginVertical: 10 }}>
+                  {t("dis")}
+                </Text>
+              </View>
+              <TextInput
+                multiline
+                numberOfLines={5}
+                value={description}
+                placeholder={t("already")}
+                onChangeText={(text) => setDescription(text)}
+              />
+              <Text style={{ textAlign: "right" }}>{description.length}</Text>
+              <TouchableOpacity
+                onPress={fileSelector}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  borderRadius: 15,
+                  marginHorizontal: 20,
+                  marginTop: 20,
+                  paddingVertical: 5,
+                  paddingHorizontal: 5,
+                  borderWidth: 1,
+                  alignSelf: "flex-start",
+                }}
+              >
+                <Icon size={16} name="attachment" />
+                <Text style={{ marginHorizontal: 5 }}> {t("attach")}</Text>
+              </TouchableOpacity>
+              <Text
+                style={{
+                  marginHorizontal: 20,
+                  color: "rgba(0,0,0,0.6)",
+                }}
+              >
+                {t("max")}
               </Text>
             </View>
-            <TextInput
-              multiline
-              numberOfLines={5}
-              value={description}
-              placeholder={t("already")}
-              onChangeText={(text) => setDescription(text)}
+            <Divider
+              style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
             />
-            <Text style={{ textAlign: "right" }}>{description.length}</Text>
-            <TouchableOpacity
-              onPress={fileSelector}
+            <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+              <View>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 17,
+                    marginVertical: 10,
+                  }}
+                >
+                  {t("cat")}
+                </Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text>{jobPost?.category}</Text>
+                </View>
+              </View>
+              <View style={{ marginVertical: 10 }}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 17,
+                    marginVertical: 10,
+                  }}
+                >
+                  {t("skill")}
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  {jobPost?.skills?.map((item, index) => {
+                    return (
+                      <Text
+                        key={index + 1}
+                        style={{
+                          paddingHorizontal: 13,
+                          paddingVertical: 5,
+                          paddingHorizontal: 10,
+                          borderRadius: 15,
+                          // backgroundColor: "#0244d0",
+                        }}
+                      >
+                        {item}
+                      </Text>
+                    );
+                  })}
+                </View>
+              </View>
+              <View>
+                {jobPost?.budget ? (
+                  <View>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 17,
+                        marginVertical: 10,
+                      }}
+                    >
+                      {t("salary")}
+                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={{ fontSize: 16, marginLeft: "5%" }}>
+                        {jobPost.budget.from} birr- {jobPost.budget.to}{" "}
+                        {t("bir")}
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <View>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 17,
+                        marginVertical: 10,
+                      }}
+                    >
+                      {t("salary")}
+                    </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={{ fontSize: 16, marginLeft: "5%" }}>
+                        {jobPost.paymentStyle}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+              <View>
+                {jobPost?.placeName ? (
+                  <View>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 17,
+                        marginVertical: 10,
+                      }}
+                    >
+                      {t("work")}
+                    </Text>
+                    <View style={{ flexDirection: "row", marginLeft: "5%" }}>
+                      <Text style={{ fontSize: 16 }}>{jobPost.placeName}</Text>
+                    </View>
+                  </View>
+                ) : (
+                  <></>
+                )}
+              </View>
+              <View>
+                {jobPost?.experience ? (
+                  <View>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 17,
+                        marginVertical: 10,
+                      }}
+                    >
+                      {t("experience")}
+                    </Text>
+                    <View style={{ marginLeft: "5%" }}>
+                      <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                        {jobPost.experience.title}
+                      </Text>
+                      <Text style={{ fontSize: 16 }}>
+                        {jobPost.experience.description}
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <></>
+                )}
+              </View>
+            </View>
+            <Divider
+              style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                marginVertical: "5%",
+                alignItems: "center",
+                marginHorizontal: "5%",
+              }}
+            >
+              <Text>{t("deadline")}</Text>
+              <TouchableOpacity
+                // style={{ alignItems: "center" }}
+                onPress={() => setOpen(true)}
+              >
+                {open ? (
+                  <DatePicker
+                    value={date ? new Date(date) : new Date()} //initial date from state
+                    mode="date" //The enum of date, datetime and time
+                    display="calendar"
+                    maxDate="01-01-2019"
+                    textColor="red"
+                    minimumDate={new Date(1950, 0, 1)}
+                    maximumDate={new Date(2000, 10, 20)}
+                    onChange={({ nativeEvent: { timestamp } }) => {
+                      if (timestamp) {
+                        setDate(new Date(timestamp));
+                      }
+                      setOpen(false);
+                    }}
+                  />
+                ) : (
+                  <Text style={{ color: "#666", marginLeft: 5 }}>
+                    {date
+                      ? date.getDate() +
+                        "/" +
+                        (date.getMonth() + 1) +
+                        "/" +
+                        date.getFullYear()
+                      : t("deaddate")}
+                  </Text>
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ marginLeft: "10%" }}
+                onPress={() => setOpen1(true)}
+              >
+                {open1 ? (
+                  <DatePicker
+                    value={datetime ? new Date(datetime) : new Date()} //initial date from state
+                    mode="time" //The enum of date, datetime and time
+                    display="clock"
+                    maxDate="01-01-2019"
+                    textColor="red"
+                    minimumDate={new Date(1950, 0, 1)}
+                    maximumDate={new Date(2000, 10, 20)}
+                    onChange={({ nativeEvent: { timestamp } }) => {
+                      if (timestamp) {
+                        setDatetime(new Date(timestamp));
+                      }
+                      setOpen1(false);
+                    }}
+                  />
+                ) : (
+                  <Text style={{ color: "#666", marginLeft: 5 }}>
+                    {datetime
+                      ? datetime.getHours() + " : " + datetime.getMinutes()
+                      : t("deadtime")}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                borderRadius: 15,
-                marginHorizontal: 20,
-                marginTop: 20,
-                paddingVertical: 5,
-                paddingHorizontal: 5,
-                borderWidth: 1,
-                alignSelf: "flex-start",
+                marginLeft: "5%",
               }}
             >
-              <Icon size={16} name="attachment" />
-              <Text style={{ marginHorizontal: 5 }}> {t("attach")}</Text>
-            </TouchableOpacity>
-            <Text
+              <Text>{t("permanent1")}</Text>
+              <Checkbox
+                color="#0244d0"
+                status={permanent ? "checked" : "unchecked"}
+                onPress={() => {
+                  setPermanet(!permanent);
+                }}
+              />
+            </View>
+            <View
               style={{
-                marginHorizontal: 20,
-                color: "rgba(0,0,0,0.6)",
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: "5%",
               }}
             >
-              {t("max")}
-            </Text>
-          </View>
-          <Divider
-            style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
-          />
-          <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
-            <View>
-              <Text
-                style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
-              >
-                {t("cat")}
-              </Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text>{jobPost?.category}</Text>
-              </View>
+              <Text>{t("cv1")}</Text>
+              <Checkbox
+                color="#0244d0"
+                status={cvRequired ? "checked" : "unchecked"}
+                onPress={() => {
+                  setCvRequired(!cvRequired);
+                }}
+              />
             </View>
-            <View style={{ marginVertical: 10 }}>
-              <Text
-                style={{ fontWeight: "bold", fontSize: 17, marginVertical: 10 }}
-              >
-                {t("skill")}
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                {jobPost?.skills?.map((item, index) => {
-                  return (
-                    <Text
-                      key={index + 1}
-                      style={{
-                        paddingHorizontal: 13,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        borderRadius: 15,
-                        // backgroundColor: "#0244d0",
-                      }}
-                    >
-                      {item}
-                    </Text>
-                  );
-                })}
-              </View>
-            </View>
-            <View>
-              {jobPost?.budget ? (
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                      marginVertical: 10,
-                    }}
-                  >
-                    {t("salary")}
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
-                      {jobPost.budget.from} birr- {jobPost.budget.to} {t("bir")}
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                      marginVertical: 10,
-                    }}
-                  >
-                    {t("salary")}
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={{ fontSize: 16, marginLeft: "5%" }}>
-                      {jobPost.paymentStyle}
-                    </Text>
-                  </View>
-                </View>
-              )}
-            </View>
-            <View>
-              {jobPost?.placeName ? (
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                      marginVertical: 10,
-                    }}
-                  >
-                    {t("work")}
-                  </Text>
-                  <View style={{ flexDirection: "row", marginLeft: "5%" }}>
-                    <Text style={{ fontSize: 16 }}>{jobPost.placeName}</Text>
-                  </View>
-                </View>
-              ) : (
-                <></>
-              )}
-            </View>
-            <View>
-              {jobPost?.experience ? (
-                <View>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 17,
-                      marginVertical: 10,
-                    }}
-                  >
-                    {t("experience")}
-                  </Text>
-                  <View style={{ marginLeft: "5%" }}>
-                    <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-                      {jobPost.experience.title}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>
-                      {jobPost.experience.description}
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                <></>
-              )}
-            </View>
-          </View>
-          <Divider
-            style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              marginVertical: "5%",
-              alignItems: "center",
-              marginHorizontal: "5%",
-            }}
-          >
-            <Text>{t("deadline")}</Text>
-            <TouchableOpacity
-              // style={{ alignItems: "center" }}
-              onPress={() => setOpen(true)}
-            >
-              {open ? (
-                <DatePicker
-                  value={date ? new Date(date) : new Date()} //initial date from state
-                  mode="date" //The enum of date, datetime and time
-                  display="calendar"
-                  maxDate="01-01-2019"
-                  textColor="red"
-                  minimumDate={new Date(1950, 0, 1)}
-                  maximumDate={new Date(2000, 10, 20)}
-                  onChange={({ nativeEvent: { timestamp } }) => {
-                    if (timestamp) {
-                      setDate(new Date(timestamp));
-                    }
-                    setOpen(false);
-                  }}
-                />
-              ) : (
-                <Text style={{ color: "#666", marginLeft: 5 }}>
-                  {date
-                    ? date.getDate() +
-                      "/" +
-                      (date.getMonth() + 1) +
-                      "/" +
-                      date.getFullYear()
-                    : t("deaddate")}
-                </Text>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginLeft: "10%" }}
-              onPress={() => setOpen1(true)}
-            >
-              {open1 ? (
-                <DatePicker
-                  value={datetime ? new Date(datetime) : new Date()} //initial date from state
-                  mode="time" //The enum of date, datetime and time
-                  display="clock"
-                  maxDate="01-01-2019"
-                  textColor="red"
-                  minimumDate={new Date(1950, 0, 1)}
-                  maximumDate={new Date(2000, 10, 20)}
-                  onChange={({ nativeEvent: { timestamp } }) => {
-                    if (timestamp) {
-                      setDatetime(new Date(timestamp));
-                    }
-                    setOpen1(false);
-                  }}
-                />
-              ) : (
-                <Text style={{ color: "#666", marginLeft: 5 }}>
-                  {datetime
-                    ? datetime.getHours() + " : " + datetime.getMinutes()
-                    : t("deadtime")}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: "5%",
-            }}
-          >
-            <Text>{t("permanent1")}</Text>
-            <Checkbox
-              color="#0244d0"
-              status={permanent ? "checked" : "unchecked"}
-              onPress={() => {
-                setPermanet(!permanent);
-              }}
+            <Divider
+              style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
             />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: "5%",
-            }}
-          >
-            <Text>{t("cv1")}</Text>
-            <Checkbox
-              color="#0244d0"
-              status={cvRequired ? "checked" : "unchecked"}
-              onPress={() => {
-                setCvRequired(!cvRequired);
-              }}
-            />
-          </View>
-          <Divider
-            style={{ borderWidth: 0.5, borderColor: "rgba(0,0,0,0.2)" }}
-          />
-          <List.Section>
-            {/* <ScreeningQuestion
+            <List.Section>
+              {/* <ScreeningQuestion
               expanded={expanded}
               questions={questions}
               setQuestions={setQuestions}
               handlePress={handlePress}
             /> */}
-            <AdvancedPred
-              expanded={expanded}
-              handlePress={handlePress}
-              setHour={setHour}
-              gender={gender}
-              setGender={setGender}
-              checkHour={checkHour}
-              englishLevel={englishLevel}
-              setEnglishLevel={setEnglishLevel}
-            />
-          </List.Section>
-        </ScrollView>
-      </Pressable>
-
+              <AdvancedPred
+                expanded={expanded}
+                handlePress={handlePress}
+                setHour={setHour}
+                gender={gender}
+                setGender={setGender}
+                checkHour={checkHour}
+                englishLevel={englishLevel}
+                setEnglishLevel={setEnglishLevel}
+              />
+            </List.Section>
+          </ScrollView>
+        </Pressable>
+      </ScrollView>
       <View
         style={{
-          position: "absolute",
-          top: dimension.height - dimension.height / 7.5,
-          alignItems: "center",
-          justifyContent: "center",
-          height: 60,
           backgroundColor: "#fff",
-          width: "100%",
-          borderTopWidth: 1,
-          borderColor: "rgba(0,0,0,0.7)",
+          borderTopWidth: 2,
+          alignItems: "flex-end",
+          height: 60,
+          justifyContent: "center",
+          borderColor: "rgba(0,0,0,0.3)",
         }}
       >
         <TouchableOpacity
@@ -470,16 +477,18 @@ const ReviewScreen = ({ navigation }) => {
             submitHandler();
           }}
           style={{
-            width: "80%",
-            borderRadius: 20,
             backgroundColor:
-              description.length > 49 ? "blue" : "rgba(0,0,0,0.6)",
-            height: "70%",
-            alignItems: "center",
-            justifyContent: "center",
+              description.length > 49 ? "#0244d0" : "rgba(0,0,0,0.4)",
+            width: 100,
+            right: 20,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>Post Job</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("post")}{" "}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -735,7 +744,7 @@ function AdvancedPred({
       </View>
       <View>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>{t("genderr")}</Text>
-        {["male", "female", "both"].map((item, index) => {
+        {[t("male"), t("female"), t("any")].map((item, index) => {
           return (
             <TouchableOpacity
               key={index + 1}

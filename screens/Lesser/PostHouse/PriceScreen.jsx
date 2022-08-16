@@ -59,7 +59,7 @@ const PriceScreen = ({ navigation, route }) => {
             <TouchableOpacity
               style={{
                 borderRadius: 50,
-                backgroundColor: "rgba(0,0,0,0.3)",
+                backgroundColor: "#0244d0",
                 padding: 10,
               }}
               onPress={() => {
@@ -70,7 +70,7 @@ const PriceScreen = ({ navigation, route }) => {
                 }
               }}
             >
-              <Icon size={20} name="minus" />
+              <Icon color={"#fff"} size={20} name="minus" />
             </TouchableOpacity>
             <TextInput
               value={price}
@@ -81,12 +81,12 @@ const PriceScreen = ({ navigation, route }) => {
             <TouchableOpacity
               style={{
                 borderRadius: 50,
-                backgroundColor: "rgba(0,0,0,0.3)",
+                backgroundColor: "#0244d0",
                 padding: 10,
               }}
               onPress={() => setPrice(String(+price + 1))}
             >
-              <Icon name="plus" size={20} />
+              <Icon color={"#fff"} name="plus" size={20} />
             </TouchableOpacity>
           </View>
           <Text style={{ textAlign: "center" }}>{t("et")}</Text>
@@ -126,7 +126,9 @@ const PriceScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("next4")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

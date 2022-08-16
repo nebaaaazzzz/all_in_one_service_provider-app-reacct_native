@@ -87,8 +87,7 @@ const SignupScreen = ({ navigation }) => {
     // );
   }
   if (isSuccess) {
-    // navigation.navigate("validate", { data });
-    navigation.navigate("login");
+    navigation.navigate("validate", { data });
   }
 
   return (

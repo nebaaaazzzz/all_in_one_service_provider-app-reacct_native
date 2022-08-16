@@ -83,7 +83,7 @@ const ContactusScreen = () => {
           <Pressable
             onPress={() => {
               Linking.openURL(
-                "https://www.facebook.com/profile.php?id=100004424373801"
+                "https://www.facebook.com/profile.php?id=100006370661244"
               );
             }}
           >
@@ -91,7 +91,7 @@ const ContactusScreen = () => {
           </Pressable>
           <Pressable
             onPress={() => {
-              Linking.openURL("https://t.me/nebaaaazzzz");
+              Linking.openURL("https://t.me/Tigistnigus");
             }}
           >
             <FontAwesome5 color="#0244d0" name="telegram" size={35} />

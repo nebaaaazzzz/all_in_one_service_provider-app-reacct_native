@@ -12,14 +12,14 @@ import { ProgressBar } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import { PostJobContext } from "./PostJobScreen";
 import { RadioButton } from "react-native-paper";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const PaymentScreen = ({ navigation, route }) => {
-  const {t}=useTranslation();
+  const { t } = useTranslation();
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
   const [fromBudget, setFromBudget] = useState();
-  const exp = ["Fixed", "By Negotiation", "By The Organization Scale"];
+  const exp = [t("fixed"), t("negotiation"), t("byorganization")];
   const [paymentStyle, setPaymentStyle] = React
     .useState
     // exp.findIndex((item) => data?.paymentStyle === item)
@@ -27,7 +27,6 @@ const PaymentScreen = ({ navigation, route }) => {
 
   const [toBudget, setToBudget] = useState();
   const [bool, setBool] = useState(false);
-  console.log(bool);
   useEffect(() => {
     if (paymentStyle !== undefined) {
       if (paymentStyle > 0) {
@@ -99,7 +98,7 @@ const PaymentScreen = ({ navigation, route }) => {
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text>From</Text>
+              <Text>{t("from")}</Text>
 
               <View
                 style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
@@ -112,7 +111,7 @@ const PaymentScreen = ({ navigation, route }) => {
               </View>
             </View>
             <View style={{ flex: 1 }}>
-              <Text>To</Text>
+              <Text>{t("to")}</Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <TextInput
                   keyboardType="number-pad"
@@ -167,9 +166,8 @@ const PaymentScreen = ({ navigation, route }) => {
               //   parseFloat(toBudget) &&
               //   parseFloat("2") < parseFloat("565")
               // ) {
-
-              navigation.navigate("employer/postjob/review");
             }
+            navigation.navigate("employer/postjob/review");
             // }
           }}
           style={{

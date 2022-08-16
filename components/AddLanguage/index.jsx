@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import { languageList } from "../../constants/data";
 import { RadioButton } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 const AddLanguage = ({ setOpenModal, addLanguage, languages }) => {
+  const { t } = useTranslation();
   const [checked, setChecked] = useState("");
   const [language, setLanguage] = useState();
   const [isSelected, setIsSelected] = useState(false);

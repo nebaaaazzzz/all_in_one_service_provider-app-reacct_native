@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Divider, Badge } from "react-native-paper";
 import { useMutation, useQuery } from "react-query";
 import { useQueryClient } from "react-query";

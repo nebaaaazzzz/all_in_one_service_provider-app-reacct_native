@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 const SpacekindScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
   const { dispatch } = useContext(PostHouseContext);
-  const placeKinds = ["An entire place", "A private room"];
+  const placeKinds = [t("entire"), t("private")];
   let index;
   if (route.params?.data) {
     index = placeKinds.findIndex(
@@ -98,7 +98,9 @@ const SpacekindScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("next4")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

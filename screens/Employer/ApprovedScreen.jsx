@@ -36,6 +36,7 @@ const fetchApproved = async ({ pageParam = 1, queryKey }) => {
 };
 
 const Users = ({ item, pressHandler }) => {
+  const { t } = useTranslation();
   return (
     <View>
       {item.map((i, index) => {
@@ -158,6 +159,7 @@ const Employer = ({ navigation, route }) => {
 };
 
 const ApplicantsScreen = ({ route }) => {
+  const { t } = useTranslation();
   return (
     <EmployerStackNavigator.Navigator>
       <EmployerStackNavigator.Screen

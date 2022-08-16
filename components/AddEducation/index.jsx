@@ -9,7 +9,9 @@ import React, { useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import DatePicker from "@react-native-community/datetimepicker";
 import SelectDropdown from "react-native-select-dropdown";
+import { useTranslation } from "react-i18next";
 const AddEducation = ({ education, addEducation, setOpenModal }) => {
+  const { t } = useTranslation();
   const [date1, setDate1] = useState();
   const [date2, setDate2] = useState();
   const [open1, setOpen1] = useState(false);

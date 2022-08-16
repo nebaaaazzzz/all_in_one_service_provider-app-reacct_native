@@ -68,67 +68,67 @@ const PlaceOfferScreen = ({ navigation, route }) => {
 
     {
       name: t("fire"),
-      icon: <Icon name={"campfire"} />,
+      icon: <Icon color={"#0244d0"} name={"campfire"} />,
     },
     {
       name: t("table"),
-      icon: <Icon name={"table-tennis"} />,
+      icon: <Icon color={"#0244d0"} name={"table-tennis"} />,
     },
     {
       name: t("Indoor"),
-      icon: <Icon name={"fireplace"} />,
+      icon: <Icon color={"#0244d0"} name={"fireplace"} />,
     },
     {
       name: t("out"),
-      icon: <MaterialIcon name={"dinner-dining"} />,
+      icon: <MaterialIcon color={"#0244d0"} name={"dinner-dining"} />,
     },
     {
       name: t("exercise"),
-      icon: <MaterialIcon name="sports-cricket" size={24} color="black" />,
+      icon: <MaterialIcon color={"#0244d0"} name="sports-cricket" size={24} />,
     },
   ];
   const guestFav = [
     {
       name: t("Wifi"),
-      icon: <Icon name={"wifi"} />,
+      icon: <Icon color={"#0244d0"} name={"wifi"} />,
     },
     {
       name: t("Tv"),
-      icon: <FontAwsome name="tv" />,
+      icon: <FontAwsome color={"#0244d0"} name="tv" />,
     },
     {
       name: t("kitchen"),
-      icon: <MaterialIcon name={"kitchen"} />,
+      icon: <MaterialIcon color={"#0244d0"} name={"kitchen"} />,
     },
     {
       name: t("Wash"),
-      icon: <Icon name={"dishwasher"} />,
+      icon: <Icon color={"#0244d0"} name={"dishwasher"} />,
     },
     {
       name: t("Free"),
-      icon: <Icon name={"parking"} />,
+      icon: <Icon color={"#0244d0"} name={"parking"} />,
     },
     {
       name: t("paid"),
-      icon: <Icon name={"car-parking-lights"} />,
+      icon: <Icon color={"#0244d0"} name={"car-parking-lights"} />,
     },
     {
       name: t("Air"),
-      icon: <Icon name={"air-conditioner"} />,
+      icon: <Icon color={"#0244d0"} name={"air-conditioner"} />,
     },
     {
       name: t("Dedicated"),
-      icon: <MaterialIcon name={"workspaces-filled"} />,
+      icon: <MaterialIcon color={"#0244d0"} name={"workspaces-filled"} />,
     },
   ];
   const saftyItems = [
     {
       name: t("Smoke"),
-      icon: <Icon name={"smoke-detector-variant"} />,
+      icon: <Icon color={"#0244d0"} name={"smoke-detector-variant"} />,
     },
     {
       name: t("First"),
-      icon: <FontAwsome5 name={"first-aid"} />,
+      icon: <FontAwsome5 color={"#0244d0"} name={"first-aid"} />,
     },
 
     { name: t("extinguisher"), icon: <Icon name="fire-extinguisher" /> },
@@ -171,7 +171,6 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         // backgroundColor: "#0099ff",
-        backgroundColor: "rgba(0,0,0,0.1)",
       }}
     >
       <ScrollView
@@ -198,6 +197,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
         ].map((item, index) => {
           return (
             <List
+              key={index + 1}
               question={item.question}
               arr={item.arr}
               state={list[0][index]}
@@ -254,7 +254,9 @@ const PlaceOfferScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("next4")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

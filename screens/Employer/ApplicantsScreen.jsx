@@ -36,6 +36,7 @@ const fetchApplicants = async ({ pageParam = 1, queryKey }) => {
 };
 
 const Users = ({ item, pressHandler }) => {
+  const { t } = useTranslation();
   return (
     <View>
       {item.map((i, index) => {
@@ -79,7 +80,7 @@ const Users = ({ item, pressHandler }) => {
 const Employer = ({ navigation, route }) => {
   const [visible, setVisible] = React.useState(false);
   // require('./assets/images/girl.jpg'),          // Local image
-
+  const { t } = useTranslation();
   navigation.setOptions({
     headerShown: true,
   });

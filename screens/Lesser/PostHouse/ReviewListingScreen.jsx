@@ -158,11 +158,11 @@ const ReviewListingScreen = ({ navigation, route }) => {
             <Text style={{ color: "#fff" }}>{t("View")}</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 30, fontWeight: "600", marginVertical: 20 }}>
-            Fun place {housePost.placeName}
+            {t("plac")} {housePost.placeName}
           </Text>
           {housePost.region ? (
             <Text>
-              Region :{" "}
+              {t("region")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                 {housePost.region}
               </Text>
@@ -175,7 +175,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
           {housePost?.guestFav?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-                Guest favourite
+                {t("Guesttt")}
               </Text>
               {housePost?.guestFav?.map((item, index) => {
                 return (
@@ -353,7 +353,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-            {t("price")} :{" "}
+              {t("price")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>
                 {housePost.price}
               </Text>
@@ -368,7 +368,7 @@ const ReviewListingScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-            {t("Kind")} :{" "}
+              {t("Kind")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>
                 {housePost.placeKind}
               </Text>
@@ -390,13 +390,13 @@ const ReviewListingScreen = ({ navigation, route }) => {
             </Text>
             <View>
               <Text style={{ fontSize: 16 }}>
-              {t("typee")} :{"  "}
+                {t("typee")} :{"  "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {housePost?.placeDescription?.title}
                 </Text>
               </Text>
               <Text style={{ fontSize: 16 }}>
-              {t("des")} :{" "}
+                {t("des")} :{" "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {housePost?.placeDescription?.description}
                 </Text>
@@ -444,7 +444,9 @@ const ReviewListingScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>{t("save")}</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("save")}
+            </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -460,7 +462,9 @@ const ReviewListingScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>{t("postt")}</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("postt")}
+            </Text>
           </TouchableOpacity>
         )}
       </View>

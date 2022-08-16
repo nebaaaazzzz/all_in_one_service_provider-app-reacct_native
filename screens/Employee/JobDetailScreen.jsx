@@ -326,23 +326,38 @@ const JobDetailScreen = ({ navigation, route }) => {
         </View>
         {data.isUserApproved ? (
           <View style={{ paddingHorizontal: "5%", marginTop: "5%" }}>
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={{ fontSize: 18 }}>{t("phoneno")}</Text>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                 {data?.user?.phoneNumber}
               </Text>
             </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ fontSize: 18 }}>{t("Email")}</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                {data?.user?.email}
+              </Text>
+            </View>
             <View
               style={{
+                width: dime.width,
+                height: 200,
+                backgroundColor: "blue",
                 flex: 1,
                 alignItems: "center",
                 justifyContext: "center",
+                borderRadius: 10,
               }}
             >
               <Image
-                style={{ flex: 1 }}
+                style={{
+                  flex: 1,
+                  width: dime.width,
+                  borderRadius: 10,
+                  backgroundColor: "#0244d0",
+                }}
                 source={{
-                  uri: `${MAPBOXURI}/staticmap?stylecons=osm-carto&width=${200}&height=${200}&center=lonlat:${
+                  uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${500}&height=${600}&center=lonlat:${
                     data.location.coordinates[0]
                   },${data.location.coordinates[1]}&zoom=14&marker=lonlat:${
                     data.location.coordinates[0]
@@ -351,12 +366,6 @@ const JobDetailScreen = ({ navigation, route }) => {
                   };color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
                 }}
               />
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 18 }}>{t("Email")}</Text>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                {data?.user?.email}
-              </Text>
             </View>
           </View>
         ) : (
@@ -405,7 +414,9 @@ const JobDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Apply</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("apply")}
+            </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -421,7 +432,9 @@ const JobDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Pay</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("pay")}
+            </Text>
           </TouchableOpacity>
         )}
       </View>

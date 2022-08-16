@@ -158,6 +158,7 @@ const Employer = ({ navigation, route }) => {
 };
 
 const RejectedScreen = ({ route }) => {
+  const { t } = useTranslation();
   return (
     <EmployerStackNavigator.Navigator>
       <EmployerStackNavigator.Screen

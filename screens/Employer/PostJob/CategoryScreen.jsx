@@ -13,10 +13,56 @@ import { ProgressBar } from "react-native-paper";
 import { Divider } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import { PostJobContext } from "./PostJobScreen";
-import { categoryList } from "../../../constants/data";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 const CategoryScreen = ({ navigation, route }) => {
-  const {t}=useTranslation();
+  const { t } = useTranslation();
+  const categoryList = [
+    t("accounting"),
+    t("admin"),
+    t("advert"),
+    t("agri"),
+    t("arch"),
+    t("auto"),
+    t("banking"),
+    t("business"),
+    t("busin"),
+    t("comm"),
+    t("commun"),
+    t("consult"),
+    t("creative"),
+    t("customer"),
+
+    t("development"),
+    t("eco"),
+    t("edu"),
+    t("eng"),
+    t("environment"),
+    t("health"),
+    t("hotel"),
+    t("human"),
+    t("info"),
+    t("language"),
+    t("legal"),
+    t("logistic"),
+    t("maintenance"),
+
+    t("managment"),
+    t("manu"),
+    t("media"),
+    t("natural"),
+    t("pharma"),
+    t("purchasing"),
+    t("quality"),
+    t("research"),
+    t("retail"),
+    t("sales"),
+
+    t("science"),
+    t("security"),
+    t("social"),
+    t("strategic"),
+    t("tele"),
+  ];
   const { dispatch } = useContext(PostJobContext);
   const dimension = useWindowDimensions();
 

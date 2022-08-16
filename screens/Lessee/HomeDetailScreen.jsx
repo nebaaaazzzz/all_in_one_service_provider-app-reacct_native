@@ -7,6 +7,7 @@ import {
   Image,
   ToastAndroid,
   ActivityIndicator,
+  useWindowDimensions,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN, MAPBOXURI, MAPBOXTOKEN } from "../../urls";
@@ -39,6 +40,8 @@ const HomeDetailScreen = ({ navigation, route }) => {
     ["house", route.params.id],
     fetchHouse
   );
+  const dime = useWindowDimensions();
+
   const applyMutuation = useMutation(async () => {
     const response = await fetch(`${BASEURI}/lessee/apply/${data._id}`, {
       method: "POST",
@@ -371,17 +374,32 @@ const HomeDetailScreen = ({ navigation, route }) => {
                 {data?.user?.phoneNumber}
               </Text>
             </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontSize: 18 }}>{t("Email")}</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                {data?.user?.email}
+              </Text>
+            </View>
             <View
               style={{
+                width: dime.width,
+                height: 200,
+                backgroundColor: "blue",
                 flex: 1,
                 alignItems: "center",
                 justifyContext: "center",
+                borderRadius: 10,
               }}
             >
               <Image
-                style={{ flex: 1 }}
+                style={{
+                  flex: 1,
+                  width: dime.width,
+                  borderRadius: 10,
+                  backgroundColor: "#0244d0",
+                }}
                 source={{
-                  uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${200}&height=${200}&center=lonlat:${
+                  uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${500}&height=${600}&center=lonlat:${
                     data.location.coordinates[0]
                   },${data.location.coordinates[1]}&zoom=14&marker=lonlat:${
                     data.location.coordinates[0]
@@ -390,12 +408,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
                   };color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
                 }}
               />
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 18 }}>{t("Email")}</Text>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-                {data?.user?.email}
-              </Text>
             </View>
           </View>
         ) : (

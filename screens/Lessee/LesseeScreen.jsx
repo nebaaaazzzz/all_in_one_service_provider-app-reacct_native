@@ -49,16 +49,7 @@ const fetchHouses = async ({ pageParam = 1, queryKey }) => {
   );
   return await response.json();
 };
-const propertyType = [
-  "Home",
-  "Villa",
-  "Apartment",
-  "Cottage",
-  "Hut",
-  "Tiny home",
-  "Guest house",
-  "Office space",
-];
+
 const Home = ({ item, pressHandler }) => {
   const [bgColor, setBgColor] = useState(false);
   return (
@@ -108,7 +99,31 @@ const Home = ({ item, pressHandler }) => {
 
 const Lessee = ({ navigation }) => {
   const { t } = useTranslation();
-
+  const regionsList = [
+    t("addis"),
+    t("afar"),
+    t("amhara"),
+    t("bengu"),
+    t("dire"),
+    t("gambela"),
+    t("harer"),
+    t("oro"),
+    t("sida"),
+    t("soma"),
+    t("south"),
+    t("tigray"),
+    t("southern"),
+  ];
+  const propertyType = [
+    t("ho"),
+    t("vil"),
+    t("Apa"),
+    t("Cota"),
+    t("Hut"),
+    t("Tiny"),
+    t("Guest"),
+    t("office"),
+  ];
   const [searchQuery, setSearchQuery] = React.useState("");
   const [nearBy, setNearBy] = useState(false);
   const [location, setLocation] = useState("");

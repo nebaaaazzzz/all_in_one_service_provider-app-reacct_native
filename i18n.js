@@ -14,7 +14,7 @@ i18n.use(initReactI18next).init({
     escapeValue: false, // react already safes from xss
   },
   react: {
-    // useSuspense: false,
+    useSuspense: false,
   },
 });
 

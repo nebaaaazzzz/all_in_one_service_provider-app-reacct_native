@@ -22,7 +22,6 @@ import * as SecureStore from "expo-secure-store";
 
 import JobDetailScreen from "./JobDetailScreen";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { categoryList, regionsList } from "../../constants/data";
 import SelectDropdown from "react-native-select-dropdown";
 import { RadioButton } from "react-native-paper";
 import { BASEURI, BASETOKEN } from "../../urls";
@@ -97,6 +96,53 @@ const Jobs = ({ pressHandler, item }) => {
 
 const Home = ({ navigation }) => {
   const { t } = useTranslation();
+  const categoryList = [
+    t("accounting"),
+    t("admin"),
+    t("advert"),
+    t("agri"),
+    t("arch"),
+    t("auto"),
+    t("banking"),
+    t("business"),
+    t("busin"),
+    t("comm"),
+    t("commun"),
+    t("consult"),
+    t("creative"),
+    t("customer"),
+
+    t("development"),
+    t("eco"),
+    t("edu"),
+    t("eng"),
+    t("environment"),
+    t("health"),
+    t("hotel"),
+    t("human"),
+    t("info"),
+    t("language"),
+    t("legal"),
+    t("logistic"),
+    t("maintenance"),
+
+    t("managment"),
+    t("manu"),
+    t("media"),
+    t("natural"),
+    t("pharma"),
+    t("purchasing"),
+    t("quality"),
+    t("research"),
+    t("retail"),
+    t("sales"),
+
+    t("science"),
+    t("security"),
+    t("social"),
+    t("strategic"),
+    t("tele"),
+  ];
   /*Modal states */
   const [openModal, setOpenModal] = useState(false);
   const [region, setRegion] = useState("");
@@ -200,7 +246,21 @@ const Home = ({ navigation }) => {
     t("science"),
     t("security"),
   ];
-
+  const regionsList = [
+    t("addis"),
+    t("afar"),
+    t("amhara"),
+    t("bengu"),
+    t("dire"),
+    t("gambela"),
+    t("harer"),
+    t("oro"),
+    t("sida"),
+    t("soma"),
+    t("south"),
+    t("tigray"),
+    t("southern"),
+  ];
   if (status === "error") {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
@@ -423,14 +483,14 @@ const Home = ({ navigation }) => {
                   fontSize: 15,
                   color: "rgba(0,0,0,0.8)",
                 }}
-                data={["Any", "yes", "no"]}
+                data={[t("any"), t("yes"), t("no")]}
                 onSelect={(selectedItem, index) => {
                   if (index == 0) {
                     setCvRequired("");
                   } else {
-                    if (selectedItem === "yes") {
+                    if (selectedItem === t("yes")) {
                       setCvRequired(true);
-                    } else if (selectedItem === "no") {
+                    } else if (selectedItem === t("noo")) {
                       setCvRequired(false);
                     }
                   }

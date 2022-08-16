@@ -12,10 +12,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { PostJobContext } from "./PostJobScreen";
 
 import { MAPBOXTOKEN, MAPBOXURI } from "../../../urls";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const PinSpotScreen = ({ navigation, route }) => {
-  const {t}=useTranslation();
+  const { t } = useTranslation();
   const dimen = useWindowDimensions();
   let cntr;
   cntr = route.params.center;
@@ -54,7 +54,11 @@ const PinSpotScreen = ({ navigation, route }) => {
         <Image
           style={{ flex: 1 }}
           source={{
-            uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${dimen.width}&height=${dimen.height}&center=lonlat:${cntr[0]},${cntr[1]}&zoom=14&marker=lonlat:${cntr[0]},${cntr[1]};color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
+            uri: `${MAPBOXURI}/staticmap?style=osm-carto&width=${600}&height=${400}&center=lonlat:${
+              cntr[0]
+            },${cntr[1]}&zoom=14&marker=lonlat:${cntr[0]},${
+              cntr[1]
+            };color:%23ff0000;size:medium&apiKey=${MAPBOXTOKEN}`,
           }}
         />
       </View>
@@ -93,7 +97,9 @@ const PinSpotScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Next</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("next4")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

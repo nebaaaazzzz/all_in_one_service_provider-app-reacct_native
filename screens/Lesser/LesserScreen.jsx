@@ -96,11 +96,7 @@ const MyPosts = ({ navigation }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                {t("no")}
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}
@@ -177,7 +173,7 @@ const Home = ({ navigation }) => {
       </View>
       <LesserTopTabNavigator.Navigator>
         <LesserTopTabNavigator.Screen
-          options={{ title: "My Posts" }}
+          options={{ title: t("myp") }}
           name="lesser/myposts"
           component={MyPosts}
         />
@@ -186,6 +182,7 @@ const Home = ({ navigation }) => {
   );
 };
 const LesserScreen = () => {
+  const { t } = useTranslation();
   return (
     <View style={{ flex: 1 }}>
       <LesserStackNavigator.Navigator>
@@ -206,7 +203,7 @@ const LesserScreen = () => {
           component={HomeDetailScreen}
         />
         <LesserStackNavigator.Screen
-          options={{ title: t("houss")  }}
+          options={{ title: t("houss") }}
           name="lesser/viewimages"
           component={ViewImagesScreen}
         />
@@ -227,7 +224,7 @@ const LesserScreen = () => {
         />
         <LesserStackNavigator.Screen
           options={{ headerShown: false }}
-          option={{ title: t("det")  }}
+          option={{ title: t("det") }}
           name="lesser/payment"
           component={PaymentScreen}
         />
@@ -281,7 +278,9 @@ const Post = ({ item, pressHandler }) => {
                 </Text>
               </View>
 
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.price} {t("bir")}</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+                {i.price} {t("bir")}
+              </Text>
             </View>
           </TouchableOpacity>
         );

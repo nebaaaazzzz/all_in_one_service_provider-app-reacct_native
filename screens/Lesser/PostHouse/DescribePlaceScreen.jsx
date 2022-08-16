@@ -18,24 +18,27 @@ const DescribePlaceScreen = ({ navigation, route }) => {
   const highLight = [
     {
       name: t("peace"),
-      icon: <Icon name="peace" />,
+      icon: <Icon color={"#0244d0"} name="peace" />,
     },
     {
       name: t("Uni"),
-      icon: <Entypo name="dot-single" />,
+      icon: <Entypo color={"#0244d0"} name="dot-single" />,
     },
     {
-      name: t("Family-friendly"),
-      icon: <Icon name="horse-human" />,
+      name: t("fam"),
+      icon: <Icon color={"#0244d0"} name="horse-human" />,
     },
     {
-      name: t("Sty"),
-      icon: <MaterialIcons name="style" />,
+      name: t("sty"),
+      icon: <MaterialIcons color={"#0244d0"} name="style" />,
     },
-    { name: t("cent"), icon: <MaterialIcons name="center-focus-strong" /> },
+    {
+      name: t("cent"),
+      icon: <MaterialIcons color={"#0244d0"} name="center-focus-strong" />,
+    },
     {
       name: t("Spa"),
-      icon: <Icon name="account-multiple-outline" />,
+      icon: <Icon color={"#0244d0"} name="account-multiple-outline" />,
     },
   ];
   let titleList;
@@ -73,9 +76,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
         >
           {t("is")}
         </Text>
-        <Text style={{ marginLeft: 10, fontSize: 16 }}>
-          {t("chosee")}
-        </Text>
+        <Text style={{ marginLeft: 10, fontSize: 16 }}>{t("chosee")}</Text>
         <View
           style={{
             flexDirection: "row",
@@ -88,12 +89,13 @@ const DescribePlaceScreen = ({ navigation, route }) => {
             return (
               <TouchableOpacity
                 key={index + 1}
-                disabled={limit.length > 2}
                 style={{
                   width: 100,
                   borderWidth: 1,
                   margin: 10,
                   right: 20,
+                  borderColor: active[index] ? "#0244d0" : "rgba(0,0,0,0.2)",
+
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-around",
@@ -102,9 +104,11 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                   borderRadius: 5,
                 }}
                 onPress={() => {
-                  if (limit.length < 2) {
-                    setLimit([...limit, index]);
-                  }
+                  setActive(
+                    active.map((bool, j) => {
+                      return j == index ? !bool : bool;
+                    })
+                  );
                 }}
               >
                 {item.icon}
@@ -144,12 +148,13 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                 },
               });
             }
-            if (route.params?.data) {
-              return navigation.navigate("lesser/posthouse/price", {
-                data: route.params.data,
-              });
-            }
-            navigation.navigate("lesser/posthouse/price");
+            console.log(houseP);
+            // if (route.params?.data) {
+            //   return navigation.navigate("lesser/posthouse/price", {
+            //     data: route.params.data,
+            //   });
+            // }
+            // navigation.navigate("lesser/posthouse/price");
           }}
           style={{
             backgroundColor: "#0244d0",
@@ -160,7 +165,9 @@ const DescribePlaceScreen = ({ navigation, route }) => {
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>{t("next4")}</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("next4")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
