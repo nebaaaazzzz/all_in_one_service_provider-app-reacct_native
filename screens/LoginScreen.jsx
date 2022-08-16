@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -21,8 +21,21 @@ import * as SecureStore from "expo-secure-store";
 import { useMutation, useQueryClient } from "react-query";
 import { BASEURI } from "../urls";
 import { List } from "react-native-paper";
+import { useTranslation } from "react-i18next";
+import il8n from "./../i18n";
+import "./../i18n";
 
 const LoginScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
+  const [currentLanguage, setLanguage] = useState("en");
+  const [expanded, setExpanded] = React.useState(false);
+
+  const changeLanguage = (value) => {
+    il8n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch((err) => console.log(err));
+  };
   const [password, setPassword] = React.useState("");
   const queryClient = useQueryClient();
   const [phoneError, setPhoneError] = React.useState("");
@@ -93,10 +106,18 @@ const LoginScreen = ({ navigation, route }) => {
         >
           <List.Item
             title="አማርኛ"
+            onPress={() => {
+              setExpanded(false);
+              changeLanguage("am");
+            }}
             style={{ margin: 0, padding: 0 }}
             titleStyle={{ color: "#0244d0" }}
           />
           <List.Item
+            onPress={() => {
+              setExpanded(false);
+              changeLanguage("en");
+            }}
             style={{ margin: 0, padding: 0 }}
             title="English"
             titleStyle={{ color: "#0244d0" }}
@@ -116,7 +137,7 @@ const LoginScreen = ({ navigation, route }) => {
                 marginBottom: 10,
               }}
             >
-              Login
+              {t("lo")}
             </Text>
             <View style={{ marginBottom: 10 }}>
               {isError && (
@@ -146,7 +167,7 @@ const LoginScreen = ({ navigation, route }) => {
                   onChangeText={(text) => {
                     setPhoneNumber(text);
                   }}
-                  placeholder={"Phone number"}
+                  placeholder={t("phoneno")}
                   keyboardType={"phone-pad"}
                   style={{
                     flex: 1,
@@ -176,7 +197,7 @@ const LoginScreen = ({ navigation, route }) => {
                   onChangeText={(text) => {
                     setPassword(text);
                   }}
-                  placeholder={"Password"}
+                  placeholder={t("pass")}
                   style={{ flex: 1, paddingVertical: 0 }}
                   secureTextEntry={true}
                 />
@@ -203,7 +224,7 @@ const LoginScreen = ({ navigation, route }) => {
                   color: "#fff",
                 }}
               >
-                Login
+                {t("lo")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -214,7 +235,7 @@ const LoginScreen = ({ navigation, route }) => {
               <Text
                 style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
               >
-                forget password?
+                {t("forg")}{" "}
               </Text>
             </TouchableOpacity>
 
@@ -225,11 +246,11 @@ const LoginScreen = ({ navigation, route }) => {
                 marginBottom: 30,
               }}
             >
-              <Text>New to the app?</Text>
+              <Text>{t("forg")}</Text>
               <TouchableOpacity onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: "#0244d0", fontWeight: "700" }}>
                   {" "}
-                  Signup
+                  {t("signup")}
                 </Text>
               </TouchableOpacity>
             </View>
