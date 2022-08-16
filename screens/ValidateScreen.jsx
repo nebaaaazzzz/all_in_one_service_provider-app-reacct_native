@@ -69,6 +69,7 @@ const ValidateScreen = ({ route, navigation }) => {
         justifyContent: "flex-end",
       }}
     >
+      {error.message}
       <View
         style={{
           padding: 10,

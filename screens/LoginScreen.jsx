@@ -29,7 +29,6 @@ const LoginScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
   const [currentLanguage, setLanguage] = useState("en");
   const [expanded, setExpanded] = React.useState(false);
-
   const changeLanguage = (value) => {
     il8n
       .changeLanguage(value)
@@ -54,7 +53,6 @@ const LoginScreen = ({ navigation, route }) => {
           });
 
           if (!response.ok) {
-            console.log("hello");
             throw new Error((await response.json()).message);
           }
           return await response.json();
@@ -233,7 +231,11 @@ const LoginScreen = ({ navigation, route }) => {
               }}
             >
               <Text
-                style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
+                style={{
+                  textAlign: "center",
+                  color: "#0244d0",
+                  marginBottom: 30,
+                }}
               >
                 {t("forg")}{" "}
               </Text>
@@ -246,7 +248,7 @@ const LoginScreen = ({ navigation, route }) => {
                 marginBottom: 30,
               }}
             >
-              <Text>{t("forg")}</Text>
+              <Text>{t("New")}</Text>
               <TouchableOpacity onPress={() => navigation.navigate("signup")}>
                 <Text style={{ color: "#0244d0", fontWeight: "700" }}>
                   {" "}

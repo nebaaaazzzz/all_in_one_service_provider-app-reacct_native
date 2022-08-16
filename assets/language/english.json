@@ -1,7 +1,6 @@
 {
   "translation": {
     "lo": "Login",
-
     "phoneno": "Phone number",
 
     "pass": "Password",
@@ -9,6 +8,10 @@
     "forg": "Forgot password?",
 
     "New": "New to the app?",
+
+    "chgpass": "Change Password",
+    "newpass": "New Password",
+    "confpass": "Confirm Password",
 
     "signup": "Signup",
 
@@ -160,7 +163,7 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "job": "Job Detail",
-    "houss":"House Detail",
+    "houss": "House Detail",
 
     "post": "Post job",
     "lets": "Let's start with a strong headline",
@@ -284,7 +287,7 @@
     "goto": "Go to Map",
     "letus": "Let us know what your place has to offer!",
     "standout": "Do you have any standout amenities?",
-    "fav":"What about these guest favorites?",
+    "fav": "What about these guest favorites?",
     "pool": "pool",
     "fire": "Fire pit",
     "table": "pool table",
@@ -309,8 +312,8 @@
     "cover": "Cover Photo",
     "Make": "Make Cover photo",
     "delete": "Delete",
-    "one": "Add atleast",  
-    "one1":"photos",
+    "one": "Add atleast",
+    "one1": "photos",
     "your": "Upload from you device",
     "addd": "Add photos",
     "name": "Let's give your place a name",
@@ -355,16 +358,11 @@
     "downcv": "Download and upload cv",
     "Approve": "Approve",
 
-
-
-    "confirmation":"Confirmation",
-    "please":"Please enter 6 digit code sent you via SMS",
-    "resend":"Resend Code",
-    "confirm":"Confirm",
-    "forgot":"Forgot Password",
-    "reset":"Reset"
-
-
-
+    "confirmation": "Confirmation",
+    "please": "Please enter 6 digit code sent you via SMS",
+    "resend": "Resend Code",
+    "confirm": "Confirm",
+    "forgot": "Forgot Password",
+    "reset": "Reset"
   }
 }

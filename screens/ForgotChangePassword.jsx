@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,37 +11,40 @@ import {
   StatusBar,
 } from "react-native";
 
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { ScrollView } from "react-native-gesture-handler";
-import * as SecureStore from "expo-secure-store";
 
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { BASEURI } from "../urls";
-import { List } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
 const ForgotChangePassword = ({ navigation, route }) => {
-  const [password, setPassword] = React.useState("");
-  const queryClient = useQueryClient();
-  const [phoneError, setPhoneError] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
+  const user = route.params.data;
+  const { t } = useTranslation();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const { isLoading, data, error, isError, isSuccess, mutate } = useMutation(
     async () => {
       try {
-        if (!(passwordError && phoneError)) {
-          const response = await fetch(`${BASEURI}/auth/login`, {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({ phoneNumber, password }),
-          });
+        if (
+          !(passwordError && confirmPasswordError) &&
+          password === confirmPassword
+        ) {
+          const response = await fetch(
+            `${BASEURI}/auth/forgot-change-password`,
+            {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify({ id: user._id, password, confirmPassword }),
+            }
+          );
 
           if (!response.ok) {
-            console.log("hello");
             throw new Error((await response.json()).message);
           }
           return await response.json();
@@ -59,12 +62,7 @@ const ForgotChangePassword = ({ navigation, route }) => {
     );
   }
   if (isSuccess) {
-    (async () => {
-      if (data.token) {
-        await SecureStore.setItemAsync("token", data.token);
-        await queryClient.invalidateQueries("user");
-      }
-    })();
+    navigation.navigate("login");
   }
   return (
     <SafeAreaView
@@ -74,35 +72,6 @@ const ForgotChangePassword = ({ navigation, route }) => {
         justifyContent: "center",
       }}
     >
-      <View
-        style={{
-          alignItems: "flex-end",
-          // marginRight: 20,
-          top: -35,
-          right: 0,
-          position: "absolute",
-        }}
-      >
-        <List.Accordion
-          style={{ width: 100, opacity: 1 }}
-          title="Uncontrolled Accordion"
-          right={(props) => (
-            <FontAwesome name="language" color="#0244d0" size={40} />
-          )}
-          // right={(props) => <></>}
-        >
-          <List.Item
-            title="አማርኛ"
-            style={{ margin: 0, padding: 0 }}
-            titleStyle={{ color: "#0244d0" }}
-          />
-          <List.Item
-            style={{ margin: 0, padding: 0 }}
-            title="English"
-            titleStyle={{ color: "#0244d0" }}
-          />
-        </List.Accordion>
-      </View>
       <Pressable onPress={() => Keyboard.dismiss()}>
         <ScrollView>
           <View style={{ paddingHorizontal: 25 }}>
@@ -116,7 +85,7 @@ const ForgotChangePassword = ({ navigation, route }) => {
                 marginBottom: 10,
               }}
             >
-              Login
+              {t("chgpass")}
             </Text>
             <View style={{ marginBottom: 10 }}>
               {isError && (
@@ -125,36 +94,7 @@ const ForgotChangePassword = ({ navigation, route }) => {
                 </Text>
               )}
             </View>
-            <View style={{ marginBottom: 25 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  borderColor: phoneError ? "red" : "#ccc",
-                  borderBottomWidth: 1,
-                  paddingBottom: 8,
-                }}
-              >
-                <MaterialIcons
-                  name="phone"
-                  size={20}
-                  color="#0244d0"
-                  style={{ marginRight: 5 }}
-                />
-                <TextInput
-                  selectionColor={"#000"}
-                  value={phoneNumber}
-                  onChangeText={(text) => {
-                    setPhoneNumber(text);
-                  }}
-                  placeholder={"Phone number"}
-                  keyboardType={"phone-pad"}
-                  style={{
-                    flex: 1,
-                    paddingVertical: 0,
-                  }}
-                />
-              </View>
-            </View>
+
             <View style={{ marginBottom: 25 }}>
               <View
                 style={{
@@ -176,7 +116,34 @@ const ForgotChangePassword = ({ navigation, route }) => {
                   onChangeText={(text) => {
                     setPassword(text);
                   }}
-                  placeholder={"Password"}
+                  placeholder={t("newpass")}
+                  style={{ flex: 1, paddingVertical: 0 }}
+                  secureTextEntry={true}
+                />
+              </View>
+            </View>
+            <View style={{ marginBottom: 25 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomColor: passwordError ? "red" : "#ccc",
+                  borderBottomWidth: 1,
+                  paddingBottom: 8,
+                }}
+              >
+                <Ionicons
+                  name="ios-lock-closed-outline"
+                  size={20}
+                  color="#0244d0"
+                  style={{ marginRight: 5 }}
+                />
+                <TextInput
+                  selectionColor={"#000"}
+                  value={confirmPassword}
+                  onChangeText={(text) => {
+                    setConfirmPassword(text);
+                  }}
+                  placeholder={t("confpass")}
                   style={{ flex: 1, paddingVertical: 0 }}
                   secureTextEntry={true}
                 />
@@ -184,12 +151,16 @@ const ForgotChangePassword = ({ navigation, route }) => {
             </View>
 
             <TouchableOpacity
-              disabled={passwordError && phoneError}
-              onPress={() => mutate({ id: new Date() })}
+              disabled={passwordError && confirmPasswordError}
+              onPress={() => {
+                mutate();
+              }}
               style={{
-                backgroundColor: !(passwordError && phoneError)
-                  ? "#0244d0"
-                  : "rgba(0,0,0,0.6)",
+                backgroundColor:
+                  !(passwordError && confirmPasswordError) &&
+                  password == confirmPassword
+                    ? "#0244d0"
+                    : "rgba(0,0,0,0.6)",
                 padding: 20,
                 borderRadius: 10,
                 marginBottom: 30,
@@ -203,36 +174,9 @@ const ForgotChangePassword = ({ navigation, route }) => {
                   color: "#fff",
                 }}
               >
-                Login
+                {t("save")}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("forgotpassword");
-              }}
-            >
-              <Text
-                style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
-              >
-                forget password?
-              </Text>
-            </TouchableOpacity>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                marginBottom: 30,
-              }}
-            >
-              <Text>New to the app?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-                <Text style={{ color: "#0244d0", fontWeight: "700" }}>
-                  {" "}
-                  Signup
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </Pressable>

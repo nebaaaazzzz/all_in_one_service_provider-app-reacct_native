@@ -62,7 +62,7 @@ const PlaceOfferScreen = ({ navigation, route }) => {
   const amenities = [
     {
       name: t("pool"),
-      icon: <Icon name={"pool"} />,
+      icon: <Icon color={"#0244d0"} name={"pool"} />,
       // icon: "pool",
     },
 
@@ -131,7 +131,10 @@ const PlaceOfferScreen = ({ navigation, route }) => {
       icon: <FontAwsome5 color={"#0244d0"} name={"first-aid"} />,
     },
 
-    { name: t("extinguisher"), icon: <Icon name="fire-extinguisher" /> },
+    {
+      name: t("extinguisher"),
+      icon: <Icon color={"#0244d0"} name="fire-extinguisher" />,
+    },
   ];
   let amenIndex, guefavIndex, saftyIndex;
   if (route.params?.data) {

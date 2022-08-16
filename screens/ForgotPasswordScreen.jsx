@@ -20,9 +20,10 @@ import * as SecureStore from "expo-secure-store";
 
 import { useMutation, useQueryClient } from "react-query";
 import { BASEURI } from "../urls";
-import { List } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
 const ForgotPasswordScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const [password, setPassword] = React.useState("");
   const queryClient = useQueryClient();
   const [phoneError, setPhoneError] = React.useState("");
@@ -32,7 +33,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
     async () => {
       try {
         if (!(passwordError && phoneError)) {
-          const response = await fetch(`${BASEURI}/auth/login`, {
+          const response = await fetch(`${BASEURI}/auth/forgot-password`, {
             method: "POST",
             headers: {
               "content-type": "application/json",
@@ -41,8 +42,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
           });
 
           if (!response.ok) {
-            console.log("hello");
-            throw new Error((await response.json()).message);
+            throw new Error(await response.json());
           }
           return await response.json();
         }
@@ -59,12 +59,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
     );
   }
   if (isSuccess) {
-    (async () => {
-      if (data.token) {
-        await SecureStore.setItemAsync("token", data.token);
-        await queryClient.invalidateQueries("user");
-      }
-    })();
+    navigation.navigate("confirmation", { data });
   }
   return (
     <SafeAreaView
@@ -74,35 +69,6 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
         justifyContent: "center",
       }}
     >
-      <View
-        style={{
-          alignItems: "flex-end",
-          // marginRight: 20,
-          top: -35,
-          right: 0,
-          position: "absolute",
-        }}
-      >
-        <List.Accordion
-          style={{ width: 100, opacity: 1 }}
-          title="Uncontrolled Accordion"
-          right={(props) => (
-            <FontAwesome name="language" color="#0244d0" size={40} />
-          )}
-          // right={(props) => <></>}
-        >
-          <List.Item
-            title="አማርኛ"
-            style={{ margin: 0, padding: 0 }}
-            titleStyle={{ color: "#0244d0" }}
-          />
-          <List.Item
-            style={{ margin: 0, padding: 0 }}
-            title="English"
-            titleStyle={{ color: "#0244d0" }}
-          />
-        </List.Accordion>
-      </View>
       <Pressable onPress={() => Keyboard.dismiss()}>
         <ScrollView>
           <View style={{ paddingHorizontal: 25 }}>
@@ -116,7 +82,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
                 marginBottom: 10,
               }}
             >
-              Forgot Password
+              {t("forgot")}
             </Text>
             <View style={{ marginBottom: 10 }}>
               {isError && (
@@ -146,7 +112,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
                   onChangeText={(text) => {
                     setPhoneNumber(text);
                   }}
-                  placeholder={"Phone number"}
+                  placeholder={t("phoneno")}
                   keyboardType={"phone-pad"}
                   style={{
                     flex: 1,
@@ -176,25 +142,9 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
                   color: "#fff",
                 }}
               >
-                Reset
+                {t("send")}
               </Text>
             </TouchableOpacity>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                marginBottom: 30,
-              }}
-            >
-              <Text>New to the app?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-                <Text style={{ color: "#0244d0", fontWeight: "700" }}>
-                  {" "}
-                  Signup
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </Pressable>

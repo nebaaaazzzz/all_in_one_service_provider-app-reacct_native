@@ -108,11 +108,6 @@ const AppNavigator = ({ navigation }) => {
                   name="jobdetail"
                   component={JobDetailScreen}
                 />
-
-                <StackNavigator.Screen
-                  name="confirmation"
-                  component={ConfirmationScreen}
-                />
               </StackNavigator.Group>
             ) : (
               <StackNavigator.Group>
@@ -120,6 +115,10 @@ const AppNavigator = ({ navigation }) => {
                 <StackNavigator.Screen
                   name="forgotpassword"
                   component={ForgotPasswordScreen}
+                />
+                <StackNavigator.Screen
+                  name="confirmation"
+                  component={ConfirmationScreen}
                 />
                 <StackNavigator.Screen name="signup" component={SignupScreen} />
                 <StackNavigator.Screen
