@@ -15,7 +15,6 @@ import { Divider, Badge } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
 import { useTranslation } from "react-i18next";
 
-
 const fetchHouse = async ({ queryKey }) => {
   const response = await fetch(`${BASEURI}/lesser/house/${queryKey[1]}`, {
     headers: {
@@ -29,7 +28,7 @@ const fetchHouse = async ({ queryKey }) => {
   return (await response.json()).data;
 };
 const HomeDetailScreen = ({ navigation, route }) => {
-  
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const dimension = useWindowDimensions();
   const { isLoading, isError, error, data, isFetching } = useQuery(
@@ -207,7 +206,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.guestFavourite?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-              {t("Guest")}
+                {t("Guest")}
               </Text>
               {data?.guestFavourite?.map((item, index) => {
                 return (
@@ -234,7 +233,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.saftyItems?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-              {t("Safty")}
+                {t("Safty")}
               </Text>
               {data?.saftyItems?.map((item, index) => {
                 return (
@@ -288,7 +287,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           {data?.bestDescribe?.length ? (
             <View style={{ marginVertical: "2%" }}>
               <Text style={{ marginVertical: "2%", fontSize: 16 }}>
-              {t("best")}
+                {t("best")}
               </Text>
               {data?.bestDescribe?.map((item, index) => {
                 return (
@@ -325,7 +324,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-            {t("price")} :{" "}
+              {t("price")} :{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>{data.price}</Text>
             </Text>
           </View>
@@ -338,7 +337,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={{ fontSize: 17 }}>
-            {t("Kind")}:{" "}
+              {t("Kind")}:{" "}
               <Text style={{ color: "rgba(0,0,0,0.7)" }}>{data.placeKind}</Text>
             </Text>
           </View>
@@ -358,13 +357,13 @@ const HomeDetailScreen = ({ navigation, route }) => {
             </Text>
             <View>
               <Text style={{ fontSize: 16 }}>
-              {t("Typee")} :{"  "}
+                {t("Typee")} :{"  "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {data.placeDescription.title}
                 </Text>
               </Text>
               <Text style={{ fontSize: 16 }}>
-              {t("des")} :{" "}
+                {t("des")} :{" "}
                 <Text style={{ color: "rgba(0,0,0,0.6)" }}>
                   {data.placeDescription.description}
                 </Text>
@@ -416,7 +415,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>
-          {t("delpost")}
+            {t("delpost")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -427,14 +426,16 @@ const HomeDetailScreen = ({ navigation, route }) => {
           }}
           style={{
             backgroundColor: "#0244d0",
-            width: 100,
+            width: 120,
             marginHorizontal: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,
             borderRadius: 5,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>{t("editpost")}</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("editpost")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

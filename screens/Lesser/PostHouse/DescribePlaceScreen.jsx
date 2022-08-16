@@ -48,7 +48,7 @@ const DescribePlaceScreen = ({ navigation, route }) => {
     });
   }
   const [active, setActive] = useState(titleList || Array(6).fill(false));
-  const { dispatch } = useContext(PostHouseContext);
+  const { dispatch, housePost } = useContext(PostHouseContext);
   return (
     <View
       horizontal={false}
@@ -148,13 +148,12 @@ const DescribePlaceScreen = ({ navigation, route }) => {
                 },
               });
             }
-            console.log(houseP);
-            // if (route.params?.data) {
-            //   return navigation.navigate("lesser/posthouse/price", {
-            //     data: route.params.data,
-            //   });
-            // }
-            // navigation.navigate("lesser/posthouse/price");
+            if (route.params?.data) {
+              return navigation.navigate("lesser/posthouse/price", {
+                data: route.params.data,
+              });
+            }
+            navigation.navigate("lesser/posthouse/price");
           }}
           style={{
             backgroundColor: "#0244d0",

@@ -144,11 +144,7 @@ const Lessee = ({ navigation, route }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                {t("no")}
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}
@@ -161,6 +157,7 @@ const Lessee = ({ navigation, route }) => {
 };
 
 const ApplicantsScreen = ({ route }) => {
+  const { t } = useTranslation();
   return (
     <LesserStackNavigator.Navigator>
       <LesserStackNavigator.Screen

@@ -266,7 +266,6 @@ const ReviewListingScreen = ({ navigation, route }) => {
                         paddingHorizontal: 10,
                         paddingVertical: 5,
                         paddingHorizontal: 10,
-                        color: "#fff",
                         borderRadius: 15,
                         // backgroundColor: "#0244d0",
                       }}

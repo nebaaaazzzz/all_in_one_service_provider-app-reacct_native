@@ -76,20 +76,29 @@ const PinSpotScreen = ({ navigation, route }) => {
           justifyContent: "space-between",
           height: 60,
           flexDirection: "row",
-          marginHorizontal: 10,
+          wdith: dimen.width,
           justifyContent: "flex-end",
           borderColor: "rgba(0,0,0,0.3)",
         }}
       >
-        {route.params?.data?.center ? (
+        {route.params?.data ? (
           <TouchableOpacity
+            style={{
+              backgroundColor: "#0244d0",
+              width: 100,
+              marginHorizontal: 10,
+              marginRight: "25%",
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
             onPress={() => {
               navigation.navigate("lesser/posthouse/location", {
                 data: route.params?.data,
               });
             }}
           >
-            <Text>{t("goto")}</Text>
+            <Text style={{ color: "#fff" }}>{t("goto")}</Text>
           </TouchableOpacity>
         ) : (
           <></>
@@ -118,6 +127,7 @@ const PinSpotScreen = ({ navigation, route }) => {
           style={{
             backgroundColor: "#0244d0",
             width: 100,
+            marginHorizontal: 10,
             marginLeft: "10%",
             paddingHorizontal: 10,
             paddingVertical: 5,
