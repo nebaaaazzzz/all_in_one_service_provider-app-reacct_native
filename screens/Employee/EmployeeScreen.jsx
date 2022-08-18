@@ -88,9 +88,7 @@ const Jobs = ({ pressHandler, item }) => {
               {i.description}
             </Text>
             <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.placeName}</Text>
-            <Text style={{ color: "rgba(0,0,0,0.6)" }}>
-              {i.closed ? "closed" : ""}
-            </Text>
+            <Text style={{ color: "#ff0000" }}>{i.closed ? "closed" : ""}</Text>
           </TouchableOpacity>
         );
       })}
@@ -198,6 +196,18 @@ const Home = ({ navigation }) => {
       },
     }
   );
+  useEffect(() => {
+    queryClient.refetchQueries([
+      "jobs",
+      location,
+      searchQuery,
+      region,
+      category,
+      gender,
+      permanent,
+      cvRequired,
+    ]);
+  });
   // console.log("location :" + location + " op");
   useEffect(() => {
     if (nearBy) {
@@ -343,6 +353,7 @@ const Home = ({ navigation }) => {
                 fontSize: 15,
                 color: "rgba(0,0,0,0.8)",
               }}
+              searchable={true}
               dropdownOverlayColor="transparent"
               buttonStyle={{
                 borderWidth: 1,
@@ -586,8 +597,13 @@ const Home = ({ navigation }) => {
                   onPress={() => {
                     if (index === 1) {
                       setNearBy(true);
+                    }
+                    if (index == 0) {
+                      setNearBy(false);
+                      setCategory(item);
                     } else {
                       setNearBy(false);
+                      setCategory(item);
                     }
                     setIndex(index);
                   }}

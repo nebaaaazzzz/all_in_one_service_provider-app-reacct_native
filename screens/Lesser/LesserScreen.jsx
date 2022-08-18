@@ -8,7 +8,7 @@ import {
   FlatList,
   ToastAndroid,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import PostHouseScreen from "./PostHouse/PostHouseScreen";
@@ -57,9 +57,9 @@ const MyPosts = ({ navigation }) => {
   });
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
-  if (!isFocused) {
+  useEffect(() => {
     queryClient.invalidateQueries("myhouses");
-  }
+  }, [isFocused]);
   // require('./assets/images/girl.jpg'),          // Local image
   function pressHandler(id) {
     navigation.navigate("lesser/housedetail", {

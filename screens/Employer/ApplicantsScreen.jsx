@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
@@ -111,8 +111,11 @@ const Employer = ({ navigation, route }) => {
   }
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
-  if (!isFocused) {
+  useEffect(() => {
     queryClient.invalidateQueries("jobapplicants");
+  }, [isFocused]);
+  if (!isFocused) {
+    queryClient.invalidateQueries(["jobapplicants", route.params.id]);
   }
   if (status === "loading") {
     return (

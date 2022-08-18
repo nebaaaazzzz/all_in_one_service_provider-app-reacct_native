@@ -23,6 +23,8 @@ import * as yup from "yup";
 
 import { BASEURI } from "../urls";
 const SignupScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [open, setOpen] = useState(false);
   /**/
   const [firstName, setFirstName] = useState("");
@@ -495,9 +497,11 @@ const SignupScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          <Text>Already registered?</Text>
+          <Text>{t("al")}</Text>
           <TouchableOpacity onPress={() => navigation.push("login")}>
-            <Text style={{ color: "#0244d0", fontWeight: "700" }}>SignIn </Text>
+            <Text style={{ color: "#0244d0", fontWeight: "700" }}>
+              {t("si")}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

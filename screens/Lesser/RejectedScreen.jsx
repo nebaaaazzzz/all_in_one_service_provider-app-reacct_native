@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
@@ -110,6 +110,9 @@ const Lessee = ({ navigation, route }) => {
   }
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.invalidateQueries(["houserejected", route.params.id]);
+  }, [isFocused]);
   if (!isFocused) {
     queryClient.invalidateQueries("houserejected");
   }
@@ -144,11 +147,7 @@ const Lessee = ({ navigation, route }) => {
             return <ActivityIndicator color={"#0244d0"}></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                {t("no")}
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}

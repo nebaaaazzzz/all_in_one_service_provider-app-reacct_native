@@ -110,6 +110,9 @@ const Employer = ({ navigation, route }) => {
     });
   }
   const isFocused = useIsFocused();
+  useEffect(() => {
+    queryClient.invalidateQueries(["jobrejected", route.params.id]);
+  }, [isFocused]);
   const queryClient = useQueryClient();
   if (!isFocused) {
     queryClient.invalidateQueries("jobrejected");
@@ -164,10 +167,10 @@ const RejectedScreen = ({ route }) => {
       <EmployerStackNavigator.Screen
         initialParams={{ id: route.params.id }}
         options={{
-          title: t("Applicants"),
+          title: t("Rejected"),
           headerTitleContainerStyle: { textAlign: "center" },
         }}
-        name="employer/rejecte/"
+        name="employer/rejected/"
         component={Employer}
       />
       <EmployerStackNavigator.Screen

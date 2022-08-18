@@ -56,6 +56,7 @@ const AddEducation = ({ education, addEducation, setOpenModal }) => {
             width: "90%",
             borderRadius: 15,
           }}
+          search={true}
           data={degreeTypes}
           onSelect={(selectedItem, index) => {
             setDegree(selectedItem);

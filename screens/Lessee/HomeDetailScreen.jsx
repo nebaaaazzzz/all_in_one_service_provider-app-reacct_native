@@ -33,6 +33,7 @@ const fetchHouse = async ({ queryKey }) => {
 };
 
 const HomeDetailScreen = ({ navigation, route }) => {
+  console.log(route.params);
   const { t } = useTranslation();
   const user = useContext(UserContext);
   const clientQuery = useQueryClient();
@@ -46,7 +47,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
     const response = await fetch(`${BASEURI}/lessee/apply/${data._id}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     });
     if (!response.ok) {

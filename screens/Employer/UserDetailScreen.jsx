@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
 import React, { useEffect } from "react";
 import RNFS from "react-native-fs";
@@ -42,7 +42,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
   const approveMutation = useMutation(async () => {
     const response = await fetch(
-      `${BASEURI}/employer/accept/${route.params.id}/${route.params.jobId}`,
+      `${BASEURI}/employer/approve/${route.params.id}/${route.params.jobId}`,
       {
         headers: {
           Authorization: `Bearer ${BASETOKEN}`,
@@ -77,6 +77,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   const user = data;
   const [cvExists, setCvExists] = React.useState(false);
   const localFile = `${RNFS.DocumentDirectoryPath}/${user?.cv}`;
+  const queryClient = useQueryClient();
   useEffect(() => {
     async function check() {
       setCvExists(
@@ -102,7 +103,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   }
   if (rejectMutation.isSuccess || approveMutation.isSuccess) {
     queryClient.invalidateQueries("jobapplicants");
-    navigation.navigate("employer/applicants/");
+    navigation.goBack();
   }
   return (
     <SafeAreaView style={styles.container}>

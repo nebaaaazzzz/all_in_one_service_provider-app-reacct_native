@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 const LesserStackNavigator = createStackNavigator();
 const fetchApplicant = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
-    `${BASEURI}/lesser/rejected/${queryKey[1]}?page=${pageParam}`,
+    `${BASEURI}/lesser/approved/${queryKey[1]}?page=${pageParam}`,
     {
       headers: {
         Authorization: `Bearer ${

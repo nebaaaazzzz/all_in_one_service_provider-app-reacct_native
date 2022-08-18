@@ -41,7 +41,6 @@ const AppNavigator = ({ navigation }) => {
   };
   // handle gateway callbacks
   const queryClient = useQueryClient();
-  const scheme = useColorScheme();
   (async () => await import("./urls"))();
   const [tokenG, setTokenG] = useState();
   const { data, isFetching, isError, error, isLoading, isSuccess } = useQuery(
@@ -78,7 +77,6 @@ const AppNavigator = ({ navigation }) => {
   if (tokenG && error) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>{error.message}</Text>
         <TouchableOpacity
           style={{
             backgroundColor: "#0244d0",
@@ -90,7 +88,7 @@ const AppNavigator = ({ navigation }) => {
             queryClient.refetchQueries("user");
           }}
         >
-          <Text style={{ color: "#fff" }}>This To Restart</Text>
+          <Text style={{ color: "#fff" }}>Retry </Text>
         </TouchableOpacity>
       </View>
     );

@@ -6,6 +6,7 @@ import {
   ToastAndroid,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import React, { useContext, useEffect, useTransition } from "react";
 import { Divider } from "react-native-paper";
@@ -35,6 +36,8 @@ const fetchJob = async ({ queryKey }) => {
 
 const JobDetailScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
+  const dime = useWindowDimensions();
+
   const user = useContext(UserContext);
   const { isLoading, isError, error, data, isFetching, isSuccess } = useQuery(
     ["job", route.params.id],
@@ -95,13 +98,10 @@ const JobDetailScreen = ({ navigation, route }) => {
     if (data.applied) {
       navigation.goBack();
       clientQuery.invalidateQueries(["appliedjobs"]);
-
       clientQuery.invalidateQueries(["jobs"]);
 
       ToastAndroid.show("successfully removed", ToastAndroid.LONG);
     } else {
-      navigation.navigate("employee/");
-
       clientQuery.invalidateQueries(["jobs"]);
 
       ToastAndroid.show("successfully applied", ToastAndroid.LONG);
@@ -122,7 +122,6 @@ const JobDetailScreen = ({ navigation, route }) => {
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
-
   return (
     <View style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -132,7 +131,12 @@ const JobDetailScreen = ({ navigation, route }) => {
           {data.title}
         </Text>
         <Text
-          style={{ textAlign: "center", fontSize: 25, marginVertical: "5%" }}
+          style={{
+            textAlign: "center",
+            color: "#ff0000",
+            fontSize: 25,
+            marginVertical: "5%",
+          }}
         >
           {data.closed ? "Closed" : ""}
         </Text>

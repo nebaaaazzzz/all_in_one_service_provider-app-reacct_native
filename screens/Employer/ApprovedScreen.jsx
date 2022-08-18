@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import FilterModal from "../../components/FilterModal";
 import { BASETOKEN, BASEURI } from "../../urls";
 import { useInfiniteQuery } from "react-query";
@@ -111,10 +111,10 @@ const Employer = ({ navigation, route }) => {
     });
   }
   const isFocused = useIsFocused();
+  useEffect(() => {
+    queryClient.invalidateQueries(["jobapproved", route.params.id]);
+  }, [isFocused]);
   const queryClient = useQueryClient();
-  if (!isFocused) {
-    queryClient.invalidateQueries("jobapplicants");
-  }
   if (status === "loading") {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -158,25 +158,25 @@ const Employer = ({ navigation, route }) => {
   );
 };
 
-const ApplicantsScreen = ({ route }) => {
+const ApprovedScreen = ({ route }) => {
   const { t } = useTranslation();
   return (
     <EmployerStackNavigator.Navigator>
       <EmployerStackNavigator.Screen
         initialParams={{ id: route.params.id }}
         options={{
-          title: t("Applicants"),
+          title: t("Approved"),
           headerTitleContainerStyle: { textAlign: "center" },
         }}
-        name="employer/applicants/"
+        name="employer/approved/"
         component={Employer}
       />
       <EmployerStackNavigator.Screen
         options={{ title: t("det") }}
-        name="employer/applicants/userdetail"
+        name="employer/approved/userdetail"
         component={UserDetailScreen}
       />
     </EmployerStackNavigator.Navigator>
   );
 };
-export default ApplicantsScreen;
+export default ApprovedScreen;

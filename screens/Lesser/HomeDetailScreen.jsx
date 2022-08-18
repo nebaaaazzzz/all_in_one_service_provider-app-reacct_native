@@ -73,6 +73,12 @@ const HomeDetailScreen = ({ navigation, route }) => {
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
   }
+  if (closeMutuation.isError) {
+    ToastAndroid.show(closeMutuation.error.message, ToastAndroid.LONG);
+  }
+  if (closeMutuation.isSuccess) {
+    navigation.goBack();
+  }
   if (delteMutuation.isSuccess) {
     ToastAndroid.show("successfully Deleted", ToastAndroid.LONG);
     queryClient.invalidateQueries("myhouses");
@@ -85,7 +91,7 @@ const HomeDetailScreen = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "rgba(0,0,0,0.3)",
+        backgroundColor: "#fff",
       }}
     >
       <View
@@ -165,6 +171,14 @@ const HomeDetailScreen = ({ navigation, route }) => {
           paddingHorizontal: 10,
         }}
       >
+        {data?.closed ? (
+          <Text style={{ fontSize: 20, textAlign: "center", color: "#ff0000" }}>
+            ....House Reserved.....
+          </Text>
+        ) : (
+          <></>
+        )}
+        <></>
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
@@ -403,8 +417,6 @@ const HomeDetailScreen = ({ navigation, route }) => {
       </ScrollView>
       <View
         style={{
-          position: "absolute",
-          top: dimension.height - dimension.height / 4.5,
           backgroundColor: "#fff",
           borderTopWidth: 2,
           width: "100%",
@@ -432,23 +444,27 @@ const HomeDetailScreen = ({ navigation, route }) => {
             {t("delpost")}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            closeMutuation.mutate();
-          }}
-          style={{
-            backgroundColor: "red",
-            width: 100,
-            marginHorizontal: 10,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ textAlign: "center", color: "#fff" }}>
-            {t("close")}
-          </Text>
-        </TouchableOpacity>
+        {data?.closed ? (
+          <></>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              closeMutuation.mutate();
+            }}
+            style={{
+              backgroundColor: "red",
+              width: 100,
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("close")}
+            </Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("lesser/posthouse", {

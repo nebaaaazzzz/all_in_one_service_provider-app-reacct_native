@@ -117,7 +117,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   }
   if (rejectMutation.isSuccess || approveMutation.isSuccess) {
     queryClient.invalidateQueries("houseapplicants");
-    navigation.navigate("lesser/applicants/");
+    navigation.goBack();
   }
   return (
     <View style={{ flex: 1 }}>
@@ -416,7 +416,9 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>{t("rej")}</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("rej")}
+            </Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -452,7 +454,9 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>{t("Approve")}</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("Approve")}
+            </Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -489,7 +493,9 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>{t("rej")}</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("rej")}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -503,7 +509,9 @@ const UserDetailScreen = ({ navigation, route }) => {
               borderRadius: 5,
             }}
           >
-            <Text style={{ textAlign: "center", color: "#fff" }}>{t("Approve")}</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("Approve")}
+            </Text>
           </TouchableOpacity>
         </View>
       ) : (

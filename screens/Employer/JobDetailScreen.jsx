@@ -17,6 +17,7 @@ import { BASEURI, BASETOKEN } from "../../urls";
 import * as SecureStore from "expo-secure-store";
 import { useTranslation } from "react-i18next";
 import RNFS from "react-native-fs";
+import { useIsFocused } from "@react-navigation/native";
 
 // Requests permissions for external directory
 
@@ -66,7 +67,9 @@ const JobDetailScreen = ({ navigation, route }) => {
     const response = await fetch(`${BASEURI}/employer/job/${data._id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     });
     if (!response.ok) {
@@ -74,11 +77,17 @@ const JobDetailScreen = ({ navigation, route }) => {
     }
     return response.json();
   });
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    queryClient.invalidateQueries(["job", route.params.id]);
+  }, [isFocused]);
   const closeMutuation = useMutation(async () => {
     const response = await fetch(`${BASEURI}/employer/close/${data._id}`, {
       method: "PATCH",
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
       },
     });
     if (!response.ok) {
@@ -86,12 +95,23 @@ const JobDetailScreen = ({ navigation, route }) => {
     }
     return response.json();
   });
-  if (isLoading || isFetching || delteMutuation.isLoading) {
+  if (
+    isLoading ||
+    isFetching ||
+    delteMutuation.isLoading ||
+    closeMutuation.isLoading
+  ) {
     return (
       <View style={{ marginTop: "50%" }}>
         <ActivityIndicator color={"#0244d0"}></ActivityIndicator>
       </View>
     );
+  }
+  if (closeMutuation.isError) {
+    ToastAndroid.show(closeMutuation.error.message, ToastAndroid.LONG);
+  }
+  if (closeMutuation.isSuccess) {
+    navigation.goBack();
   }
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.LONG);
@@ -174,10 +194,19 @@ const JobDetailScreen = ({ navigation, route }) => {
           <Text style={{ color: "#fff" }}>{t("rejected")}</Text>
         </TouchableOpacity>
       </View>
+
       <ScrollView
         style={{ marginBottom: 100, backgroundColor: "#fff" }}
         showsVerticalScrollIndicator={false}
       >
+        {data?.closed ? (
+          <Text style={{ fontSize: 20, textAlign: "center", color: "#ff0000" }}>
+            ....Job Closed.....
+          </Text>
+        ) : (
+          <></>
+        )}
+        <></>
         <Text
           style={{ textAlign: "center", fontSize: 25, marginVertical: "5%" }}
         >
@@ -433,23 +462,28 @@ const JobDetailScreen = ({ navigation, route }) => {
             {t("delpost")}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            closeMutuation.mutate();
-          }}
-          style={{
-            backgroundColor: "red",
-            width: 100,
-            marginHorizontal: 10,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ textAlign: "center", color: "#fff" }}>
-            {t("close")}
-          </Text>
-        </TouchableOpacity>
+        {data?.closed ? (
+          <></>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              closeMutuation.mutate();
+            }}
+            style={{
+              backgroundColor: "red",
+              width: 100,
+              marginHorizontal: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              {t("close")}
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("employer/editpost", {

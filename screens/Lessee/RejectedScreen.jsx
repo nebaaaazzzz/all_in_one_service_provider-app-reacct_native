@@ -104,9 +104,9 @@ const RejectedScreen = ({ navigation }) => {
     navigation.setOptions({
       headerShown: false,
     });
-    navigation.navigate("lessee/applied/housedetail", {
-      id,
-    });
+    // navigation.navigate("lessee/applied/housedetail", {
+    //   id,
+    // });
   }
   const isFocused = useIsFocused();
   const queryClient = useQueryClient();

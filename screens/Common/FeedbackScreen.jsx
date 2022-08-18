@@ -13,14 +13,21 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useMutation } from "react-query";
 import { BASETOKEN, BASEURI } from "../../urls";
 import { useTranslation } from "react-i18next";
+import * as SecureStore from "expo-secure-store";
 const FeedbackScreen = () => {
+  let token;
+  useEffect(() => {
+    (async () => {
+      token = await SecureStore.getItemAsync("token");
+    })();
+  }, []);
   const { t } = useTranslation();
   const mutation = useMutation(async (data) => {
     const response = await fetch(`${BASEURI}/feedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${BASETOKEN || token}`,
       },
       body: data,
     });
@@ -55,7 +62,7 @@ const FeedbackScreen = () => {
       >
         <FontAwesome name="comments-o" size={60} color="#0244d0" />
         <Text style={{ marginHorizontal: 20, fontSize: 25, color: "#0244d0" }}>
-        {t("Feed")}
+          {t("Feed")}
         </Text>
       </View>
       <View style={{ marginTop: "5%" }}>

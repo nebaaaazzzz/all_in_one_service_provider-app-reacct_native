@@ -179,7 +179,6 @@ const EditPostScreen = ({ navigation, route }) => {
     pay.findIndex((item) => jobPost?.paymentStyle === item)
   );
   /* */
-
   useEffect(() => {
     if (paymentStyle !== undefined) {
       if (paymentStyle > 0) {
@@ -215,7 +214,7 @@ const EditPostScreen = ({ navigation, route }) => {
     async (data) => {
       const response = await fetch(
         // `${BASEURI}/employer/update/${jobPost._id}`,
-        `${BASEURI}/employer/update/629ef13df462f9bdfebbde07`,
+        `${BASEURI}/employer/update/${jobPost._id}`,
         {
           method: "PATCH",
           headers: {
@@ -298,7 +297,7 @@ const EditPostScreen = ({ navigation, route }) => {
   if (isError) {
     ToastAndroid.show(error.message, ToastAndroid.SHORT);
   }
-  if (isLoading) {
+  if (isLoading || mutate.isLoading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <ActivityIndicator size={"large"} color="#0244d0" />
@@ -691,6 +690,7 @@ const EditPostScreen = ({ navigation, route }) => {
                   rowStyle={{
                     color: "rgba(0,0,0,0.2)",
                   }}
+                  search={true}
                   dropdownOverlayColor="transparent"
                   buttonStyle={{
                     borderWidth: 1,

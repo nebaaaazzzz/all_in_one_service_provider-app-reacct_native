@@ -88,8 +88,14 @@ const Home = ({ item, pressHandler }) => {
                   {i.placeName}
                 </Text>
               </View>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.price}</Text>
-              <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.closed}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.price}</Text>
+                <Text
+                  style={{ color: "#ff0000", marginLeft: "50%", fontSize: 16 }}
+                >
+                  {i.closed ? "Reserved" : ""}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         );

@@ -79,7 +79,7 @@ const ApprovedScreen = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
   const onPressHandler = (id) => {
     requestAnimationFrame(() => {
-      navigation.navigate("employee/applied/jobdetail", {
+      navigation.navigate("employee/applied/userdetail", {
         id,
       });
     });
