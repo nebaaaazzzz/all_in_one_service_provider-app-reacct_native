@@ -27,7 +27,6 @@ import "./../i18n";
 
 const LoginScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
-  const [currentLanguage, setLanguage] = useState("en");
   const [expanded, setExpanded] = React.useState(false);
   const changeLanguage = (value) => {
     il8n

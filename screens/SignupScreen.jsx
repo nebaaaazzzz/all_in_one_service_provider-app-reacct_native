@@ -52,7 +52,7 @@ const SignupScreen = ({ navigation }) => {
           }),
         });
         if (!response.ok) {
-          throw new Error(await response.json());
+          throw new Error((await response.json()).message);
         }
         return await response.json();
       } catch (err) {

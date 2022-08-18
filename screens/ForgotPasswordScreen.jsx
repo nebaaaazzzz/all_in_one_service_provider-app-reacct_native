@@ -42,7 +42,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
           });
 
           if (!response.ok) {
-            throw new Error(await response.json());
+            throw new Error((await response.json()).message);
           }
           return await response.json();
         }
@@ -85,10 +85,12 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
               {t("forgot")}
             </Text>
             <View style={{ marginBottom: 10 }}>
-              {isError && (
+              {isError ? (
                 <Text style={{ textAlign: "center", color: "red" }}>
-                  {error.message}
+                  {error?.message}
                 </Text>
+              ) : (
+                <></>
               )}
             </View>
             <View style={{ marginBottom: 25 }}>

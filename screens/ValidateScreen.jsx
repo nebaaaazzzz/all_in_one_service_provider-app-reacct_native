@@ -36,9 +36,7 @@ const ValidateScreen = ({ route, navigation }) => {
         }),
       });
       if (!response.ok) {
-        console.log("not success ful");
-        throw new Error("not success ful");
-        // throw new Error(await response.json());
+        throw new Error((await response.json()).message);
       }
       return await response.json();
     }

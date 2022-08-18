@@ -79,7 +79,19 @@ const AppNavigator = ({ navigation }) => {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text>{error.message}</Text>
-        <TouchableOpacity onPress={() => {}}></TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#0244d0",
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+          onPress={() => {
+            queryClient.refetchQueries("user");
+          }}
+        >
+          <Text style={{ color: "#fff" }}>This To Restart</Text>
+        </TouchableOpacity>
       </View>
     );
   }

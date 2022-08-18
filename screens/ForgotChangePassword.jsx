@@ -74,6 +74,7 @@ const ForgotChangePassword = ({ navigation, route }) => {
     >
       <Pressable onPress={() => Keyboard.dismiss()}>
         <ScrollView>
+          <Text>{error?.message}</Text>
           <View style={{ paddingHorizontal: 25 }}>
             <Text
               style={{

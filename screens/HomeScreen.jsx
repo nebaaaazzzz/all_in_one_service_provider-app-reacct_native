@@ -5,22 +5,16 @@ import {
   TouchableOpacity,
   Image,
   useWindowDimensions,
-  Pressable,
-  Linking,
 } from "react-native";
 // import "./i18n/i18n";
 import i18n from "./../i18n/";
-import React, { useEffect, useState } from "react";
-import Svg, { Path } from "react-native-svg";
+import React, { useState } from "react";
 import styled from "styled-components/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 const DrawerNavigator = createDrawerNavigator();
-import { useQueryClient } from "react-query";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ProfileScreen from "./Common/ProfileScreen";
-import SettingsScreen from "./Common/SettingsScreen";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import DatePicker from "@react-native-community/datetimepicker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AboutScreen from "./Common/AboutScreen";

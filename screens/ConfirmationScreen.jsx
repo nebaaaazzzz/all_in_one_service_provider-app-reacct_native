@@ -32,7 +32,7 @@ const ConfirmationScreen = ({ route, navigation }) => {
         }),
       });
       if (!response.ok) {
-        throw new Error(await response.json());
+        throw new Error((await response.json()).message);
       }
       return await response.json();
     }
