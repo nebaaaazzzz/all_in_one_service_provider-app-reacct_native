@@ -94,6 +94,7 @@ const CategoryScreen = ({ navigation, route }) => {
               rowStyle={{
                 color: "rgba(0,0,0,0.2)",
               }}
+              search={true}
               dropdownOverlayColor="transparent"
               buttonStyle={{
                 borderWidth: 1,

@@ -1,9 +1,15 @@
 import { View, Text, Image, ScrollView, StatusBar } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { BASEURI, BASETOKEN } from "../../urls";
 import * as SecureStore from "expo-secure-store";
 
 const ViewImagesScreen = ({ route }) => {
+  let token;
+  useEffect(() => {
+    (async () => {
+      token = await SecureStore.getItemAsync("token");
+    })();
+  });
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -17,7 +23,7 @@ const ViewImagesScreen = ({ route }) => {
             source={{
               uri: `${BASEURI}/house/image/${item}`,
               headers: {
-                Authorization: `Bearer ${BASETOKEN}`,
+                Authorization: `Bearer ${BASETOKEN || token}`,
               },
             }}
             style={{

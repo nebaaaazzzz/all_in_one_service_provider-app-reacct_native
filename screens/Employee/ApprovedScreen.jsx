@@ -11,15 +11,17 @@ import { Divider } from "react-native-paper";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
+import * as SecureStore from "expo-secure-store";
 
 import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 const fetchJobs = async ({ pageParam = 1 }) => {
+  let token = await SecureStore.getItemAsync("token");
   const response = await fetch(
     `${BASEURI}/employee/approved/?page=${pageParam}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${BASETOKEN || token}`,
       },
     }
   );
@@ -136,11 +138,7 @@ const ApprovedScreen = ({ navigation }) => {
             return <ActivityIndicator color={"#0244d0"} />;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                {t("no")}
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}

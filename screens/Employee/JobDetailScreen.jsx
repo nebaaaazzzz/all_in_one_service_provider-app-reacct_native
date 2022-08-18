@@ -18,11 +18,13 @@ import { useIsFocused } from "@react-navigation/native";
 import { UserContext } from "../../App.Navigator";
 import RNFS from "react-native-fs";
 import { useTranslation } from "react-i18next";
+import * as SecureStore from "expo-secure-store";
 
 const fetchJob = async ({ queryKey }) => {
+  let token = await SecureStore.getItemAsync("token");
   const response = await fetch(`${BASEURI}/employee/job/${queryKey[1]}`, {
     headers: {
-      Authorization: `Bearer ${BASETOKEN}`,
+      Authorization: `Bearer ${BASETOKEN || token}`,
     },
   });
   if (!response.ok) {
@@ -128,6 +130,11 @@ const JobDetailScreen = ({ navigation, route }) => {
           style={{ textAlign: "center", fontSize: 25, marginVertical: "5%" }}
         >
           {data.title}
+        </Text>
+        <Text
+          style={{ textAlign: "center", fontSize: 25, marginVertical: "5%" }}
+        >
+          {data.closed ? "Closed" : ""}
         </Text>
         {data?.deleted ? <Text>Job deleted</Text> : <></>}
         <Divider />
@@ -401,23 +408,27 @@ const JobDetailScreen = ({ navigation, route }) => {
         ) : data.isUserApproved || data.isUserRejected ? (
           <></>
         ) : user?.left > 0 ? (
-          <TouchableOpacity
-            onPress={() => {
-              applyMutuation.mutate();
-            }}
-            style={{
-              backgroundColor: data.applied ? "red" : "#0244d0",
-              width: 100,
-              right: 30,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>
-              {t("apply")}
-            </Text>
-          </TouchableOpacity>
+          data.closed ? (
+            <></>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                applyMutuation.mutate();
+              }}
+              style={{
+                backgroundColor: data.applied ? "red" : "#0244d0",
+                width: 100,
+                right: 30,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>
+                {t("apply")}
+              </Text>
+            </TouchableOpacity>
+          )
         ) : (
           <TouchableOpacity
             onPress={() => {

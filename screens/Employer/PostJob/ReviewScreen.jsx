@@ -337,8 +337,7 @@ const ReviewScreen = ({ navigation }) => {
                     display="calendar"
                     maxDate="01-01-2019"
                     textColor="red"
-                    minimumDate={new Date(1950, 0, 1)}
-                    maximumDate={new Date(2000, 10, 20)}
+                    minimumDate={new Date()}
                     onChange={({ nativeEvent: { timestamp } }) => {
                       if (timestamp) {
                         setDate(new Date(timestamp));
@@ -369,8 +368,7 @@ const ReviewScreen = ({ navigation }) => {
                     display="clock"
                     maxDate="01-01-2019"
                     textColor="red"
-                    minimumDate={new Date(1950, 0, 1)}
-                    maximumDate={new Date(2000, 10, 20)}
+                    minimumDate={new Date()}
                     onChange={({ nativeEvent: { timestamp } }) => {
                       if (timestamp) {
                         setDatetime(new Date(timestamp));

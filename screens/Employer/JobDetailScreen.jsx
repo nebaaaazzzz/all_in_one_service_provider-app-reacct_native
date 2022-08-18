@@ -74,6 +74,18 @@ const JobDetailScreen = ({ navigation, route }) => {
     }
     return response.json();
   });
+  const closeMutuation = useMutation(async () => {
+    const response = await fetch(`${BASEURI}/employer/close/${data._id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${BASETOKEN}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("error occured");
+    }
+    return response.json();
+  });
   if (isLoading || isFetching || delteMutuation.isLoading) {
     return (
       <View style={{ marginTop: "50%" }}>
@@ -419,6 +431,23 @@ const JobDetailScreen = ({ navigation, route }) => {
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>
             {t("delpost")}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            closeMutuation.mutate();
+          }}
+          style={{
+            backgroundColor: "red",
+            width: 100,
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("close")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

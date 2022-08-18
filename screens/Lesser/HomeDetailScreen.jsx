@@ -49,6 +49,20 @@ const HomeDetailScreen = ({ navigation, route }) => {
     }
     return response.json();
   });
+  const closeMutuation = useMutation(async () => {
+    const response = await fetch(`${BASEURI}/lesser/close/${data._id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${
+          BASETOKEN || (await SecureStore.getItemAsync("token"))
+        }`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("error occured");
+    }
+    return response.json();
+  });
   if (isLoading || isFetching || delteMutuation.isLoading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -416,6 +430,23 @@ const HomeDetailScreen = ({ navigation, route }) => {
         >
           <Text style={{ textAlign: "center", color: "#fff" }}>
             {t("delpost")}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            closeMutuation.mutate();
+          }}
+          style={{
+            backgroundColor: "red",
+            width: 100,
+            marginHorizontal: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>
+            {t("close")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

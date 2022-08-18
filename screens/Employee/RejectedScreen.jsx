@@ -14,12 +14,16 @@ import fromNow from "../../utils/time";
 
 import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import * as SecureStore from "expo-secure-store";
+
 const fetchJobs = async ({ pageParam = 1 }) => {
+  let token = await SecureStore.getItemAsync("token");
+
   const response = await fetch(
     `${BASEURI}/employee/rejected/?page=${pageParam}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${BASETOKEN || token}`,
       },
     }
   );
@@ -136,11 +140,7 @@ const RejectedScreen = ({ navigation }) => {
             return <ActivityIndicator></ActivityIndicator>;
           }
           if (!hasNextPage) {
-            return (
-              <Text style={{ textAlign: "center" }}>
-                {t("no")}
-              </Text>
-            );
+            return <Text style={{ textAlign: "center" }}>{t("no")}</Text>;
           }
           return null;
         }}

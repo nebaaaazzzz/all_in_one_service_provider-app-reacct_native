@@ -4,6 +4,7 @@ import {
   View,
   Text,
   StatusBar,
+  ToastAndroid,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import React, { useState } from "react";
@@ -37,8 +38,29 @@ const ConfirmationScreen = ({ route, navigation }) => {
       return await response.json();
     }
   );
+  const resendMutation = useMutation(async () => {
+    const response = await fetch(`${BASEURI}/auth/resend`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: user._id,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error((await response.json()).message);
+    }
+    return await response.json();
+  });
   if (isSuccess) {
     navigation.navigate("forgotchangepasssword", { data });
+  }
+  if (resendMutation.isSuccess) {
+    ToastAndroid.show("check your message", ToastAndroid.LONG);
+  }
+  if (resendMutation.isError) {
+    ToastAndroid.show(resendMutation.error.message, ToastAndroid.LONG);
   }
   if (isLoading) {
     return (
@@ -83,7 +105,12 @@ const ConfirmationScreen = ({ route, navigation }) => {
             setRandStr(text);
           }}
         />
-        <Button mode="text">
+        <Button
+          mode="text"
+          onPress={() => {
+            resendMutation.mutate();
+          }}
+        >
           <Text style={{ textTransform: "none" }}>Resend code</Text>
         </Button>
         <Button

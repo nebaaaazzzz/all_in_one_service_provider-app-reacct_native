@@ -1,7 +1,15 @@
 import { View, Text, Image, ScrollView, StatusBar } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
+
 import { BASEURI, BASETOKEN } from "../../urls";
 const ViewImagesScreen = ({ route }) => {
+  let token;
+  useEffect(() => {
+    (async () => {
+      token = await SecureStore.getItemAsync("token");
+    })();
+  });
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

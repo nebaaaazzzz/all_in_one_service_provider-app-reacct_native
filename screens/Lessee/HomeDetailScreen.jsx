@@ -112,6 +112,9 @@ const HomeDetailScreen = ({ navigation, route }) => {
         <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
           {data.placeTitle}
         </Text>
+        <Text style={{ fontSize: 22, marginVertical: 10, textAlign: "center" }}>
+          {data?.closed ? "closed" : ""}
+        </Text>
         {data?.deleted ? <Text>Job deleted</Text> : <></>}
         <View>
           <Divider />
@@ -445,21 +448,25 @@ const HomeDetailScreen = ({ navigation, route }) => {
         ) : data.isUserApproved || data.isUserRejected ? (
           <></>
         ) : user?.left > 0 ? (
-          <TouchableOpacity
-            onPress={() => {
-              applyMutuation.mutate();
-            }}
-            style={{
-              backgroundColor: data.applied ? "red" : "#0244d0",
-              width: 100,
-              right: 30,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", color: "#fff" }}>Apply</Text>
-          </TouchableOpacity>
+          data?.closed ? (
+            <></>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                applyMutuation.mutate();
+              }}
+              style={{
+                backgroundColor: data.applied ? "red" : "#0244d0",
+                width: 100,
+                right: 30,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", color: "#fff" }}>Apply</Text>
+            </TouchableOpacity>
+          )
         ) : (
           <TouchableOpacity
             onPress={() => {

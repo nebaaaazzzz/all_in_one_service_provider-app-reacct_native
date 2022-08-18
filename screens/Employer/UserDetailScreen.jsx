@@ -1,37 +1,6 @@
-// const UserDetailScreen = ({ navigation, route }) => {
-//
-
-//   const isFocused = useIsFocused();
-//   const queryClient = useQueryClient();
-//   if (!isFocused) {
-//     queryClient.invalidateQueries([
-//       "user",
-//       route.params.jobId,
-//       route.params.id,
-//     ]);
-//   }
-
-//   if (!isFocused) {
-//     queryClient.invalidateQueries([
-//       "user",
-//       route.params.jobId,
-//       route.params.id,
-//     ]);
-//   }
-
-//   return (
-//
-//       </ScrollView>
-//       {/* if user is approved */}
-//       {/* if user is approved */}
-//       {/* if user is approved */}
-//
-//     </SafeAreaView>
-//   );
-// };
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { BASEURI, BASETOKEN } from "../../urls";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import RNFS from "react-native-fs";
 import FileViewer from "react-native-file-viewer";
 
@@ -44,14 +13,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Avatar, Title, Caption, Text, Divider } from "react-native-paper";
-import { FontAwesome5 } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { createStackNavigator } from "@react-navigation/stack";
 import * as SecureStore from "expo-secure-store";
 import { useTranslation } from "react-i18next";
 
-const ProfileStackNavigator = createStackNavigator();
 const fetchUser = async ({ queryKey }) => {
+  let token;
+  (async () => {
+    token = await SecureStore.getItemAsync("token");
+  })();
   const response = await fetch(
     `${BASEURI}/employer/${queryKey[1]}/${queryKey[2]}`,
     {

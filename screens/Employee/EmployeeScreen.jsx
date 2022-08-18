@@ -32,6 +32,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useIsFocused } from "@react-navigation/native";
 import AppliedScreen from "./AppliedScreen";
 import { useTranslation } from "react-i18next";
+
 const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   const response = await fetch(
     `${BASEURI}/employee/?page=${pageParam}&nearBy=${queryKey[1]}&search=${queryKey[2]}&region=${queryKey[3]}&category=${queryKey[4]}&gender=${queryKey[5]}&permanent=${queryKey[6]}&cvRequired=${queryKey[7]}`,
@@ -87,6 +88,9 @@ const Jobs = ({ pressHandler, item }) => {
               {i.description}
             </Text>
             <Text style={{ color: "rgba(0,0,0,0.6)" }}>{i.placeName}</Text>
+            <Text style={{ color: "rgba(0,0,0,0.6)" }}>
+              {i.closed ? "closed" : ""}
+            </Text>
           </TouchableOpacity>
         );
       })}

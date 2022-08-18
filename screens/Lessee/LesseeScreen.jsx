@@ -89,6 +89,7 @@ const Home = ({ item, pressHandler }) => {
                 </Text>
               </View>
               <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.price}</Text>
+              <Text style={{ color: "rgba(0,0,0,0.6)" }}> {i.closed}</Text>
             </View>
           </TouchableOpacity>
         );

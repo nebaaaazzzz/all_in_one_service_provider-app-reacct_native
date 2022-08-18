@@ -15,19 +15,21 @@ import JobDetailScreen from "./JobDetailScreen";
 import { BASEURI, BASETOKEN } from "../../urls";
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import fromNow from "../../utils/time";
-const ApplyTabNavigator = createMaterialTopTabNavigator();
+import * as SecureStore from "expo-secure-store";
 
+const ApplyTabNavigator = createMaterialTopTabNavigator();
 import { useIsFocused } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ApprovedScreen from "./ApprovedScreen";
 import RejectedScreen from "./RejectedScreen";
 import { useTranslation } from "react-i18next";
 const fetchJobs = async ({ pageParam = 1 }) => {
+  let token = await SecureStore.getItemAsync("token");
   const response = await fetch(
     `${BASEURI}/employee/applied/?page=${pageParam}`,
     {
       headers: {
-        Authorization: `Bearer ${BASETOKEN}`,
+        Authorization: `Bearer ${BASETOKEN || token}`,
       },
     }
   );
