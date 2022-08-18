@@ -184,7 +184,7 @@ const SignupScreen = ({ navigation }) => {
                 }
                 setFirstName(text);
               }}
-              placeholder="First Name"
+              placeholder={t("fnam")}
               style={{ flex: 1, paddingVertical: 0 }}
             />
           </View>
@@ -227,7 +227,7 @@ const SignupScreen = ({ navigation }) => {
                 }
                 setLastName(text);
               }}
-              placeholder={"Last Name"}
+              placeholder={t("lnam")}
               style={{ flex: 1, paddingVertical: 0 }}
             />
           </View>
@@ -288,23 +288,23 @@ const SignupScreen = ({ navigation }) => {
           }}
         >
           <View style={{ marginRight: "10%" }}>
-            <Text style={{ color: "rgba(0,0,0,0.8)" }}>Gender</Text>
+            <Text style={{ color: "rgba(0,0,0,0.8)" }}>{t("gende")}</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ color: "rgba(0,0,0,.6)" }}>Male</Text>
+            <Text style={{ color: "rgba(0,0,0,.6)" }}>{t("male")}</Text>
             <RadioButton
               value="male"
               color="#0244d0"
-              status={gender === "male" ? "checked" : "unchecked"}
+              status={gender === t("male") ? "checked" : "unchecked"}
               onPress={() => setGender("male")}
             />
-            <Text style={{ color: "rgba(0,0,0,.6)" }}>Female</Text>
+            <Text style={{ color: "rgba(0,0,0,.6)" }}>{t("female")}</Text>
 
             <RadioButton
               value="female"
               color="#0244d0"
-              status={gender === "female" ? "checked" : "unchecked"}
-              onPress={() => setGender("female")}
+              status={gender === t("female") ? "checked" : "unchecked"}
+              onPress={() => setGender(t("female"))}
             />
           </View>
         </View>
@@ -335,7 +335,7 @@ const SignupScreen = ({ navigation }) => {
                 setPassword(text);
               }}
               value={password}
-              placeholder={"Password"}
+              placeholder={t("pass")}
               inputType="password"
               style={{ flex: 1, paddingVertical: 0 }}
               secureTextEntry={true}
@@ -383,7 +383,7 @@ const SignupScreen = ({ navigation }) => {
                 setConfirmPassword(text);
               }}
               value={confirmPassword}
-              placeholder={"Confirm Password"}
+              placeholder={t("confir")}
               inputType="password"
               style={{ flex: 1, paddingVertical: 0 }}
               secureTextEntry={true}
@@ -436,7 +436,7 @@ const SignupScreen = ({ navigation }) => {
                   (date.getMonth() + 1) +
                   "/" +
                   date.getFullYear()
-                : "date of birth"}
+                : t("date")}
             </Text>
           )}
         </TouchableOpacity>
@@ -486,7 +486,7 @@ const SignupScreen = ({ navigation }) => {
               color: "#fff",
             }}
           >
-            Signup
+            {t("sup")}
           </Text>
         </TouchableOpacity>
 

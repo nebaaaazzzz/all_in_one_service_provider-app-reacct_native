@@ -12,7 +12,8 @@
     "chgpass": "Change Password",
     "newpass": "New Password",
     "confpass": "Confirm Password",
-
+    "reserved": "Reserved",
+    "closed": "Closed",
     "signup": "Signup",
 
     "fnam": "First Name",
@@ -26,6 +27,8 @@
     "date": "date of birth",
 
     "al": "Already registered?",
+
+    "sup": "SignUp",
 
     "si": "SignIn",
 

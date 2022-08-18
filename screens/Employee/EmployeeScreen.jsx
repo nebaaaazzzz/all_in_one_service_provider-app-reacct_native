@@ -535,7 +535,9 @@ const Home = ({ navigation }) => {
                 }}
                 onPress={() => setOpenModal(false)}
               >
-                <Text style={{ fontSize: 18, color: "#fff" }}>Close</Text>
+                <Text style={{ fontSize: 18, color: "#fff" }}>
+                  {t("close")}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

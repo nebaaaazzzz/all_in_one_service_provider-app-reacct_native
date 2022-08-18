@@ -201,7 +201,7 @@ const JobDetailScreen = ({ navigation, route }) => {
       >
         {data?.closed ? (
           <Text style={{ fontSize: 20, textAlign: "center", color: "#ff0000" }}>
-            ....Job Closed.....
+            {t("closed")}
           </Text>
         ) : (
           <></>

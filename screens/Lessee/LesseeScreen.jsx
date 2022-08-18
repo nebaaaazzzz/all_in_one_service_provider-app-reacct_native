@@ -93,7 +93,7 @@ const Home = ({ item, pressHandler }) => {
                 <Text
                   style={{ color: "#ff0000", marginLeft: "50%", fontSize: 16 }}
                 >
-                  {i.closed ? "Reserved" : ""}
+                  {i.closed ? t("reserved") : ""}
                 </Text>
               </View>
             </View>

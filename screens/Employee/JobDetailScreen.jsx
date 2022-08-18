@@ -138,7 +138,7 @@ const JobDetailScreen = ({ navigation, route }) => {
             marginVertical: "5%",
           }}
         >
-          {data.closed ? "Closed" : ""}
+          {data.closed ? t("closed") : ""}
         </Text>
         {data?.deleted ? <Text>Job deleted</Text> : <></>}
         <Divider />
